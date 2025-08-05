@@ -428,7 +428,7 @@ version: "1.114"
 
 
                 <time class="article-time--reading">
-                    阅读时长: 6 分钟
+                    阅读时长: 7 分钟
                 </time>
             </div>
             
@@ -480,21 +480,43 @@ version: "1.114"
 </h1><h2 id="简介">简介
 </h2><p>BeautifulSoup 是一个可以把 HTML 或 XML 文档“变成结构化树”，方便你用Python 来查找、遍历、提取内容的工具。</p>
 <h2 id="解析器">解析器
-</h2><p><img src="/p/beautifulsoup/image-20250802204414325.png"
-	width="836"
-	height="364"
-	srcset="/p/beautifulsoup/image-20250802204414325_hu_d88077c7db43e142.png 480w, /p/beautifulsoup/image-20250802204414325_hu_e605815b095718e5.png 1024w"
-	loading="lazy"
-	
-		alt="image-20250802204414325"
-	
-	
-		class="gallery-image" 
-		data-flex-grow="229"
-		data-flex-basis="551px"
-	
->
-具体使用代码展示如下：</p>
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>解析器</th>
+          <th>使用方法</th>
+          <th>优势</th>
+          <th>劣势</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Python标准库</td>
+          <td>BeautifulSoup(markup, &lsquo;html.parser&rsquo;)</td>
+          <td>python内置的标准库，执行速度适中</td>
+          <td>Python3.2.2之前的版本容错能力差</td>
+      </tr>
+      <tr>
+          <td>lxml HTML解析器</td>
+          <td>BeautifulSoup(markup, &rsquo;lxml')</td>
+          <td>速度快、文档容错能力强</td>
+          <td>需要安装C语言库</td>
+      </tr>
+      <tr>
+          <td>lxml XML解析器</td>
+          <td>BeautifulSoup(markup &lsquo;xml&rsquo;)</td>
+          <td>速度快，唯一支持XML的解析器</td>
+          <td>需要安装C语言库</td>
+      </tr>
+      <tr>
+          <td>html5lib</td>
+          <td>BeautifulSoup(markup, &lsquo;html5lib&rsquo;)</td>
+          <td>最好的容错性、以浏览器的方式解析文档、生成HTML5格式的文档</td>
+          <td>速度慢，不依赖外部拓展</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>具体使用代码展示如下：</p>
 <div class="highlight"><div class="chroma">
 <table class="lntable"><tr><td class="lntd">
 <pre tabindex="0" class="chroma"><code><span class="lnt">1

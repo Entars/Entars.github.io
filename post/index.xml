@@ -17,21 +17,43 @@
 &lt;/h1&gt;&lt;h2 id=&#34;简介&#34;&gt;简介
 &lt;/h2&gt;&lt;p&gt;BeautifulSoup 是一个可以把 HTML 或 XML 文档“变成结构化树”，方便你用Python 来查找、遍历、提取内容的工具。&lt;/p&gt;
 &lt;h2 id=&#34;解析器&#34;&gt;解析器
-&lt;/h2&gt;&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/beautifulsoup/image-20250802204414325.png&#34;
-	width=&#34;836&#34;
-	height=&#34;364&#34;
-	srcset=&#34;https://Entars.github.io/p/beautifulsoup/image-20250802204414325_hu_d88077c7db43e142.png 480w, https://Entars.github.io/p/beautifulsoup/image-20250802204414325_hu_e605815b095718e5.png 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;image-20250802204414325&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;229&#34;
-		data-flex-basis=&#34;551px&#34;
-	
-&gt;
-具体使用代码展示如下：&lt;/p&gt;
+&lt;/h2&gt;&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;解析器&lt;/th&gt;
+          &lt;th&gt;使用方法&lt;/th&gt;
+          &lt;th&gt;优势&lt;/th&gt;
+          &lt;th&gt;劣势&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;Python标准库&lt;/td&gt;
+          &lt;td&gt;BeautifulSoup(markup, &amp;lsquo;html.parser&amp;rsquo;)&lt;/td&gt;
+          &lt;td&gt;python内置的标准库，执行速度适中&lt;/td&gt;
+          &lt;td&gt;Python3.2.2之前的版本容错能力差&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;lxml HTML解析器&lt;/td&gt;
+          &lt;td&gt;BeautifulSoup(markup, &amp;rsquo;lxml&#39;)&lt;/td&gt;
+          &lt;td&gt;速度快、文档容错能力强&lt;/td&gt;
+          &lt;td&gt;需要安装C语言库&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;lxml XML解析器&lt;/td&gt;
+          &lt;td&gt;BeautifulSoup(markup &amp;lsquo;xml&amp;rsquo;)&lt;/td&gt;
+          &lt;td&gt;速度快，唯一支持XML的解析器&lt;/td&gt;
+          &lt;td&gt;需要安装C语言库&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+          &lt;td&gt;html5lib&lt;/td&gt;
+          &lt;td&gt;BeautifulSoup(markup, &amp;lsquo;html5lib&amp;rsquo;)&lt;/td&gt;
+          &lt;td&gt;最好的容错性、以浏览器的方式解析文档、生成HTML5格式的文档&lt;/td&gt;
+          &lt;td&gt;速度慢，不依赖外部拓展&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;具体使用代码展示如下：&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
