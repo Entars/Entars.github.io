@@ -1231,6 +1231,20 @@ version: "1.114"
       </tr>
   </tbody>
 </table></div>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Q</th>
+          <th>PoolManager和ProxyManager的区别</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>A</td>
+          <td>ProxyManager是继承自PoolManager，专门用来处理从代理服务器发出的请求，其重写了PoolManager的部分方法，确保所有的请求都从预定的代理进行，并且它能根据目标的URL的方案和代理类型，智能的选择使用HTTP转发或HTTP CONNECT通道</td>
+      </tr>
+  </tbody>
+</table></div>
 <h2 id="一些测试代码">一些测试代码
 </h2><ol>
 <li>
