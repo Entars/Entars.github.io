@@ -7,28 +7,52 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Tue, 05 Aug 2025 15:27:58 +0800</lastBuildDate><atom:link href="https://Entars.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>BeautifulSoup</title>
-        <link>https://Entars.github.io/tags/beautifulsoup/</link>
-        <pubDate>Tue, 05 Aug 2025 15:27:58 +0800</pubDate>
+        <lastBuildDate>Wed, 20 Aug 2025 17:47:51 +0800</lastBuildDate><atom:link href="https://Entars.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Selenium</title>
+        <link>https://Entars.github.io/tags/selenium/</link>
+        <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/beautifulsoup/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>爬虫</title>
-        <link>https://Entars.github.io/tags/%E7%88%AC%E8%99%AB/</link>
-        <pubDate>Tue, 05 Aug 2025 15:27:58 +0800</pubDate>
-        
-        <guid>https://Entars.github.io/tags/%E7%88%AC%E8%99%AB/</guid>
+        <guid>https://Entars.github.io/tags/selenium/</guid>
         <description></description>
         </item>
         <item>
         <title>Urllib3</title>
         <link>https://Entars.github.io/tags/urllib3/</link>
-        <pubDate>Tue, 05 Aug 2025 12:10:50 +0800</pubDate>
+        <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
         
         <guid>https://Entars.github.io/tags/urllib3/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>岗位爬取</title>
+        <link>https://Entars.github.io/tags/%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/</link>
+        <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/tags/%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>国家大学生就业服务平台</title>
+        <link>https://Entars.github.io/tags/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</link>
+        <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/tags/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>爬虫</title>
+        <link>https://Entars.github.io/tags/%E7%88%AC%E8%99%AB/</link>
+        <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/tags/%E7%88%AC%E8%99%AB/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>BeautifulSoup</title>
+        <link>https://Entars.github.io/tags/beautifulsoup/</link>
+        <pubDate>Tue, 05 Aug 2025 15:27:58 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/tags/beautifulsoup/</guid>
         <description></description>
         </item>
         <item>
