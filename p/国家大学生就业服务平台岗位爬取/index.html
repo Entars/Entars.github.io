@@ -1829,11 +1829,6 @@ version: "1.114"
 </span><span class="lnt">508
 </span><span class="lnt">509
 </span><span class="lnt">510
-</span><span class="lnt">511
-</span><span class="lnt">512
-</span><span class="lnt">513
-</span><span class="lnt">514
-</span><span class="lnt">515
 </span></code></pre></td>
 <td class="lntd">
 <pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">queue</span>
@@ -1852,10 +1847,9 @@ version: "1.114"
 </span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">selenium.webdriver.support</span> <span class="kn">import</span> <span class="n">expected_conditions</span> <span class="k">as</span> <span class="n">EC</span>
 </span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">selenium.webdriver.support.ui</span> <span class="kn">import</span> <span class="n">WebDriverWait</span>
 </span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="c1">#抑制认证警告</span>
 </span></span><span class="line"><span class="cl"><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">(</span><span class="n">urllib3</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">InsecureRequestWarning</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">keep_connect</span><span class="p">(</span><span class="n">chrome_location</span><span class="p">,</span><span class="n">username</span><span class="p">,</span><span class="n">password</span><span class="p">):</span>
@@ -1863,8 +1857,11 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">    <span class="n">options</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">ChromeOptions</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="n">options</span><span class="o">.</span><span class="n">binary_location</span> <span class="o">=</span> <span class="n">chrome_location</span>
 </span></span><span class="line"><span class="cl">    <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;ignore-certificate-errors&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;--headless&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;--disable-gpu&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">options</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">&#34;--disable-software-rasterizer&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">    <span class="n">options</span><span class="o">.</span><span class="n">add_experimental_option</span><span class="p">(</span><span class="s2">&#34;detach&#34;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">    <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span> <span class="n">executable_path</span><span class="o">=</span><span class="s1">&#39;../chromedriver.exe&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">,</span><span class="n">executable_path</span><span class="o">=</span><span class="s1">&#39;../chromedriver.exe&#39;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">login_url</span> <span class="o">=</span> <span class="s1">&#39;https://account.chsi.com.cn/passport/login?service=https://www.ncss.cn/student/connect/chsi&amp;entrytype=stu&#39;</span>
 </span></span><span class="line"><span class="cl">    <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">login_url</span><span class="p">)</span>
@@ -1978,17 +1975,17 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">            <span class="n">headers</span><span class="o">=</span><span class="n">headers</span>
 </span></span><span class="line"><span class="cl">        <span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">403</span><span class="p">,</span><span class="mi">401</span><span class="p">]:</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求第</span><span class="si">{</span><span class="n">page</span><span class="si">}</span><span class="s2">页时登录过期&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求第</span><span class="si">{</span><span class="n">page</span><span class="si">}</span><span class="s2">页时登录过期&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">resp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;UTF-8&#39;</span><span class="p">))</span>
 </span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;list&#39;</span><span class="p">]</span>
 </span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求第</span><span class="si">{</span><span class="n">page</span><span class="si">}</span><span class="s2">页时错误，状态码</span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求第</span><span class="si">{</span><span class="n">page</span><span class="si">}</span><span class="s2">页时错误，状态码</span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求第</span><span class="si">{</span><span class="n">page</span><span class="si">}</span><span class="s2">页时发生错误:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求第</span><span class="si">{</span><span class="n">page</span><span class="si">}</span><span class="s2">页时发生错误:</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
@@ -2013,13 +2010,13 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="mi">200</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="k">elif</span> <span class="n">resp</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">401</span><span class="p">,</span><span class="mi">403</span><span class="p">]:</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;获取</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">详情页时登录过期&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;获取</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">详情页时登录过期&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">        <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求失败，状态码</span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求失败，状态码</span><span class="si">{</span><span class="n">resp</span><span class="o">.</span><span class="n">status</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求失败，</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;请求失败，</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
@@ -2032,7 +2029,7 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">job_detail_describe_div</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">        <span class="n">job_detail_describe</span> <span class="o">=</span> <span class="n">job_detail_describe_div</span><span class="o">.</span><span class="n">getText</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;未找到岗位描述元素，岗位ID:</span><span class="si">{</span><span class="n">job_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;岗位ID&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;未找到岗位描述元素，岗位ID:</span><span class="si">{</span><span class="n">job_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;岗位ID&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="n">job_detail_describe</span> <span class="o">=</span> <span class="s2">&#34;未知&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="n">job_info</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
@@ -2068,54 +2065,45 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">list_page_worker</span><span class="p">(</span><span class="n">list_page_queue</span><span class="p">,</span><span class="n">http</span><span class="p">,</span><span class="n">Cookie</span><span class="p">,</span><span class="n">detail_task_queue</span><span class="p">,</span><span class="n">list_pbar</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">list_page_worker</span><span class="p">(</span><span class="n">list_page_queue</span><span class="p">,</span> <span class="n">http</span><span class="p">,</span> <span class="n">Cookie</span><span class="p">,</span> <span class="n">detail_task_queue</span><span class="p">,</span> <span class="n">list_pbar</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;获取岗位列表的工作流程&#34;&#34;&#34;</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">list_get_wrong</span><span class="p">,</span><span class="n">list_pages_done</span><span class="p">,</span><span class="n">enqueued_jobs_count</span>
-</span></span><span class="line"><span class="cl">    <span class="n">page</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">list_get_wrong</span><span class="p">,</span> <span class="n">list_pages_done</span><span class="p">,</span> <span class="n">enqueued_jobs_count</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">page</span> <span class="o">=</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="c1">#获取任务</span>
 </span></span><span class="line"><span class="cl">            <span class="n">page</span> <span class="o">=</span> <span class="n">list_page_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">thread_name</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;列表页任务队列空，线程</span><span class="si">{</span><span class="n">thread_name</span><span class="si">}</span><span class="s2">准备退出&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">page</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="n">list_page_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">page</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list_page_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>   <span class="c1"># 对应主线程 put(None)</span>
 </span></span><span class="line"><span class="cl">                <span class="k">break</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="c1">#print(f&#34;开始爬取列表页{page}&#34;)</span>
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="c1">#爬取列表页</span>
-</span></span><span class="line"><span class="cl">            <span class="n">jobs</span> <span class="o">=</span> <span class="n">get_job_data</span><span class="p">(</span><span class="n">http</span><span class="o">=</span><span class="n">http</span><span class="p">,</span><span class="n">Cookie</span><span class="o">=</span><span class="n">Cookie</span><span class="p">,</span><span class="n">page</span><span class="o">=</span><span class="n">page</span><span class="p">,</span><span class="n">page_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="c1"># 爬取列表页</span>
+</span></span><span class="line"><span class="cl">            <span class="n">jobs</span> <span class="o">=</span> <span class="n">get_job_data</span><span class="p">(</span><span class="n">http</span><span class="o">=</span><span class="n">http</span><span class="p">,</span> <span class="n">Cookie</span><span class="o">=</span><span class="n">Cookie</span><span class="p">,</span> <span class="n">page</span><span class="o">=</span><span class="n">page</span><span class="p">,</span> <span class="n">page_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">jobs</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="c1">#print(f&#34;列表页{page}获取到{len(jobs)}个岗位&#34;)</span>
 </span></span><span class="line"><span class="cl">                <span class="k">for</span> <span class="n">job</span> <span class="ow">in</span> <span class="n">jobs</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">                    <span class="n">job_info</span> <span class="o">=</span> <span class="n">parse_job_info</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">                    <span class="n">detail_task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">job_info</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">                    <span class="k">with</span> <span class="n">progress_lock</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">                        <span class="n">enqueued_jobs_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">))</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="c1">#随机延迟</span>
-</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">1.5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">thread_name</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;列表页任务队列空，线程 </span><span class="si">{</span><span class="n">thread_name</span><span class="si">}</span><span class="s2"> 准备退出&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;列表页工作线程异常: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;列表页工作线程异常: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">page</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">                <span class="n">list_get_wrong</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">page</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">finally</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">list_pages_done</span> <span class="o">+=</span> <span class="mi">1</span>
-</span></span><span class="line"><span class="cl">            <span class="n">list_pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">list_page_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">page</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># 只在真实任务时更新</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list_pages_done</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list_pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">list_page_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
@@ -2124,45 +2112,47 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;详情页工作流程&#34;&#34;&#34;</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">global</span> <span class="n">detail_get_wrong</span><span class="p">,</span><span class="n">detail_jobs_done</span>
-</span></span><span class="line"><span class="cl">    <span class="n">job_id</span> <span class="o">=</span> <span class="kc">None</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">job_info</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">        <span class="n">job_id</span> <span class="o">=</span><span class="kc">None</span>
 </span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">            <span class="n">job_info</span> <span class="o">=</span> <span class="n">detail_task_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">thread_name</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;详情页任务队列空，线程</span><span class="si">{</span><span class="n">thread_name</span><span class="si">}</span><span class="s2">准备退出&#34;</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
-</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">job_info</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">job_info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">                <span class="n">detail_task_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">                <span class="k">break</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="n">job_id</span> <span class="o">=</span> <span class="n">job_info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;岗位ID&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="c1">#print(f&#34;开始爬取详情页{job_id}&#34;)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># print(f&#34;开始爬取详情页{job_id}&#34;)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="n">html</span><span class="o">=</span><span class="n">fetch_detail_page</span><span class="p">(</span><span class="n">job_id</span><span class="p">,</span><span class="n">http</span><span class="p">,</span><span class="n">Cookie</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">html</span> <span class="o">=</span> <span class="n">fetch_detail_page</span><span class="p">(</span><span class="n">job_id</span><span class="p">,</span> <span class="n">http</span><span class="p">,</span> <span class="n">Cookie</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">html</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="n">new_job_info</span> <span class="o">=</span> <span class="n">pares_detail_job_info</span><span class="p">(</span><span class="n">html</span><span class="p">,</span><span class="n">job_info</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">new_job_info</span> <span class="o">=</span> <span class="n">pares_detail_job_info</span><span class="p">(</span><span class="n">html</span><span class="p">,</span> <span class="n">job_info</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">                <span class="n">result_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">new_job_info</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">               <span class="c1"># print(f&#34;详情页{job_id}解析完成&#34;)</span>
+</span></span><span class="line"><span class="cl">            <span class="c1"># print(f&#34;详情页{job_id}解析完成&#34;)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;详情页</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">爬取失败&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;详情页</span><span class="si">{</span><span class="n">job_id</span><span class="si">}</span><span class="s2">爬取失败&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span><span class="mf">0.8</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">))</span>
 </span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">thread_name</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">current_thread</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;详情页任务队列空，线程</span><span class="si">{</span><span class="n">thread_name</span><span class="si">}</span><span class="s2">准备退出&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;详情页工作线程异常: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;详情页工作线程异常: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">job_id</span><span class="p">:</span>
 </span></span><span class="line"><span class="cl">                <span class="n">detail_get_wrong</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">job_id</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="k">finally</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">            <span class="n">detail_jobs_done</span> <span class="o">+=</span> <span class="mi">1</span>
-</span></span><span class="line"><span class="cl">            <span class="n">detail_pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">            <span class="n">detail_task_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">job_info</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">detail_jobs_done</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">                <span class="n">detail_pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">detail_task_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">result_writer</span><span class="p">(</span><span class="n">result_queue</span><span class="p">,</span> <span class="n">output_address</span><span class="p">):</span>
@@ -2189,16 +2179,16 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">                <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="n">count</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;已写入 </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> 条结果&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;已写入 </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> 条结果&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">                <span class="n">result_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">            <span class="k">except</span> <span class="n">queue</span><span class="o">.</span><span class="n">Empty</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;结果写入线程超时退出&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&#34;结果写入线程超时退出&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">                <span class="k">break</span>
 </span></span><span class="line"><span class="cl">            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span></span><span class="line"><span class="cl">                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;结果写入异常: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">                <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;结果写入异常: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;结果写入完成，共写入 </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> 条数据&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;结果写入完成，共写入 </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> 条数据&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
@@ -2206,10 +2196,10 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;进程管理器（主进程）&#34;&#34;&#34;</span>
 </span></span><span class="line"><span class="cl">    <span class="k">global</span>  <span class="n">enqueued_jobs_count</span>
 </span></span><span class="line"><span class="cl">    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;开始爬取任务，总页数: </span><span class="si">{</span><span class="n">total_pages</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;开始爬取任务，总页数: </span><span class="si">{</span><span class="n">total_pages</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">    <span class="c1">#创建Manager</span>
-</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="n">Manager</span><span class="p">()</span> <span class="k">as</span> <span class="n">manager</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">with</span> <span class="p">(</span><span class="n">Manager</span><span class="p">()</span> <span class="k">as</span> <span class="n">manager</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">        <span class="c1">#创建队列</span>
 </span></span><span class="line"><span class="cl">        <span class="n">list_page_queue</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
 </span></span><span class="line"><span class="cl">        <span class="n">detail_task_queue</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">Queue</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
@@ -2266,7 +2256,7 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">        <span class="c1">#通知列表页任务线程退出</span>
 </span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_list_workers</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">            <span class="n">list_page_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;所有列表页任务已完成,</span><span class="si">{</span><span class="n">num_list_workers</span><span class="si">}</span><span class="s2">个工作线程已退出&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;所有列表页任务已完成,</span><span class="si">{</span><span class="n">num_list_workers</span><span class="si">}</span><span class="s2">个工作线程已退出&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="c1">#调整详情任务总数</span>
@@ -2283,7 +2273,7 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">        <span class="c1">#通知详情页工作线程退出</span>
 </span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_detail_workers</span><span class="p">):</span>
 </span></span><span class="line"><span class="cl">            <span class="n">detail_task_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
-</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;所有详情页任务已完成,</span><span class="si">{</span><span class="n">num_detail_workers</span><span class="si">}</span><span class="s2">个工作线程已退出&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">tqdm</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;所有详情页任务已完成,</span><span class="si">{</span><span class="n">num_detail_workers</span><span class="si">}</span><span class="s2">个工作线程已退出&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">
 </span></span><span class="line"><span class="cl">        <span class="c1">#通知结果写入线程退出</span>
@@ -2309,9 +2299,9 @@ version: "1.114"
 </span></span><span class="line"><span class="cl">    <span class="n">detail_jobs_done</span> <span class="o">=</span><span class="mi">0</span>
 </span></span><span class="line"><span class="cl">    <span class="n">enqueued_jobs_count</span> <span class="o">=</span> <span class="mi">0</span>
 </span></span><span class="line"><span class="cl">    <span class="c1"># 配置爬取参数</span>
-</span></span><span class="line"><span class="cl">    <span class="n">TOTAL_PAGES</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># 要爬取的列表页总数</span>
+</span></span><span class="line"><span class="cl">    <span class="n">TOTAL_PAGES</span> <span class="o">=</span> <span class="mi">200</span>  <span class="c1"># 要爬取的列表页总数</span>
 </span></span><span class="line"><span class="cl">    <span class="n">NUM_LIST_WORKERS</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 列表页工作线程数</span>
-</span></span><span class="line"><span class="cl">    <span class="n">NUM_DETAIL_WORKERS</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># 详情页工作线程数</span>
+</span></span><span class="line"><span class="cl">    <span class="n">NUM_DETAIL_WORKERS</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># 详情页工作线程数</span>
 </span></span><span class="line"><span class="cl">    <span class="n">OUTPUT_ADDRESS</span> <span class="o">=</span> <span class="s2">&#34;&#34;</span>  <span class="c1"># 输出文件的地址，默认为项目地址</span>
 </span></span><span class="line"><span class="cl">    <span class="c1">#配置模拟登录参数</span>
 </span></span><span class="line"><span class="cl">    <span class="n">chrome_location</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;D:\python_project\Google\Chrome\Application\chrome.exe&#39;</span> <span class="c1">#chrome启动器的位置</span>
