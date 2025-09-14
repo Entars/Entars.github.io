@@ -77,41 +77,37 @@ G_{X}= \begin{pmatrix}
 \end{pmatrix}
 $$&lt;h4 id=&#34;23--laplacian滤波器&#34;&gt;2.3  Laplacian滤波器
 &lt;/h4&gt;&lt;p&gt;前面两种是一阶微分，而Laplacian滤波器则是二阶微分滤波器。其推导过程为：
-&lt;/p&gt;
+一阶差分：&lt;/p&gt;
 $$
-I_{x}(x,y) = \frac{I(x+1,y) - I(x,y)}{(x+1)-x} =   I(x+1,y) - I(x,y)\\
-\\
-I_{y}(x,y) = \frac{I(x,y+1) - I(x,y)}{(y+1)-y} =   I(x,y+1) - I(x,y)\\
-\\
-I_{xx}(x,y) = \frac{I_{x}(x+1,y) - I_{x}(x,y)}{(x+1)-x} =   I_{x}(x+1,y) - I_{x}(x,y)\\
-\\
-I_{xx}(x,y) = (I(x+2,y)-I(x+1,y))-(I(x+1,y)-I(x,y)) \\
-\\
-I_{xx}(x,y) = I(x+2,y)-2I(x+1,y)+I(x,y)\\
-\\
-I_{xx}(x,y) = I(x+1,y)-2I(x,y)+I(x-1,y)\\
-\\
-同理可得:I_{yy}(x,y) = I(x,y+1) - 2I(x,y) +I(x,y-1)\\
-\\
-因为Laplacian是基于二维拉普拉斯算子（梯度场的散度），而梯度散度的定义即为在向量场F=(F_{x},F_{y})中：\\
-\\
-\nabla F= \frac{\partial F_{x}}{\partial x} +\frac{\partial F_{y}}{\partial y}\\
-\\
-所以有: \nabla^2I(x,y) = I_{xx}+I_{yy}\\
-\\
-该式的卷积核为：\begin{pmatrix}
-   0&amp; 1 &amp; 0\\
-   1&amp; -4 &amp;1 \\
-   0&amp; 1 &amp;0
-\end{pmatrix}，此为四邻域模板\\
-\\
-八邻域模板为:\begin{pmatrix}
-   1&amp; 1 &amp; 1\\
-   1&amp; -8 &amp;1 \\
-   1&amp; 1 &amp;1
+\begin{aligned}
+I_{x}(x,y) &amp;= I(x+1,y) - I(x,y), \\
+I_{y}(x,y) &amp;= I(x,y+1) - I(x,y).
+\end{aligned}
+$$&lt;p&gt;二阶差分：&lt;/p&gt;
+$$
+\begin{aligned}
+I_{xx}(x,y) &amp;= I(x+2,y) - 2I(x+1,y) + I(x,y) \\
+            &amp;= I(x+1,y) - 2I(x,y) + I(x-1,y), \\
+I_{yy}(x,y) &amp;= I(x,y+1) - 2I(x,y) + I(x,y-1).
+\end{aligned}
+$$&lt;p&gt;因此拉普拉斯算子为：&lt;/p&gt;
+$$
+\nabla^2 I(x,y) = I_{xx}(x,y) + I_{yy}(x,y).
+$$&lt;p&gt;其卷积核为（四邻域模板）：&lt;/p&gt;
+$$
+\begin{pmatrix}
+0 &amp; \;1 &amp; 0 \\
+1 &amp; -4 &amp; 1 \\
+0 &amp; \;1 &amp; 0
 \end{pmatrix}
-$$&lt;p&gt;
-算法基本流程为:&lt;/p&gt;
+$$&lt;p&gt;八邻域模板为：&lt;/p&gt;
+$$
+\begin{pmatrix}
+1 &amp; 1 &amp; 1 \\
+1 &amp; -8 &amp; 1 \\
+1 &amp; 1 &amp; 1
+\end{pmatrix}
+$$&lt;p&gt;算法基本流程为:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
 &lt;p&gt;判断图像中心像素灰度值与它周围其他像素的灰度值，如果中心像素的灰度更高，则提升中心像素的灰度；反之降低中心像素的灰度，从而实现图像锐化操作;&lt;/p&gt;
