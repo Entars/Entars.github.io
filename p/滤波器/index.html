@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="简单了解几种在图像处理中常用的滤波器">
+<title>滤波器</title>
+
+<link rel='canonical' href='https://Entars.github.io/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/'>
+
+<link rel="stylesheet" href="/scss/style.min.192f2b9c70838cd388b03e35a5443a670532f2b1925e526a96a5114bd7a3ff85.css"><meta property='og:title' content="滤波器">
+<meta property='og:description' content="简单了解几种在图像处理中常用的滤波器">
+<meta property='og:url' content='https://Entars.github.io/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/'>
+<meta property='og:site_name' content='南国遗梦的小站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='图像滤波器' /><meta property='article:published_time' content='2025-09-14T01:14:13&#43;08:00'/><meta property='article:modified_time' content='2025-09-14T01:14:13&#43;08:00'/><meta property='og:image' content='https://Entars.github.io/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/0.jpg' />
+<meta name="twitter:title" content="滤波器">
+<meta name="twitter:description" content="简单了解几种在图像处理中常用的滤波器"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://Entars.github.io/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/0.jpg' />
+    <link rel="shortcut icon" href="/favicon.ico" />
+<style>
+     
+    :root {
+        --code-font-family: "JetBrains Mono";  
+    }
+
+    code {
+        font-size: 1.4rem;  
+    }
+
+    pre {
+        font-size: 1.4rem;  
+    }
+</style>
+
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=JetBrains Mono:wght@300;700&display=swap";  
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_b439c9ec2036e131.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">南国遗梦的小站</a></h1>
+            <h2 class="site-description">记录学习，记录生活</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://b23.tv/ueaKiC6'
+                        target="_blank"
+                        title="bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, platform, streaming, video]
+category: Brand
+version: "2.1"
+unicode: "f6d2"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" />
+  <path d="M8 3l2 3" />
+  <path d="M16 3l-2 3" />
+  <path d="M9 13v-2" />
+  <path d="M15 11v2" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/Entars'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://qm.qq.com/q/CxmhbYf7YQ'
+                        target="_blank"
+                        title="QQ"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, communicator, internet]
+category: Brand
+unicode: "f606"
+version: "1.114"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 9.748a14.716 14.716 0 0 0 11.995 -.052c.275 -9.236 -11.104 -11.256 -11.995 .052z" />
+  <path d="M18 10c.984 2.762 1.949 4.765 2 7.153c.014 .688 -.664 1.346 -1.184 .303c-.346 -.696 -.952 -1.181 -1.816 -1.456" />
+  <path d="M17 16c.031 1.831 .147 3.102 -1 4" />
+  <path d="M8 20c-1.099 -.87 -.914 -2.24 -1 -4" />
+  <path d="M6 10c-.783 2.338 -1.742 4.12 -1.968 6.43c-.217 2.227 .716 1.644 1.16 .917c.296 -.487 .898 -.934 1.808 -1.347" />
+  <path d="M15.898 13l-.476 -2" />
+  <path d="M8 20l-1.5 1c-.5 .5 -.5 1 .5 1h10c1 0 1 -.5 .5 -1l-1.5 -1" />
+  <path d="M13.75 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+  <path d="M10.25 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#滤波器的本质">滤波器的本质</a></li>
+    <li><a href="#滤波器的几种大类型">滤波器的几种大类型</a></li>
+    <li><a href="#图像滤波器">图像滤波器</a>
+      <ol>
+        <li><a href="#1平滑滤波器">1.平滑滤波器</a>
+          <ol>
+            <li><a href="#11高斯滤波">1.1高斯滤波</a></li>
+            <li><a href="#12中值滤波">1.2中值滤波</a></li>
+            <li><a href="#13均值滤波">1.3均值滤波</a></li>
+          </ol>
+        </li>
+        <li><a href="#2边缘检测滤波器">2.边缘检测滤波器</a>
+          <ol>
+            <li><a href="#21-prewitt滤波器">2.1 Prewitt滤波器</a></li>
+            <li><a href="#22-sobel滤波器">2.2 Sobel滤波器</a></li>
+            <li><a href="#23--laplacian滤波器">2.3  Laplacian滤波器</a></li>
+            <li><a href="#24max-min滤波器">2.4MAX-MIN滤波器</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/">
+                <img src="/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/0_hu_c6f6026db6a6aed7.jpg"
+                        srcset="/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/0_hu_c6f6026db6a6aed7.jpg 800w, /p/%E6%BB%A4%E6%B3%A2%E5%99%A8/0_hu_60e3235dfc384a4d.jpg 1600w"
+                        width="800" 
+                        height="379" 
+                        loading="lazy"
+                        alt="Featured image of post 滤波器" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/">滤波器</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            简单了解几种在图像处理中常用的滤波器
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time-wrapper">
+        <footer class="article-time">
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-09-14</time>
+            </div>
+            
+
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 3 分钟
+                </time>
+            </div>
+            
+        </footer>
+        
+        
+        <footer class="taxonomy-container">
+            
+            <div class="article-categories">
+                
+                <a class="article-category" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/" data-text="计算机技术">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">计算机技术</span>
+                </a>
+                
+                <a class="article-category" href="/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" data-text="图像处理">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">图像处理</span>
+                </a>
+                
+            </div>
+            
+
+            
+            <div class="article-tags">
+                
+                <a class="article-tag" href="/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/" data-text="图像滤波器">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">图像滤波器 </span>
+                
+                </a>
+                
+            </div>
+            
+        </footer>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="滤波器的本质">滤波器的本质
+</h2><p>其本质是一种特殊的函数，即在图像的局部区域用提供的明确计算方法对区内的像素值进行计算，用最后的计算结果替代该局部区域的中心值。
+</p>
+$$
+V=G(X,W)
+$$<p>
+其中X是矩阵（局部区域），W是向量（计算权重）</p>
+<h2 id="滤波器的几种大类型">滤波器的几种大类型
+</h2><ol>
+<li>线性滤波器：即对矩阵直接加权求和，G(X,W)=X·W</li>
+<li>非线性滤波器：不满足线性滤波器要求的，即为非线性滤波器，典型的有最大值/最小值/均值</li>
+<li>自适应滤波器：线性滤波中的W在滑动过程中固定不变，自适应滤波的W则是在滑动过程中会随着窗口内像素的性质和结构发生变化。但计算代价更高更难优化加速</li>
+</ol>
+<h2 id="图像滤波器">图像滤波器
+</h2><h3 id="1平滑滤波器">1.平滑滤波器
+</h3><p>均值滤波、中值滤波、高斯滤波的基本原理都是滑动窗口，以指定的计算方式得到其中的值</p>
+<h4 id="11高斯滤波">1.1高斯滤波
+</h4><p>高斯滤波器使图像平滑，用于去除噪声。主要计算方法是将中心像素的周围像素按照<strong>高斯分布加权平均</strong>进行平滑化，这种二维权值通常被称为卷积核或滤波器。
+</p>
+$$
+f(x,y)=\frac{1}{2Π\sigma ^{2} } e^{-\frac{x^{2}+y^{2} }{2\sigma ^{2} } }
+$$<h4 id="12中值滤波">1.2中值滤波
+</h4><p>中值滤波是取滑动窗口中像素的最大值
+</p>
+$$
+\begin{pmatrix}
+  1& 2 & 3\\
+  4&  5&6 \\
+  7&  {\color{Red} 8} &7
+\end{pmatrix}
+$$<h4 id="13均值滤波">1.3均值滤波
+</h4><p>取滑动窗口中的均值，该滤波器对减少图像中的随机噪声有效</p>
+<h3 id="2边缘检测滤波器">2.边缘检测滤波器
+</h3><p>边缘检测目的是标识数字图像中亮度变化明显的点，提取图像中的线条，该种检测常在灰度图中进行</p>
+<h4 id="21-prewitt滤波器">2.1 Prewitt滤波器
+</h4><p>该滤波器的设计思想是真正的边界点在<strong>水平方向和垂直方向上的相邻点</strong>应该也同样为<strong>边界点</strong>，因此以更大的边缘检测滤波器，考虑周围更多的点会使得边缘检测更准确。算子模板有：
+</p>
+$$
+G_{X}= \begin{pmatrix}
+  -1& 0 & 1\\
+  -1& 0&1 \\
+  -1& 0 &1
+\end{pmatrix},G_{Y}=\begin{pmatrix}
+  -1 & -1 &-1\\
+0& 0 &0\\
+1&1&1
+\end{pmatrix}
+$$<p>
+计算方法是卷积。</p>
+<h4 id="22-sobel滤波器">2.2 Sobel滤波器
+</h4><p>Sobel算子在Prewitt算子的基础上增加了权重的概念，认为相邻点的距离远近对当前像素点的影响是不同的，距离越近的像素点对应当前像素的影响越大，从而实现图像锐化并突出边缘轮廓。算子模板：
+</p>
+$$
+G_{X}= \begin{pmatrix}
+  -1& 0 &1\\
+  -2& 0 &2 \\
+  -1& 0 &1
+\end{pmatrix},G_{Y}=\begin{pmatrix}
+  -1 & -2 &-1\\
+   0 &  0 &0\\
+   1 &  2 & 1
+\end{pmatrix}
+$$<h4 id="23--laplacian滤波器">2.3  Laplacian滤波器
+</h4><p>前面两种是一阶微分，而Laplacian滤波器则是二阶微分滤波器。其推导过程为：
+</p>
+$$
+I_{x}(x,y) = \frac{I(x+1,y) - I(x,y)}{(x+1)-x} =   I(x+1,y) - I(x,y)\\
+\\
+I_{y}(x,y) = \frac{I(x,y+1) - I(x,y)}{(y+1)-y} =   I(x,y+1) - I(x,y)\\
+\\
+I_{xx}(x,y) = \frac{I_{x}(x+1,y) - I_{x}(x,y)}{(x+1)-x} =   I_{x}(x+1,y) - I_{x}(x,y)\\
+\\
+I_{xx}(x,y) = (I(x+2,y)-I(x+1,y))-(I(x+1,y)-I(x,y)) \\
+\\
+I_{xx}(x,y) = I(x+2,y)-2I(x+1,y)+I(x,y)\\
+\\
+I_{xx}(x,y) = I(x+1,y)-2I(x,y)+I(x-1,y)\\
+\\
+同理可得:I_{yy}(x,y) = I(x,y+1) - 2I(x,y) +I(x,y-1)\\
+\\
+因为Laplacian是基于二维拉普拉斯算子（梯度场的散度），而梯度散度的定义即为在向量场F=(F_{x},F_{y})中：\\
+\\
+\nabla F= \frac{\partial F_{x}}{\partial x} +\frac{\partial F_{y}}{\partial y}\\
+\\
+所以有: \nabla^2I(x,y) = I_{xx}+I_{yy}\\
+\\
+该式的卷积核为：\begin{pmatrix}
+   0& 1 & 0\\
+   1& -4 &1 \\
+   0& 1 &0
+\end{pmatrix}，此为四邻域模板\\
+\\
+八邻域模板为:\begin{pmatrix}
+   1& 1 & 1\\
+   1& -8 &1 \\
+   1& 1 &1
+\end{pmatrix}
+$$<p>
+算法基本流程为:</p>
+<ol>
+<li>
+<p>判断图像中心像素灰度值与它周围其他像素的灰度值，如果中心像素的灰度更高，则提升中心像素的灰度；反之降低中心像素的灰度，从而实现图像锐化操作;</p>
+</li>
+<li>
+<p>在算法实现过程中，Laplacian算子通过对邻域中心像素的四方向或八方向求梯度，再将梯度相加起来判断中心像素灰度与邻域内其他像素灰度的关系；</p>
+</li>
+<li>
+<p>最后通过梯度运算的结果对像素灰度进行调整。</p>
+</li>
+</ol>
+<p>基本规律：</p>
+<ol>
+<li>
+<p>当邻域内像素灰度相同时，模板的卷积运算结果为0；</p>
+</li>
+<li>
+<p>当中心像素灰度高于邻域内其他像素的平均灰度时，模板的卷积运算结果为正数；</p>
+</li>
+<li>
+<p>当中心像素的灰度低于邻域内其他像素的平均灰度时，模板的卷积为负数。对卷积运算的结果用适当的衰弱因子处理并加在原中心像素上，就可以实现图像的锐化处理。</p>
+</li>
+</ol>
+<h4 id="24max-min滤波器">2.4MAX-MIN滤波器
+</h4><p>MAX-MIN滤波器是一种常见的边缘检测滤波器，其使用网格内像素的最大值和最小值的差值对网格内像素重新赋值。</p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/">图像滤波器</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/pyqt5/">
+        
+        
+            <div class="article-image">
+                <img src="/p/pyqt5/1.500ae605887764ecdcadff8e1a4c2ac2_hu_491a64e5160f6680.jpeg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PyQt5"
+                        
+                        data-hash="md5-UArmBYh3ZOzcrf&#43;OGkwqwg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PyQt5</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/national_college_employment_platform.fe2444a62531fdb0363fe317e8d8f5c4_hu_a85221a37b1ad3f3.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 国家大学生就业服务平台岗位爬取"
+                        
+                        data-hash="md5-/iREpiUx/bA2P&#43;MX6Nj1xA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">国家大学生就业服务平台岗位爬取</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/beautifulsoup/">
+        
+        
+            <div class="article-image">
+                <img src="/p/beautifulsoup/BeautifulSoup.7c88ad0285f3162af5340b4fc5f3f69b_hu_ab6056d7b0e9da9d.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post BeautifulSoup"
+                        
+                        data-hash="md5-fIitAoXzFir1NAtPxfP2mw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BeautifulSoup</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/urllib3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/urllib3/urllib3.d09ed0a030d6ab5731213e09ee5b5273_hu_834b79c8e8f30e37.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Urllib3"
+                        
+                        data-hash="md5-0J7QoDDWq1cxIT4J7ltScw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Urllib3</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 Haibo Huang
+    </section>
+    
+    <section class="powerby">
+        
+            恍如昨日，嗤笑今朝 <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>图像处理 on 南国遗梦的小站</title>
+        <link>https://Entars.github.io/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</link>
+        <description>Recent content in 图像处理 on 南国遗梦的小站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>Haibo Huang</copyright>
+        <lastBuildDate>Sun, 14 Sep 2025 01:14:13 +0800</lastBuildDate><atom:link href="https://Entars.github.io/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>滤波器</title>
+        <link>https://Entars.github.io/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/</link>
+        <pubDate>Sun, 14 Sep 2025 01:14:13 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/</guid>
+        <description>&lt;img src="https://Entars.github.io/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/0.jpg" alt="Featured image of post 滤波器" /&gt;&lt;h2 id=&#34;滤波器的本质&#34;&gt;滤波器的本质
+&lt;/h2&gt;&lt;p&gt;其本质是一种特殊的函数，即在图像的局部区域用提供的明确计算方法对区内的像素值进行计算，用最后的计算结果替代该局部区域的中心值。
+&lt;/p&gt;
+$$
+V=G(X,W)
+$$&lt;p&gt;
+其中X是矩阵（局部区域），W是向量（计算权重）&lt;/p&gt;
+&lt;h2 id=&#34;滤波器的几种大类型&#34;&gt;滤波器的几种大类型
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;线性滤波器：即对矩阵直接加权求和，G(X,W)=X·W&lt;/li&gt;
+&lt;li&gt;非线性滤波器：不满足线性滤波器要求的，即为非线性滤波器，典型的有最大值/最小值/均值&lt;/li&gt;
+&lt;li&gt;自适应滤波器：线性滤波中的W在滑动过程中固定不变，自适应滤波的W则是在滑动过程中会随着窗口内像素的性质和结构发生变化。但计算代价更高更难优化加速&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;图像滤波器&#34;&gt;图像滤波器
+&lt;/h2&gt;&lt;h3 id=&#34;1平滑滤波器&#34;&gt;1.平滑滤波器
+&lt;/h3&gt;&lt;p&gt;均值滤波、中值滤波、高斯滤波的基本原理都是滑动窗口，以指定的计算方式得到其中的值&lt;/p&gt;
+&lt;h4 id=&#34;11高斯滤波&#34;&gt;1.1高斯滤波
+&lt;/h4&gt;&lt;p&gt;高斯滤波器使图像平滑，用于去除噪声。主要计算方法是将中心像素的周围像素按照&lt;strong&gt;高斯分布加权平均&lt;/strong&gt;进行平滑化，这种二维权值通常被称为卷积核或滤波器。
+&lt;/p&gt;
+$$
+f(x,y)=\frac{1}{2Π\sigma ^{2} } e^{-\frac{x^{2}+y^{2} }{2\sigma ^{2} } }
+$$&lt;h4 id=&#34;12中值滤波&#34;&gt;1.2中值滤波
+&lt;/h4&gt;&lt;p&gt;中值滤波是取滑动窗口中像素的最大值
+&lt;/p&gt;
+$$
+\begin{pmatrix}
+  1&amp; 2 &amp; 3\\
+  4&amp;  5&amp;6 \\
+  7&amp;  {\color{Red} 8} &amp;7
+\end{pmatrix}
+$$&lt;h4 id=&#34;13均值滤波&#34;&gt;1.3均值滤波
+&lt;/h4&gt;&lt;p&gt;取滑动窗口中的均值，该滤波器对减少图像中的随机噪声有效&lt;/p&gt;
+&lt;h3 id=&#34;2边缘检测滤波器&#34;&gt;2.边缘检测滤波器
+&lt;/h3&gt;&lt;p&gt;边缘检测目的是标识数字图像中亮度变化明显的点，提取图像中的线条，该种检测常在灰度图中进行&lt;/p&gt;
+&lt;h4 id=&#34;21-prewitt滤波器&#34;&gt;2.1 Prewitt滤波器
+&lt;/h4&gt;&lt;p&gt;该滤波器的设计思想是真正的边界点在&lt;strong&gt;水平方向和垂直方向上的相邻点&lt;/strong&gt;应该也同样为&lt;strong&gt;边界点&lt;/strong&gt;，因此以更大的边缘检测滤波器，考虑周围更多的点会使得边缘检测更准确。算子模板有：
+&lt;/p&gt;
+$$
+G_{X}= \begin{pmatrix}
+  -1&amp; 0 &amp; 1\\
+  -1&amp; 0&amp;1 \\
+  -1&amp; 0 &amp;1
+\end{pmatrix},G_{Y}=\begin{pmatrix}
+  -1 &amp; -1 &amp;-1\\
+0&amp; 0 &amp;0\\
+1&amp;1&amp;1
+\end{pmatrix}
+$$&lt;p&gt;
+计算方法是卷积。&lt;/p&gt;
+&lt;h4 id=&#34;22-sobel滤波器&#34;&gt;2.2 Sobel滤波器
+&lt;/h4&gt;&lt;p&gt;Sobel算子在Prewitt算子的基础上增加了权重的概念，认为相邻点的距离远近对当前像素点的影响是不同的，距离越近的像素点对应当前像素的影响越大，从而实现图像锐化并突出边缘轮廓。算子模板：
+&lt;/p&gt;
+$$
+G_{X}= \begin{pmatrix}
+  -1&amp; 0 &amp;1\\
+  -2&amp; 0 &amp;2 \\
+  -1&amp; 0 &amp;1
+\end{pmatrix},G_{Y}=\begin{pmatrix}
+  -1 &amp; -2 &amp;-1\\
+   0 &amp;  0 &amp;0\\
+   1 &amp;  2 &amp; 1
+\end{pmatrix}
+$$&lt;h4 id=&#34;23--laplacian滤波器&#34;&gt;2.3  Laplacian滤波器
+&lt;/h4&gt;&lt;p&gt;前面两种是一阶微分，而Laplacian滤波器则是二阶微分滤波器。其推导过程为：
+&lt;/p&gt;
+$$
+I_{x}(x,y) = \frac{I(x+1,y) - I(x,y)}{(x+1)-x} =   I(x+1,y) - I(x,y)\\
+\\
+I_{y}(x,y) = \frac{I(x,y+1) - I(x,y)}{(y+1)-y} =   I(x,y+1) - I(x,y)\\
+\\
+I_{xx}(x,y) = \frac{I_{x}(x+1,y) - I_{x}(x,y)}{(x+1)-x} =   I_{x}(x+1,y) - I_{x}(x,y)\\
+\\
+I_{xx}(x,y) = (I(x+2,y)-I(x+1,y))-(I(x+1,y)-I(x,y)) \\
+\\
+I_{xx}(x,y) = I(x+2,y)-2I(x+1,y)+I(x,y)\\
+\\
+I_{xx}(x,y) = I(x+1,y)-2I(x,y)+I(x-1,y)\\
+\\
+同理可得:I_{yy}(x,y) = I(x,y+1) - 2I(x,y) +I(x,y-1)\\
+\\
+因为Laplacian是基于二维拉普拉斯算子（梯度场的散度），而梯度散度的定义即为在向量场F=(F_{x},F_{y})中：\\
+\\
+\nabla F= \frac{\partial F_{x}}{\partial x} +\frac{\partial F_{y}}{\partial y}\\
+\\
+所以有: \nabla^2I(x,y) = I_{xx}+I_{yy}\\
+\\
+该式的卷积核为：\begin{pmatrix}
+   0&amp; 1 &amp; 0\\
+   1&amp; -4 &amp;1 \\
+   0&amp; 1 &amp;0
+\end{pmatrix}，此为四邻域模板\\
+\\
+八邻域模板为:\begin{pmatrix}
+   1&amp; 1 &amp; 1\\
+   1&amp; -8 &amp;1 \\
+   1&amp; 1 &amp;1
+\end{pmatrix}
+$$&lt;p&gt;
+算法基本流程为:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;判断图像中心像素灰度值与它周围其他像素的灰度值，如果中心像素的灰度更高，则提升中心像素的灰度；反之降低中心像素的灰度，从而实现图像锐化操作;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;在算法实现过程中，Laplacian算子通过对邻域中心像素的四方向或八方向求梯度，再将梯度相加起来判断中心像素灰度与邻域内其他像素灰度的关系；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;最后通过梯度运算的结果对像素灰度进行调整。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;基本规律：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;当邻域内像素灰度相同时，模板的卷积运算结果为0；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;当中心像素灰度高于邻域内其他像素的平均灰度时，模板的卷积运算结果为正数；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;当中心像素的灰度低于邻域内其他像素的平均灰度时，模板的卷积为负数。对卷积运算的结果用适当的衰弱因子处理并加在原中心像素上，就可以实现图像的锐化处理。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h4 id=&#34;24max-min滤波器&#34;&gt;2.4MAX-MIN滤波器
+&lt;/h4&gt;&lt;p&gt;MAX-MIN滤波器是一种常见的边缘检测滤波器，其使用网格内像素的最大值和最小值的差值对网格内像素重新赋值。&lt;/p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>
