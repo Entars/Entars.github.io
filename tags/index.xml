@@ -7,20 +7,36 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Sun, 14 Sep 2025 01:14:13 +0800</lastBuildDate><atom:link href="https://Entars.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 11 Oct 2025 15:16:24 +0800</lastBuildDate><atom:link href="https://Entars.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>Python</title>
+        <link>https://Entars.github.io/tags/python/</link>
+        <pubDate>Sat, 11 Oct 2025 15:16:24 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/tags/python/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>SQLite3</title>
+        <link>https://Entars.github.io/tags/sqlite3/</link>
+        <pubDate>Sat, 11 Oct 2025 15:16:24 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/tags/sqlite3/</guid>
+        <description></description>
+        </item>
+        <item>
+        <title>数据库</title>
+        <link>https://Entars.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+        <pubDate>Sat, 11 Oct 2025 15:16:24 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+        <description></description>
+        </item>
+        <item>
         <title>图像滤波器</title>
         <link>https://Entars.github.io/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/</link>
         <pubDate>Sun, 14 Sep 2025 01:14:13 +0800</pubDate>
         
         <guid>https://Entars.github.io/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>Python</title>
-        <link>https://Entars.github.io/tags/python/</link>
-        <pubDate>Fri, 22 Aug 2025 20:41:39 +0800</pubDate>
-        
-        <guid>https://Entars.github.io/tags/python/</guid>
         <description></description>
         </item>
         <item>
