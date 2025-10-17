@@ -1,13 +1,261 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>爬虫项目 on 南国遗梦的小站</title>
-        <link>https://Entars.github.io/categories/%E7%88%AC%E8%99%AB%E9%A1%B9%E7%9B%AE/</link>
-        <description>Recent content in 爬虫项目 on 南国遗梦的小站</description>
+        <title>个人项目 on 南国遗梦的小站</title>
+        <link>https://Entars.github.io/categories/%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE/</link>
+        <description>Recent content in 个人项目 on 南国遗梦的小站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Wed, 20 Aug 2025 17:47:51 +0800</lastBuildDate><atom:link href="https://Entars.github.io/categories/%E7%88%AC%E8%99%AB%E9%A1%B9%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 17 Oct 2025 14:53:54 +0800</lastBuildDate><atom:link href="https://Entars.github.io/categories/%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>WordCard技术文档</title>
+        <link>https://Entars.github.io/p/wordcard%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</link>
+        <pubDate>Fri, 17 Oct 2025 14:53:54 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/p/wordcard%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/</guid>
+        <description>&lt;img src="https://Entars.github.io/p/wordcard%E6%8A%80%E6%9C%AF%E6%96%87%E6%A1%A3/1.jpg" alt="Featured image of post WordCard技术文档" /&gt;&lt;h1 id=&#34;wordcard-技术文档&#34;&gt;WordCard 技术文档
+&lt;/h1&gt;&lt;blockquote&gt;
+&lt;p&gt;版本：1.0&lt;/p&gt;&lt;/blockquote&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;简介&#34;&gt;简介
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;WordClock&lt;/code&gt; 是基于 &lt;code&gt;customtkinter&lt;/code&gt; 的桌面小工具，用于在桌面悬浮窗中循环显示单词及其翻译，并支持从 JSON 导入词表、将词表写入 SQLite 数据库、通过系统托盘控制程序、保存窗口位置及设置等功能。&lt;/p&gt;
+&lt;p&gt;主要特点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;悬浮、圆角、透明窗口，常驻桌面并支持拖动和隐藏到托盘。&lt;/li&gt;
+&lt;li&gt;自动按间隔随机切换单词并更新 UI。&lt;/li&gt;
+&lt;li&gt;支持将 JSON 词表导入到 SQLite 并作为可选词表使用。&lt;/li&gt;
+&lt;li&gt;支持通过设置窗口管理词表、设置切换间隔、删除词表与制作 JSON 文件。&lt;/li&gt;
+&lt;li&gt;使用多线程处理长耗时操作（导入、加载词表、托盘）以保证 UI 不阻塞。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;快速开始&#34;&gt;快速开始
+&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;安装依赖（示例）：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;pip install customtkinter pystray pillow
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;blockquote&gt;
+&lt;p&gt;注意：&lt;code&gt;customtkinter&lt;/code&gt; 依赖 &lt;code&gt;tkinter&lt;/code&gt;（通常随 Python 自带），若缺少请安装对应系统包。&lt;/p&gt;&lt;/blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;将代码保存为 &lt;code&gt;word_clock.py&lt;/code&gt;，并确保同目录下有 &lt;code&gt;单词.db&lt;/code&gt;（或指定其他路径）。&lt;/li&gt;
+&lt;li&gt;运行：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-bash&#34; data-lang=&#34;bash&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;python word_clock.py
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ol&gt;
+&lt;li&gt;第一次运行会生成 &lt;code&gt;settings.json&lt;/code&gt;（默认 intervaltime = 5 秒），可在设置窗口调整。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;环境依赖&#34;&gt;环境依赖
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Python 3.8+&lt;/li&gt;
+&lt;li&gt;tkinter（GUI）&lt;/li&gt;
+&lt;li&gt;customtkinter&lt;/li&gt;
+&lt;li&gt;pystray&lt;/li&gt;
+&lt;li&gt;pillow (PIL)&lt;/li&gt;
+&lt;li&gt;sqlite3（Python 标准库）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;平台注意&lt;/strong&gt;：代码中使用了 Windows 特定的 Win32 API（通过 &lt;code&gt;ctypes&lt;/code&gt;）来隐藏任务栏图标，因此最佳运行环境为 &lt;strong&gt;Windows&lt;/strong&gt;。在非 Windows 系统上应移除或条件兼容该部分。&lt;/p&gt;
+&lt;h2 id=&#34;文件结构&#34;&gt;文件结构
+&lt;/h2&gt;&lt;p&gt;假设单文件项目：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;wordcard.py
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;单词.db          # SQLite 数据库（可选，程序会尝试连接）
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;settings.json    # 程序运行后生成或更新
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;p&gt;导入的 JSON 文件示例（每个元素为对象）：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;apple&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;translate&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;苹果&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;book&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;translate&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;书&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;h2 id=&#34;主要类与方法说明&#34;&gt;主要类与方法说明
+&lt;/h2&gt;&lt;h3 id=&#34;wordclock-继承自-ctkctk&#34;&gt;WordClock (继承自 ctk.CTk)
+&lt;/h3&gt;&lt;p&gt;描述：应用的主窗口类，封装 UI、数据库连接、托盘、线程与设置保存。&lt;/p&gt;
+&lt;h4 id=&#34;属性重要&#34;&gt;属性（重要）
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;SETTINGS_FILE&lt;/code&gt;：字符串，默认 &lt;code&gt;settings.json&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;db_path&lt;/code&gt;：SQLite 数据库路径，默认 &lt;code&gt;单词.db&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;db_conn&lt;/code&gt;, &lt;code&gt;db_cursor&lt;/code&gt;：数据库连接与游标（持久连接，check_same_thread=False）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;wordtables&lt;/code&gt;：从 SQLite 读取到的表名列表。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;words_list&lt;/code&gt;：当前选中词表对应的单词列表，元素为 &lt;code&gt;(word, translate)&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;intervaltime&lt;/code&gt;：单词切换时间间隔（秒）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;running&lt;/code&gt;：布尔，控制自动更新线程运行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;loading&lt;/code&gt;：布尔，指示是否处于词表加载中，用于暂停自动刷新。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;方法摘要按功能分组&#34;&gt;方法摘要（按功能分组）
+&lt;/h4&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;初始化与窗口配置&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;__init__(self, db_path=&amp;quot;单词.db&amp;quot;)&lt;/code&gt;：创建窗口、加载配置、打开数据库连接、启动托盘线程与自动刷新线程、绑定关闭事件等。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;hide_from_taskbar(self)&lt;/code&gt;：使用 &lt;code&gt;ctypes&lt;/code&gt; 调用 Win32 API 将窗口从任务栏隐藏（Windows-specific）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bind_drag_events(self)&lt;/code&gt;、&lt;code&gt;start_drag&lt;/code&gt;、&lt;code&gt;on_drag&lt;/code&gt;：支持拖动并在拖动时保存位置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;设置存取&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;load_settings(self)&lt;/code&gt;：读取 &lt;code&gt;settings.json&lt;/code&gt;，若不存在返回默认配置。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;save_settings(self)&lt;/code&gt;：保存窗口位置、当前选表名、间隔等到 &lt;code&gt;settings.json&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;on_close(self)&lt;/code&gt;：窗口关闭回调，保存设置并退出。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;数据库与数据加载&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;fetch_wordtables(self, db_path)&lt;/code&gt;：读取 SQLite 中的表名并存入 &lt;code&gt;self.wordtables&lt;/code&gt;。SQL 为 &lt;code&gt;SELECT name FROM sqlite_master WHERE type=&#39;table&#39; ORDER BY rowid;&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;load_words_from_db(self, db_path, table_name=None)&lt;/code&gt;：读取指定表的 &lt;code&gt;word, translate&lt;/code&gt; 列并返回列表；若未传表名，默认取 &lt;code&gt;self.wordtables[0]&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;json2sqldb(self, file_address, file_name)&lt;/code&gt;：将 JSON 数据写入新建的 SQLite 表，包含事务优化（调整 PRAGMA、BEGIN TRANSACTION、executemany、commit），最后恢复 PRAGMA 设置。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;自动切换与UI更新&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auto_update_words(self)&lt;/code&gt;：后台线程循环，根据 &lt;code&gt;self.intervaltime&lt;/code&gt; 随机选择单词并通过 &lt;code&gt;after(0, ...)&lt;/code&gt; 回到主线程更新 UI。会在 &lt;code&gt;self.loading=True&lt;/code&gt; 时短暂等待以避免冲突。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;display_translation(self, text)&lt;/code&gt;：当翻译过长时设置 &lt;code&gt;wraplength&lt;/code&gt; 以换行显示。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;托盘相关&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;setup_tray(self)&lt;/code&gt;：构造托盘图标与菜单（显示/隐藏、设置、退出），并运行事件循环（pystray）。独立线程运行。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;toggle_window(self, icon=None, item=None)&lt;/code&gt;：切换窗口显示/隐藏。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;quit_app(self, icon=None, item=None)&lt;/code&gt;：停止线程、关闭数据库并退出。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;设置窗口与词表管理&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;so_setting(self)&lt;/code&gt;：打开设置窗口，构建左侧控制按钮与右侧显示词表的滚动区域，并异步加载表名。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;load_wordtables_async(self)&lt;/code&gt;：后台加载表并回调 &lt;code&gt;put_tables_on_right&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;put_tables_on_right(self)&lt;/code&gt;：基于 &lt;code&gt;self.wordtables&lt;/code&gt; 在滚动区构建按钮并支持高亮当前表。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;on_label_click_with_confirmation(self, name, button)&lt;/code&gt;：点击某个词表按钮弹出确认框，确认后显示遮罩并在后台加载数据，加载完成后更新 UI 与当前表。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;del_wordtable(self)&lt;/code&gt; / &lt;code&gt;confirm_delete(self, table_name, popup)&lt;/code&gt;：删除选中表并刷新 UI。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;open_make_wordtable_window(self)&lt;/code&gt; / &lt;code&gt;generate_json_from_text(self, text_box, win)&lt;/code&gt;：允许用户粘贴文本快速生成 JSON 文件（每行 &lt;code&gt;单词 翻译&lt;/code&gt;），并保存 JSON。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;加载遮罩与动画&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;_create_loading_overlay(self, message=&amp;quot;正在加载…&amp;quot;)&lt;/code&gt;：在 &lt;code&gt;main_frame&lt;/code&gt; 上创建覆盖层（遮罩）并返回 overlay。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;_start_loading_animation(self, overlay)&lt;/code&gt;：使用 &lt;code&gt;after&lt;/code&gt; 循环更新点点动画，直至 &lt;code&gt;self.loading=False&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;_stop_loading_animation(self)&lt;/code&gt;：取消动画任务。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;辅助弹窗&lt;/strong&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;show_popup(self, message: str, duration: int = 1800)&lt;/code&gt;：自定义 &lt;code&gt;CTkToplevel&lt;/code&gt; 弹窗，代替未加载的 &lt;code&gt;CTkMessagebox&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;数据库与数据格式&#34;&gt;数据库与数据格式
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;SQLite 表结构（在 &lt;code&gt;json2sqldb&lt;/code&gt; 创建）&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;CREATE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;TABLE&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;table_name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;id&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;INTEGER&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;PRIMARY&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;KEY&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;AUTOINCREMENT&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;n&#34;&gt;word&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;varchar&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;255&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;DEFAULT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;  &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;translate&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;TEXT&lt;/span&gt;&lt;span class=&#34;w&#34;&gt; &lt;/span&gt;&lt;span class=&#34;k&#34;&gt;NULL&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;w&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;);&lt;/span&gt;&lt;span class=&#34;w&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;JSON 导入格式&lt;/strong&gt;：数组，每项为对象：&lt;code&gt;{&amp;quot;word&amp;quot;: &amp;quot;xxx&amp;quot;, &amp;quot;translate&amp;quot;: &amp;quot;yyy&amp;quot;}&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;注意&lt;/strong&gt;：代码假设表中存在 &lt;code&gt;word&lt;/code&gt; 与 &lt;code&gt;translate&lt;/code&gt; 字段。若你的原始表结构不同，需修改 &lt;code&gt;load_words_from_db&lt;/code&gt; 查询语句。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;设置与持久化settingsjson&#34;&gt;设置与持久化（settings.json）
+&lt;/h2&gt;&lt;p&gt;&lt;code&gt;settings.json&lt;/code&gt; 存储字段：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pos_x&lt;/code&gt;、&lt;code&gt;pos_y&lt;/code&gt;：上次窗口位置（像素坐标）。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;last_table&lt;/code&gt;：上次使用的词表名。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;intervaltime&lt;/code&gt;：单词自动切换间隔（秒）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;默认文件会在程序首次运行时创建（&lt;code&gt;intervaltime=5&lt;/code&gt;）。保存由 &lt;code&gt;save_settings()&lt;/code&gt; 完成（拖动、修改间隔、关闭时等触发）。&lt;/p&gt;
+&lt;h2 id=&#34;运行与调试建议&#34;&gt;运行与调试建议
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;数据库无法连接&lt;/strong&gt;：确认 &lt;code&gt;db_path&lt;/code&gt; 路径正确且文件存在。若数据库为空，程序的 &lt;code&gt;fetch_wordtables&lt;/code&gt; 可能返回空列表，&lt;code&gt;load_words_from_db&lt;/code&gt; 会返回占位 &lt;code&gt;(&amp;quot;No word&amp;quot;,&amp;quot;无&amp;quot;)&lt;/code&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;线程安全&lt;/strong&gt;：使用了 &lt;code&gt;sqlite3.connect(..., check_same_thread=False)&lt;/code&gt; 来允许多线程访问。但推荐仅主线程使用游标并在子线程使用新的连接（&lt;code&gt;sqlite3.connect(self.db_path)&lt;/code&gt;）以避免潜在竞态。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;托盘图标不显示或程序无反应&lt;/strong&gt;：&lt;code&gt;pystray&lt;/code&gt; 在某些平台或环境需要额外配置。测试时可先注释 &lt;code&gt;setup_tray&lt;/code&gt; 并直接运行主窗口检查 UI。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;隐藏任务栏仅在 Windows 生效&lt;/strong&gt;：&lt;code&gt;hide_from_taskbar()&lt;/code&gt; 使用 Win32 API，仅在 Windows 上有效，跨平台请条件判断或移除。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;日志与异常&lt;/strong&gt;：建议扩展 &lt;code&gt;print&lt;/code&gt; 为 &lt;code&gt;logging&lt;/code&gt; 模块，并在关键异常中记录堆栈信息以便排查。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;常见问题与解决方法&#34;&gt;常见问题与解决方法
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;问：窗口没有显示单词或只显示 &lt;code&gt;No word&lt;/code&gt;。
+&lt;ul&gt;
+&lt;li&gt;因为数据库中没有表或表中没有数据。确保通过导入 JSON 创建了至少一个表或手动向 SQLite 中插入数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;问：点击词表按钮没反应。
+&lt;ul&gt;
+&lt;li&gt;检查 &lt;code&gt;word_table_buttons&lt;/code&gt; 是否正确生成，以及 &lt;code&gt;self.wordtables&lt;/code&gt; 是否有数据。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;问：应用未隐藏到系统托盘或无法退出。
+&lt;ul&gt;
+&lt;li&gt;检查 &lt;code&gt;pystray&lt;/code&gt; 是否正常安装并且在当前平台支持托盘操作。临时方法：直接关闭窗口或在代码中调用 &lt;code&gt;quit_app()&lt;/code&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;扩展与改进建议&#34;&gt;扩展与改进建议
+&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;使用线程池/Executor&lt;/strong&gt;：替换原始 &lt;code&gt;threading.Thread&lt;/code&gt; 为 &lt;code&gt;concurrent.futures.ThreadPoolExecutor&lt;/code&gt; 以更好地管理线程生命周期与异常捕获。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;数据库连接策略&lt;/strong&gt;：将长期持久连接改为“按线程新建连接”的策略（每个线程独立连接），以避免跨线程共享同一游标导致的问题。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;UI 优化&lt;/strong&gt;：为长文本增加动效、增加单词发音（调用 TTS 或在线 API）、支持多语言界面切换。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;配置界面改进&lt;/strong&gt;：在设置窗口直接显示并编辑 &lt;code&gt;intervaltime&lt;/code&gt;，支持导入 CSV、 Excel；提供词表导出功能（JSON / CSV）。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;跨平台兼容&lt;/strong&gt;：为 &lt;code&gt;hide_from_taskbar&lt;/code&gt; 添加平台判断，并实现 macOS / Linux 下替代实现或跳过该功能。&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;错误日志&lt;/strong&gt;：集成日志文件输出以及可选的错误上报（不建议在个人项目中默认开启）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;附典型-json-输入示例&#34;&gt;附：典型 JSON 输入示例
+&lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;1
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;2
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;3
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;4
+&lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;5
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;
+&lt;td class=&#34;lntd&#34;&gt;
+&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;apple&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;translate&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;苹果&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;book&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;translate&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;书&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;  &lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;&lt;span class=&#34;nt&#34;&gt;&amp;#34;word&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;computer&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;translate&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;电脑 计算机&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;</description>
+        </item>
+        <item>
         <title>国家大学生就业服务平台岗位爬取</title>
         <link>https://Entars.github.io/p/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/</link>
         <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
