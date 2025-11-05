@@ -7,7 +7,15 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Fri, 17 Oct 2025 14:53:54 +0800</lastBuildDate><atom:link href="https://Entars.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 05 Nov 2025 12:47:28 +0800</lastBuildDate><atom:link href="https://Entars.github.io/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>计算机技术</title>
+        <link>https://Entars.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/</link>
+        <pubDate>Wed, 05 Nov 2025 12:47:28 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/</guid>
+        <description>&lt;img src="https://Entars.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/image.png" alt="Featured image of post 计算机技术" /&gt;</description>
+        </item>
+        <item>
         <title>个人项目</title>
         <link>https://Entars.github.io/categories/%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE/</link>
         <pubDate>Fri, 17 Oct 2025 14:53:54 +0800</pubDate>
@@ -16,35 +24,11 @@
         <description></description>
         </item>
         <item>
-        <title>计算机技术</title>
-        <link>https://Entars.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/</link>
-        <pubDate>Sat, 11 Oct 2025 15:16:24 +0800</pubDate>
-        
-        <guid>https://Entars.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/</guid>
-        <description>&lt;img src="https://Entars.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/image.png" alt="Featured image of post 计算机技术" /&gt;</description>
-        </item>
-        <item>
         <title>图像处理</title>
         <link>https://Entars.github.io/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</link>
         <pubDate>Sun, 14 Sep 2025 01:14:13 +0800</pubDate>
         
         <guid>https://Entars.github.io/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>GUI</title>
-        <link>https://Entars.github.io/categories/gui/</link>
-        <pubDate>Fri, 22 Aug 2025 20:41:39 +0800</pubDate>
-        
-        <guid>https://Entars.github.io/categories/gui/</guid>
-        <description></description>
-        </item>
-        <item>
-        <title>PyQt5</title>
-        <link>https://Entars.github.io/categories/pyqt5/</link>
-        <pubDate>Fri, 22 Aug 2025 20:41:39 +0800</pubDate>
-        
-        <guid>https://Entars.github.io/categories/pyqt5/</guid>
         <description></description>
         </item>
         <item>
