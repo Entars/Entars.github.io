@@ -7,7 +7,118 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Wed, 05 Nov 2025 12:47:28 +0800</lastBuildDate><atom:link href="https://Entars.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 24 Nov 2025 20:52:57 +0800</lastBuildDate><atom:link href="https://Entars.github.io/post/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>线性回归</title>
+        <link>https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
+        <pubDate>Mon, 24 Nov 2025 20:52:57 +0800</pubDate>
+        
+        <guid>https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
+        <description>&lt;img src="https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall.png" alt="Featured image of post 线性回归" /&gt;&lt;h3 id=&#34;一元线性回归&#34;&gt;一元线性回归
+&lt;/h3&gt;&lt;p&gt;基本方程：
+&lt;/p&gt;
+$$
+y = \beta_{0} + \beta_{1}x
+$$&lt;p&gt;
+当给定参数$\beta_{0}$和$\beta_{1}$后，函数图像呈现&lt;strong&gt;一条直线&lt;/strong&gt;。当我们只用一个$x$来预测$y$，就是&lt;strong&gt;一元线性回归&lt;/strong&gt;，但在一般条件下，这两个参数是未知的，我们知道的只有$x$和$y$，在二维图像上表现为一个个单独的点，&lt;strong&gt;线性回归就是要找到一条直线，尽可能让这条线去拟合图中的点&lt;/strong&gt;（即所有的$x$和$y$的组合）。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1.png&#34;
+	width=&#34;640&#34;
+	height=&#34;480&#34;
+	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_8975bc443cb4959.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_38e7fce06d964f15.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;无扰动&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;这是非常理想的情况下，在实际中，数据点会十分散乱，线性回归就是在杂乱中寻找规律：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2.png&#34;
+	width=&#34;640&#34;
+	height=&#34;480&#34;
+	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_e670753ccfb10674.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_3465e9e9af260ff1.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;添加扰动&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;h3 id=&#34;损失函数&#34;&gt;损失函数
+&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3.png&#34;
+	width=&#34;640&#34;
+	height=&#34;480&#34;
+	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_311f4d747f25fb56.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_38702406ac0412d6.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;双直线&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;既然是用直线拟合散点，为什么最终得到的直线是蓝色的那根而不是绿色的，散点都在这两条线附近，所以我们需要一个&lt;strong&gt;评判标准，用于评价哪条才是最“合适”的&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;一个很直观的标准就是看哪条线和散点之间的偏差最大，也就是&lt;strong&gt;真实值和预测值间的差值&lt;/strong&gt;，即&lt;strong&gt;残差&lt;/strong&gt;，用公式表示即：
+&lt;/p&gt;
+$$
+e = y - \hat{y}
+$$&lt;p&gt;
+图像表示为：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4.png&#34;
+	width=&#34;931&#34;
+	height=&#34;537&#34;
+	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_4e211df32d95de81.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_1992b6d7ebbab3d2.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;残差图像&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;173&#34;
+		data-flex-basis=&#34;416px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;对于我们数据中的每个点如此计算一遍，再将所有的$e_{i}^{2}$相加，就能量化出拟合的直线和实际之间的误差。公式表示为：
+&lt;/p&gt;
+$$
+Q=\sum_{i=1}^{n}(y_{i}-\hat{y}_{i})^{2}=\sum_{i=1}^{n}(y_{i}-(\hat{\beta}_{0}+\hat{\beta}_{1}x_{i}))^{2}
+$$&lt;p&gt;
+这个公式是&lt;strong&gt;残差平方和&lt;/strong&gt;，即SSE（Sum of Squares for Error），在机器学习中它是回归问题中最常用的&lt;strong&gt;损失函数&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;现在我们知道了&lt;strong&gt;损失函数是衡量回归模型误差的函数，也就是我们要的“直线”的评价标准。这个函数的值越小，说明直线越能拟合我们的数据。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&#34;最小二乘估计&#34;&gt;最小二乘估计
+&lt;/h3&gt;&lt;p&gt;最小二乘估计是用来计算$\beta_{0}$和$\beta_{1}$的方法，我们知道，两点确定一线，有两组x，y的值，就能算出来$\beta_{0}$和$\beta_{1}$。但是现在我们有很多点，且并不正好落在一条直线上，这么多点每两点都能确定一条直线，这到底要怎么确定选哪条直线呢？&lt;/p&gt;
+&lt;p&gt;将一切回归到评价准则，对于一条最适合的线，其损失函数的值一定是最小的，对于一个一元二次函数，其导函数为0的点处取到最小函数值，而在损失函数中，存在两个变量，为二元二次函数，其函数图像大致为：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5.png&#34;
+	width=&#34;643&#34;
+	height=&#34;482&#34;
+	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_d075332fee245e13.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_374b95cac7e6a017.png 1024w&#34;
+	loading=&#34;lazy&#34;
+	
+		alt=&#34;三维凸函数图&#34;
+	
+	
+		class=&#34;gallery-image&#34; 
+		data-flex-grow=&#34;133&#34;
+		data-flex-basis=&#34;320px&#34;
+	
+&gt;&lt;/p&gt;
+&lt;p&gt;在微积分中，若闭区间内是凹函数，则极小值即为最小值，导数为0时，Q取最小值，因此对两个未知量求偏导，令其为0，则：
+&lt;/p&gt;
+$$
+\frac{\partial Q}{\partial\beta_{0}}=2\sum_{i=1}^{n}\left(y_{i}-\hat{\beta}_{0}-\hat{\beta}_{1}x_{i}\right)=0
+$$$$
+\frac{\partial Q}{\partial\beta_{1}}=2\sum_{i=1}^{n}\left(y_{i}-\hat{\beta}_{0}-\hat{\beta}_{1}x_{i}\right)x_{i}=0
+$$&lt;p&gt;将散点值代入，即可求得。&lt;/p&gt;
+</description>
+        </item>
+        <item>
         <title>Numpy使用手册</title>
         <link>https://Entars.github.io/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</link>
         <pubDate>Wed, 05 Nov 2025 12:47:28 +0800</pubDate>
