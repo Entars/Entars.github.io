@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="主要包含全局阈值二值化方法：128阈值、平均阈值、OSTU大津法">
+<title>全局阈值二值化</title>
+
+<link rel='canonical' href='https://Entars.github.io/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/'>
+
+<link rel="stylesheet" href="/scss/style.min.192f2b9c70838cd388b03e35a5443a670532f2b1925e526a96a5114bd7a3ff85.css"><meta property='og:title' content="全局阈值二值化">
+<meta property='og:description' content="主要包含全局阈值二值化方法：128阈值、平均阈值、OSTU大津法">
+<meta property='og:url' content='https://Entars.github.io/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/'>
+<meta property='og:site_name' content='南国遗梦的小站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='图像二值化' /><meta property='article:published_time' content='2025-12-02T20:52:12&#43;08:00'/><meta property='article:modified_time' content='2025-12-02T20:52:12&#43;08:00'/><meta property='og:image' content='https://Entars.github.io/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/wallpaper.png' />
+<meta name="twitter:title" content="全局阈值二值化">
+<meta name="twitter:description" content="主要包含全局阈值二值化方法：128阈值、平均阈值、OSTU大津法"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://Entars.github.io/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/wallpaper.png' />
+    <link rel="shortcut icon" href="/favicon.ico" />
+<style>
+     
+    :root {
+        --code-font-family: "JetBrains Mono";  
+    }
+
+    code {
+        font-size: 1.4rem;  
+    }
+
+    pre {
+        font-size: 1.4rem;  
+    }
+</style>
+
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=JetBrains Mono:wght@300;700&display=swap";  
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_b439c9ec2036e131.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">南国遗梦的小站</a></h1>
+            <h2 class="site-description">记录学习，记录生活</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://b23.tv/ueaKiC6'
+                        target="_blank"
+                        title="bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, platform, streaming, video]
+category: Brand
+version: "2.1"
+unicode: "f6d2"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" />
+  <path d="M8 3l2 3" />
+  <path d="M16 3l-2 3" />
+  <path d="M9 13v-2" />
+  <path d="M15 11v2" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/Entars'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://qm.qq.com/q/CxmhbYf7YQ'
+                        target="_blank"
+                        title="QQ"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, communicator, internet]
+category: Brand
+unicode: "f606"
+version: "1.114"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 9.748a14.716 14.716 0 0 0 11.995 -.052c.275 -9.236 -11.104 -11.256 -11.995 .052z" />
+  <path d="M18 10c.984 2.762 1.949 4.765 2 7.153c.014 .688 -.664 1.346 -1.184 .303c-.346 -.696 -.952 -1.181 -1.816 -1.456" />
+  <path d="M17 16c.031 1.831 .147 3.102 -1 4" />
+  <path d="M8 20c-1.099 -.87 -.914 -2.24 -1 -4" />
+  <path d="M6 10c-.783 2.338 -1.742 4.12 -1.968 6.43c-.217 2.227 .716 1.644 1.16 .917c.296 -.487 .898 -.934 1.808 -1.347" />
+  <path d="M15.898 13l-.476 -2" />
+  <path d="M8 20l-1.5 1c-.5 .5 -.5 1 .5 1h10c1 0 1 -.5 .5 -1l-1.5 -1" />
+  <path d="M13.75 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+  <path d="M10.25 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E9%93%BE%E6%8E%A5/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>链接</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#128阈值">128阈值</a></li>
+        <li><a href="#均值阈值">均值阈值</a></li>
+        <li><a href="#ostu大津法">OSTU大津法</a>
+          <ol>
+            <li><a href="#1两类的概率权重">（1）两类的概率（权重）</a></li>
+            <li><a href="#2两类的均值灰度中心">（2）两类的均值（灰度中心）</a></li>
+            <li><a href="#大津算法的具体实现步骤如下以8位图像--l256--为例">大津算法的具体实现步骤如下（以8位图像  $L=256$  为例）：</a></li>
+            <li><a href="#示例验证简化场景">示例验证（简化场景）</a></li>
+            <li><a href="#遍历候选阈值--t012-">遍历候选阈值  $t=0,1,2$ ：</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/">
+                <img src="/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/wallpaper_hu_656fd4d9bb6b7188.png"
+                        srcset="/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/wallpaper_hu_656fd4d9bb6b7188.png 800w, /p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/wallpaper_hu_ce250abf523d647e.png 1600w"
+                        width="800" 
+                        height="450" 
+                        loading="lazy"
+                        alt="Featured image of post 全局阈值二值化" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E5%85%A8%E5%B1%80%E9%98%88%E5%80%BC%E4%BA%8C%E5%80%BC%E5%8C%96/">全局阈值二值化</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            主要包含全局阈值二值化方法：128阈值、平均阈值、OSTU大津法
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time-wrapper">
+        <footer class="article-time">
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2025-12-02</time>
+            </div>
+            
+
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 7 分钟
+                </time>
+            </div>
+            
+        </footer>
+        
+        
+        <footer class="taxonomy-container">
+            
+            <div class="article-categories">
+                
+                <a class="article-category" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%8A%80%E6%9C%AF/" data-text="计算机技术">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">计算机技术</span>
+                </a>
+                
+                <a class="article-category" href="/categories/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" data-text="图像处理">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">图像处理</span>
+                </a>
+                
+            </div>
+            
+
+            
+            <div class="article-tags">
+                
+                <a class="article-tag" href="/tags/%E5%9B%BE%E5%83%8F%E4%BA%8C%E5%80%BC%E5%8C%96/" data-text="图像二值化">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">图像二值化 </span>
+                
+                </a>
+                
+            </div>
+            
+        </footer>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h3 id="128阈值">128阈值
+</h3><p>在灰度图像中，像素值范围是0到255（共 256 个离散级）。把灰度图二值化时常见的简单规则是：</p>
+<ul>
+<li>若像素值 $I(x,y)\geq T$，则置为 255（白）</li>
+<li>否则置为0（黑）</li>
+</ul>
+<p>当T=128时，即将灰度中点作为阈值：所有亮度 $\ge 128$ 的像素判为“亮”，小于的则判为”暗。</p>
+<p>关于图片适用性的判别，则可以用似然比检验法进行确认（只不过需要知道前景和后景的分布）：</p>
+<p>假设图像像素由前景和背景组成，每个部分的像素值服从高斯分布（正态分布）。设图像有 N 个像素，像素值为 $x_{i} (i=1,2,&hellip;,N)$ 。我们需要比较两个假设：</p>
+<ul>
+<li><strong>零假设（$H_{0}$）</strong>：阈值 T=128是合理的，即图像二值化使用固定阈值128。</li>
+<li><strong>备择假设（$H_{1}$）</strong>：阈值 T 是任意的，即存在一个最优阈值  $T^*$ 能更好地拟合图像数据。</li>
+</ul>
+<p>似然比检验通过比较在 $H_{0}$ 和 $H_{1}$ 下的最大似然值来评估 $H_{0}$ 是否被拒绝。</p>
+<p>假设前景和背景的像素值分别服从高斯分布：</p>
+<ul>
+<li>
+<p>背景像素 ($x_{i} \leq T $) 服从 $ N(\mu_{b},\sigma_{b}^{2})$</p>
+</li>
+<li>
+<p>前景像素 ($ x_{i}&gt;T $) 服从 $ N(\mu_{f},\sigma_{f}^{2}) $</p>
+</li>
+</ul>
+<p>则似然函数(给定阈值T)为:</p>
+$$
+L(\mu_{b},\sigma_{b}^{2},\mu_{f},\sigma_{f}^{2},T)=\prod_{x_{i}\leq T}\frac{1}{\sqrt{2\pi\sigma_{b}^{2}}}\exp\left(-\frac{(x_{i}-\mu_{b})^{2}}{2\sigma_{b}^{2}}\right)\times\prod_{x_{i}>T}\frac{1}{\sqrt{2\pi\sigma_{f}^{2}}}\exp\left(-\frac{(x_{i}-\mu_{f})^{2}}{2\sigma_{f}^{2}}\right)
+$$<p>
+分别计算 $L_{0} 和 L_{1} $，似然比定义为：
+</p>
+$$
+\Lambda=\frac{L_{0}}{L_{1}}
+$$<p>
+检验统计量为 $ \lambda=-2\ln\Lambda $，在$ H_{0} $下，$  \lambda $ 近似服从自由度为1的卡方分布（因为$ H_{1} $比$ H_{0} $多一个自由参数T）。</p>
+<ul>
+<li>选择显著性水平$ \alpha $（通常为0.05），对应的卡方临界值为  $ \chi^{2}_{1,1-\alpha} $（例如，$ \alpha=0.05 $时，临界值为3.841）。</li>
+<li>如果$ \lambda&gt;\chi^{2}<em>{1,1-\alpha} $，则拒绝$ H</em>{0} $，表示阈值128不合理；否则不拒绝$ H_{0} $，表示128阈值可接受。</li>
+</ul>
+<h3 id="均值阈值">均值阈值
+</h3><p>核心思想：<strong>使用图像所有像素灰度值的平均值作为阈值</strong>。</p>
+<p>设图像有N个像素，第 $i$ 个像素的灰度值为 $p_i$ ，则平均阈值 $T$ 计算为：
+</p>
+$$
+T = \frac{1}{N} \sum_{i=1}^{N} p_i
+$$<p>代码示例：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cv2</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">mean_thresholding</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    平均阈值二值化
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 计算平均阈值</span>
+</span></span><span class="line"><span class="cl">    <span class="n">mean_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="c1"># 应用阈值</span>
+</span></span><span class="line"><span class="cl">    <span class="n">_</span><span class="p">,</span> <span class="n">binary_image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">mean_value</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">binary_image</span><span class="p">,</span> <span class="n">mean_value</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 读取图像</span>
+</span></span><span class="line"><span class="cl"><span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;document.jpg&#39;</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_GRAYSCALE</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 应用平均阈值</span>
+</span></span><span class="line"><span class="cl"><span class="n">binary_result</span><span class="p">,</span> <span class="n">threshold_value</span> <span class="o">=</span> <span class="n">mean_thresholding</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;计算得到的平均阈值: </span><span class="si">{</span><span class="n">threshold_value</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 显示结果</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;原图&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="mi">256</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">threshold_value</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;阈值 = </span><span class="si">{</span><span class="n">threshold_value</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;灰度直方图&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">binary_result</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;平均阈值二值化结果&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="ostu大津法">OSTU大津法
+</h3><p>核心准则：<strong>最优阈值 ($ T^*$) 是使两类像素的 “类间方差” 最大的阈值</strong>。</p>
+<p>背后逻辑：类间方差越大，说明前景与背景的灰度差异越显著，分割效果越好；反之，类间方差越小，两类灰度重叠越严重，分割效果越差。</p>
+<p>关键前提：总方差 = 类内方差 + 类间方差（总方差不随阈值 t 变化），因此 “最大化类间方差” 等价于 “最小化类内方差”，二者是完全等价的优化目标。</p>
+<p>假设输入图像为单通道灰度图，灰度级范围为  $[0, L-1]$ （通常  $L=256$ ，即8位图像），定义：</p>
+<ul>
+<li>$n_i$ ：灰度值为  $i$  的像素个数；</li>
+<li>总像素数  $N = \sum_{i=0}^{L-1} n_i$ ；</li>
+<li>灰度级  $i$  的概率  $p_i = \frac{n_i}{N}$ ，满足  $\sum_{i=0}^{L-1} p_i = 1$ （所有灰度的概率和为1）。</li>
+</ul>
+<p>对于任意候选阈值  $t$ （ $0 \leq t \leq L-2$ ），将像素分为  $C_0$ （0<del>t）和 $C_1$ （t+1</del>L-1），定义以下关键统计量：</p>
+<h4 id="1两类的概率权重">（1）两类的概率（权重）
+</h4><ul>
+<li>
+<p>背景类  $C_0$  的概率： $\omega_0(t) = \sum_{i=0}^t p_i$ （所有灰度≤t的像素占比）；</p>
+</li>
+<li>
+<p>前景类  $C_1$  的概率： $\omega_1(t) = \sum_{i=t+1}^{L-1} p_i = 1 - \omega_0(t)$ （所有灰度&gt;t的像素占比）。</p>
+</li>
+</ul>
+<h4 id="2两类的均值灰度中心">（2）两类的均值（灰度中心）
+</h4><ul>
+<li>
+<p>背景类  $C_0$  的均值： $\mu_0(t) = \frac{1}{\omega_0(t)} \sum_{i=0}^t i \cdot p_i$ （仅当  $\omega_0(t) \neq 0$ ，否则均值无意义）；</p>
+</li>
+<li>
+<p>前景类  $C_1$  的均值： $\mu_1(t) = \frac{1}{\omega_1(t)} \sum_{i=t+1}^{L-1} i \cdot p_i$ （仅当  $\omega_1(t) \neq 0$ ）；</p>
+</li>
+<li>
+<p>全局均值（整幅图像的灰度均值）： $\mu = \sum_{i=0}^{L-1} i \cdot p_i = \omega_0(t) \cdot \mu_0(t) + \omega_1(t) \cdot \mu_1(t)$ （加权平均，权重为两类概率）。</p>
+</li>
+</ul>
+<p>类间方差的定义是：<strong>两类均值与全局均值的加权平方和</strong>，权重为两类概率：
+</p>
+$$
+\sigma_b^2(t) = \omega_0(t) \cdot (\mu_0(t) - \mu)^2 + \omega_1(t) \cdot (\mu_1(t) - \mu)^2
+$$<p>
+简化有：
+</p>
+$$
+\boxed{\sigma_b^2(t) = \omega_0(t) \cdot \omega_1(t) \cdot (\mu_0(t) - \mu_1(t))^2}
+$$<h4 id="大津算法的具体实现步骤如下以8位图像--l256--为例">大津算法的具体实现步骤如下（以8位图像  $L=256$  为例）：
+</h4><h5 id="步骤1计算灰度概率分布">步骤1：计算灰度概率分布
+</h5><p>遍历图像所有像素，统计每个灰度级  $i$ （0~255）的像素数  $n_i$ ，并计算概率  $p_i = \frac{n_i}{N}$ （ $N$  为总像素数）。</p>
+<h5 id="步骤2遍历所有候选阈值">步骤2：遍历所有候选阈值
+</h5><p>遍历  $t \in [0, 254]$ （阈值需将灰度级分为非空两类，故  $t$  不取255），对每个  $t$  执行以下计算：</p>
+<h5 id="步骤3计算两类的概率与均值">步骤3：计算两类的概率与均值
+</h5><ul>
+<li>
+<p>背景概率  $\omega_0(t) = \sum_{i=0}^t p_i$ ；</p>
+</li>
+<li>
+<p>前景概率  $\omega_1(t) = 1 - \omega_0(t)$ ；</p>
+</li>
+<li>
+<p>背景均值  $\mu_0(t) = \frac{1}{\omega_0(t)} \sum_{i=0}^t i \cdot p_i$ （若  $\omega_0(t) = 0$ ，跳过该  $t$ ）；</p>
+</li>
+<li>
+<p>前景均值  $\mu_1(t) = \frac{1}{\omega_1(t)} \sum_{i=t+1}^{255} i \cdot p_i$ （若  $\omega_1(t) = 0$ ，跳过该  $t$ ）。</p>
+</li>
+</ul>
+<h5 id="步骤4计算类间方差">步骤4：计算类间方差
+</h5><p>用简化公式计算  $\sigma_b^2(t) = \omega_0(t) \cdot \omega_1(t) \cdot (\mu_0(t) - \mu_1(t))^2$ 。</p>
+<h5 id="步骤5寻找最优阈值">步骤5：寻找最优阈值
+</h5><p>记录所有  $t$  对应的  $\sigma_b^2(t)$ ，找到使  $\sigma_b^2(t)$  最大的阈值  $t^*$ （若有多个  $t$  对应最大方差，取任意一个即可）。</p>
+<h5 id="步骤6二值化分割">步骤6：二值化分割
+</h5><p>将图像中灰度值  $\leq t^<em>$  的像素设为背景（通常为0），灰度值  $&gt; t^</em>$  的像素设为前景（通常为255），或根据需求反转（前景为0，背景为255）。</p>
+<h4 id="示例验证简化场景">示例验证（简化场景）
+</h4><p>为直观理解，假设一幅图像的灰度级仅为  $[0,1,2,3]$ ，统计信息如下：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>灰度级  $i$</th>
+          <th>0</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>像素数  $n_i$</td>
+          <td>10</td>
+          <td>20</td>
+          <td>30</td>
+          <td>40</td>
+      </tr>
+      <tr>
+          <td>概率  $p_i$</td>
+          <td>0.1</td>
+          <td>0.2</td>
+          <td>0.3</td>
+          <td>0.4</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>总像素数  $N=100$ ，全局均值  $\mu = 0 \times 0.1 + 1 \times 0.2 + 2 \times 0.3 + 3 \times 0.4 = 2.0$ 。</p>
+<h4 id="遍历候选阈值--t012-">遍历候选阈值  $t=0,1,2$ ：
+</h4><h5 id="1-当--t0--时">1. 当  $t=0$  时：
+</h5><ul>
+<li>
+<p>$\omega_0 = 0.1$ ， $\mu_0 = 0$ ；</p>
+</li>
+<li>
+<p>$\omega_1 = 0.9$ ， $\mu_1 = \frac{1 \times 0.2 + 2 \times 0.3 + 3 \times 0.4}{0.9} = \frac{2.0}{0.9} \approx 2.222$ ；</p>
+</li>
+<li>
+<p>$\sigma_b^2 = 0.1 \times 0.9 \times (0 - 2.222)^2 \approx 0.444$ 。</p>
+</li>
+</ul>
+<h5 id="2-当--t1--时">2. 当  $t=1$  时：
+</h5><ul>
+<li>
+<p>$\omega_0 = 0.1 + 0.2 = 0.3$ ， $\mu_0 = \frac{0 \times 0.1 + 1 \times 0.2}{0.3} \approx 0.667$ ；</p>
+</li>
+<li>
+<p>$\omega_1 = 0.3 + 0.4 = 0.7$ ， $\mu_1 = \frac{2 \times 0.3 + 3 \times 0.4}{0.7} = \frac{1.8}{0.7} \approx 2.571$ ；</p>
+</li>
+<li>
+<p>$\sigma_b^2 = 0.3 \times 0.7 \times (0.667 - 2.571)^2 \approx 0.760$ 。</p>
+</li>
+</ul>
+<h5 id="3-当--t2--时">3. 当  $t=2$  时：
+</h5><ul>
+<li>
+<p>$\omega_0 = 0.1 + 0.2 + 0.3 = 0.6$ ， $\mu_0 = \frac{0 \times 0.1 + 1 \times 0.2 + 2 \times 0.3}{0.6} \approx 1.333$ ；</p>
+</li>
+<li>
+<p>$\omega_1 = 0.4$ ， $\mu_1 = 3$ ；</p>
+</li>
+<li>
+<p>$\sigma_b^2 = 0.6 \times 0.4 \times (1.333 - 3)^2 \approx 0.667$ 。</p>
+</li>
+</ul>
+<h5 id="最优阈值">最优阈值：
+</h5><p>类间方差最大值为  $\approx 0.760$ ，对应  $t^*=1$ 。因此，最优分割为：灰度01（背景）、灰度23（前景），分割效果最优。</p>
+<p>示例代码：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">cv2</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">otsu_threshold_manual</span><span class="p">(</span><span class="n">gray_img</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    手动实现大津算法，返回最优阈值和二值化图像
+</span></span></span><span class="line"><span class="cl"><span class="s2">    :param gray_img: 输入灰度图（shape: (H, W)，值范围0-255）
+</span></span></span><span class="line"><span class="cl"><span class="s2">    :return: (optimal_thresh, binary_img)
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 步骤1：计算灰度概率分布（灰度直方图）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">gray_img</span><span class="o">.</span><span class="n">shape</span>
+</span></span><span class="line"><span class="cl">    <span class="n">total_pixels</span> <span class="o">=</span> <span class="n">H</span> <span class="o">*</span> <span class="n">W</span>  <span class="c1"># 总像素数 N</span>
+</span></span><span class="line"><span class="cl">    <span class="n">hist</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">gray_img</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">256</span><span class="p">])</span>  <span class="c1"># 统计每个灰度级的像素数 n_i</span>
+</span></span><span class="line"><span class="cl">    <span class="n">p</span> <span class="o">=</span> <span class="n">hist</span> <span class="o">/</span> <span class="n">total_pixels</span>  <span class="c1"># 灰度级概率 p_i = n_i / N</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 步骤2：遍历所有候选阈值 t（0~254，避免某一类为空）</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_var</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># 最大类间方差</span>
+</span></span><span class="line"><span class="cl">    <span class="n">optimal_thresh</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># 最优阈值</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 步骤3：计算两类的概率 ω0、ω1</span>
+</span></span><span class="line"><span class="cl">        <span class="n">omega0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># C0：0~t 的概率和</span>
+</span></span><span class="line"><span class="cl">        <span class="n">omega1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">omega0</span>       <span class="c1"># C1：t+1~255 的概率和（ω0+ω1=1）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 跳过空类（避免除以零）</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">omega0</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">omega1</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 步骤4：计算两类的均值 μ0、μ1</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># μ0 = sum(i*p_i for i=0~t) / omega0</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mu0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">[:</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">omega0</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># μ1 = sum(i*p_i for i=t+1~255) / omega1</span>
+</span></span><span class="line"><span class="cl">        <span class="n">mu1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">256</span><span class="p">)</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="p">:])</span> <span class="o">/</span> <span class="n">omega1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 步骤5：计算类间方差（使用简化公式）</span>
+</span></span><span class="line"><span class="cl">        <span class="n">between_var</span> <span class="o">=</span> <span class="n">omega0</span> <span class="o">*</span> <span class="n">omega1</span> <span class="o">*</span> <span class="p">(</span><span class="n">mu0</span> <span class="o">-</span> <span class="n">mu1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 更新最大方差和最优阈值</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">between_var</span> <span class="o">&gt;</span> <span class="n">max_var</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">max_var</span> <span class="o">=</span> <span class="n">between_var</span>
+</span></span><span class="line"><span class="cl">            <span class="n">optimal_thresh</span> <span class="o">=</span> <span class="n">t</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># 步骤6：根据最优阈值二值化</span>
+</span></span><span class="line"><span class="cl">    <span class="n">binary_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gray_img</span> <span class="o">&lt;=</span> <span class="n">optimal_thresh</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>  <span class="c1"># 0=背景，255=前景</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># 若需反转前景背景，改为：np.where(gray_img &lt;= optimal_thresh, 255, 0)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">optimal_thresh</span><span class="p">,</span> <span class="n">binary_img</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># ---------------------- 主流程 ----------------------</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. 读取图像并转为灰度图</span>
+</span></span><span class="line"><span class="cl"><span class="n">img_path</span> <span class="o">=</span> <span class="s2">&#34;test_image.jpg&#34;</span>  <span class="c1"># 替换为你的图像路径</span>
+</span></span><span class="line"><span class="cl"><span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Error: 无法读取图像，请检查路径是否正确！&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">exit</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">gray_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. 手动调用大津算法</span>
+</span></span><span class="line"><span class="cl"><span class="n">manual_thresh</span><span class="p">,</span> <span class="n">manual_binary</span> <span class="o">=</span> <span class="n">otsu_threshold_manual</span><span class="p">(</span><span class="n">gray_img</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. 对比 OpenCV 结果（验证正确性）</span>
+</span></span><span class="line"><span class="cl"><span class="n">cv2_thresh</span><span class="p">,</span> <span class="n">cv2_binary</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">gray_img</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_BINARY</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">THRESH_OTSU</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. 显示结果</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 原图</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&#34;原图&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 灰度图</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">gray_img</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&#34;gray&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&#34;灰度图&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 手动实现二值化</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">manual_binary</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&#34;gray&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;手动实现大津二值化</span><span class="se">\n</span><span class="s2">阈值=</span><span class="si">{</span><span class="n">manual_thresh</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># OpenCV 实现二值化（对比）</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2_binary</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&#34;gray&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;OpenCV 大津二值化</span><span class="se">\n</span><span class="s2">阈值=</span><span class="si">{</span><span class="n">cv2_thresh</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&#34;off&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 输出阈值对比（验证手动实现正确性）</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;手动实现最优阈值：</span><span class="si">{</span><span class="n">manual_thresh</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;OpenCV 最优阈值：</span><span class="si">{</span><span class="n">cv2_thresh</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;两者阈值是否一致：</span><span class="si">{</span><span class="n">manual_thresh</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">cv2_thresh</span><span class="p">)</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 保存结果（可选）</span>
+</span></span><span class="line"><span class="cl"><span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s2">&#34;manual_otsu_binary.jpg&#34;</span><span class="p">,</span> <span class="n">manual_binary</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;手动实现二值化结果已保存！&#34;</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div>
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E5%9B%BE%E5%83%8F%E4%BA%8C%E5%80%BC%E5%8C%96/">图像二值化</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E6%BB%A4%E6%B3%A2%E5%99%A8/0.78a732b4423a178f2bcbd7231da0dc93_hu_d3ba9437559af16d.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 滤波器"
+                        
+                        data-hash="md5-eKcytEI6F48ry9cjHaDckw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">滤波器</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/">
+        
+        
+            <div class="article-image">
+                <img src="/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/1.cb7c26eee7c785655fdc00564f995d6b_hu_c46c851e7d1016cd.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Numpy使用手册"
+                        
+                        data-hash="md5-y3wm7ufHhWVf3ABWT5ldaw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Numpy使用手册</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/sqlite3/">
+        
+        
+            <div class="article-image">
+                <img src="/p/sqlite3/1.3ff7c2f6525fea0d17be4f36289bd948_hu_c425ee3846e73092.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post SQLite3"
+                        
+                        data-hash="md5-P/fC9lJf6g0Xvk82KJvZSA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SQLite3</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/pyqt5/">
+        
+        
+            <div class="article-image">
+                <img src="/p/pyqt5/1.500ae605887764ecdcadff8e1a4c2ac2_hu_491a64e5160f6680.jpeg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post PyQt5"
+                        
+                        data-hash="md5-UArmBYh3ZOzcrf&#43;OGkwqwg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">PyQt5</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/beautifulsoup/">
+        
+        
+            <div class="article-image">
+                <img src="/p/beautifulsoup/BeautifulSoup.7c88ad0285f3162af5340b4fc5f3f69b_hu_ab6056d7b0e9da9d.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post BeautifulSoup"
+                        
+                        data-hash="md5-fIitAoXzFir1NAtPxfP2mw==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">BeautifulSoup</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2025 Haibo Huang
+    </section>
+    
+    <section class="powerby">
+        
+            恍如昨日，嗤笑今朝 <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js"integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="crossorigin="anonymous"
+                
+                >
+            </script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
