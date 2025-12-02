@@ -250,9 +250,11 @@ $$&lt;h4 id=&#34;大津算法的具体实现步骤如下以8位图像--l256--为
   &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;总像素数  $N=100$ ，全局均值  $\mu = 0 \times 0.1 + 1 \times 0.2 + 2 \times 0.3 + 3 \times 0.4 = 2.0$ 。&lt;/p&gt;
-&lt;h4 id=&#34;遍历候选阈值--t012-&#34;&gt;遍历候选阈值  $t=0,1,2$ ：
-&lt;/h4&gt;&lt;h5 id=&#34;1-当--t0--时&#34;&gt;1. 当  $t=0$  时：
-&lt;/h5&gt;&lt;ul&gt;
+&lt;p&gt;遍历候选阈值  $t=0,1,2$ ：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;当  $t=0$  时：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;$\omega_0 = 0.1$ ， $\mu_0 = 0$ ；&lt;/p&gt;
 &lt;/li&gt;
@@ -263,8 +265,10 @@ $$&lt;h4 id=&#34;大津算法的具体实现步骤如下以8位图像--l256--为
 &lt;p&gt;$\sigma_b^2 = 0.1 \times 0.9 \times (0 - 2.222)^2 \approx 0.444$ 。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h5 id=&#34;2-当--t1--时&#34;&gt;2. 当  $t=1$  时：
-&lt;/h5&gt;&lt;ul&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;当  $t=1$  时：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;$\omega_0 = 0.1 + 0.2 = 0.3$ ， $\mu_0 = \frac{0 \times 0.1 + 1 \times 0.2}{0.3} \approx 0.667$ ；&lt;/p&gt;
 &lt;/li&gt;
@@ -275,8 +279,10 @@ $$&lt;h4 id=&#34;大津算法的具体实现步骤如下以8位图像--l256--为
 &lt;p&gt;$\sigma_b^2 = 0.3 \times 0.7 \times (0.667 - 2.571)^2 \approx 0.760$ 。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h5 id=&#34;3-当--t2--时&#34;&gt;3. 当  $t=2$  时：
-&lt;/h5&gt;&lt;ul&gt;
+&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;当  $t=2$  时：&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;$\omega_0 = 0.1 + 0.2 + 0.3 = 0.6$ ， $\mu_0 = \frac{0 \times 0.1 + 1 \times 0.2 + 2 \times 0.3}{0.6} \approx 1.333$ ；&lt;/p&gt;
 &lt;/li&gt;
@@ -287,10 +293,10 @@ $$&lt;h4 id=&#34;大津算法的具体实现步骤如下以8位图像--l256--为
 &lt;p&gt;$\sigma_b^2 = 0.6 \times 0.4 \times (1.333 - 3)^2 \approx 0.667$ 。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;h5 id=&#34;最优阈值&#34;&gt;最优阈值：
-&lt;/h5&gt;&lt;p&gt;类间方差最大值为  $\approx 0.760$ ，对应  $t^*=1$ 。因此，最优分割为：灰度01（背景）、灰度23（前景），分割效果最优。&lt;/p&gt;
-&lt;p&gt;示例代码：&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
+&lt;p&gt;最优阈值：&lt;/p&gt;
+&lt;p&gt;类间方差最大值为  $\approx 0.760$ ，对应  $t^*=1$ 。因此，最优分割为：灰度01（背景）、灰度23（前景），分割效果最优。&lt;/p&gt;
+&lt;h4 id=&#34;示例代码&#34;&gt;示例代码：
+&lt;/h4&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;
 &lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code&gt;&lt;span class=&#34;lnt&#34;&gt;  1
 &lt;/span&gt;&lt;span class=&#34;lnt&#34;&gt;  2
