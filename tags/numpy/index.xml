@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Numpy on 南国遗梦的小站</title>
-        <link>https://Entars.github.io/tags/numpy/</link>
+        <link>https://entars.github.io/tags/numpy/</link>
         <description>Recent content in Numpy on 南国遗梦的小站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Wed, 05 Nov 2025 12:47:28 +0800</lastBuildDate><atom:link href="https://Entars.github.io/tags/numpy/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Wed, 05 Nov 2025 12:47:28 +0800</lastBuildDate><atom:link href="https://entars.github.io/tags/numpy/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Numpy使用手册</title>
-        <link>https://Entars.github.io/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</link>
+        <link>https://entars.github.io/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</link>
         <pubDate>Wed, 05 Nov 2025 12:47:28 +0800</pubDate>
         
-        <guid>https://Entars.github.io/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</guid>
-        <description>&lt;img src="https://Entars.github.io/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/1.jpg" alt="Featured image of post Numpy使用手册" /&gt;&lt;h2 id=&#34;创建数组&#34;&gt;创建数组
+        <guid>https://entars.github.io/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/</guid>
+        <description>&lt;img src="https://entars.github.io/p/numpy%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8C/1.jpg" alt="Featured image of post Numpy使用手册" /&gt;&lt;h2 id=&#34;创建数组&#34;&gt;创建数组
 &lt;/h2&gt;&lt;h3 id=&#34;从列表创建&#34;&gt;从列表创建
 &lt;/h3&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;div class=&#34;chroma&#34;&gt;
 &lt;table class=&#34;lntable&#34;&gt;&lt;tr&gt;&lt;td class=&#34;lntd&#34;&gt;

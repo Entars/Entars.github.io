@@ -2,241 +2,241 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Tags on 南国遗梦的小站</title>
-        <link>https://Entars.github.io/tags/</link>
+        <link>https://entars.github.io/tags/</link>
         <description>Recent content in Tags on 南国遗梦的小站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Sat, 20 Dec 2025 19:37:52 +0800</lastBuildDate><atom:link href="https://Entars.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 20 Dec 2025 19:37:52 +0800</lastBuildDate><atom:link href="https://entars.github.io/tags/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Java</title>
-        <link>https://Entars.github.io/tags/java/</link>
+        <link>https://entars.github.io/tags/java/</link>
         <pubDate>Sat, 20 Dec 2025 19:37:52 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/java/</guid>
+        <guid>https://entars.github.io/tags/java/</guid>
         <description></description>
         </item>
         <item>
         <title>Java核心技术卷1</title>
-        <link>https://Entars.github.io/tags/java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%8D%B71/</link>
+        <link>https://entars.github.io/tags/java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%8D%B71/</link>
         <pubDate>Sat, 20 Dec 2025 19:37:52 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%8D%B71/</guid>
+        <guid>https://entars.github.io/tags/java%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF%E5%8D%B71/</guid>
         <description></description>
         </item>
         <item>
         <title>图像二值化</title>
-        <link>https://Entars.github.io/tags/%E5%9B%BE%E5%83%8F%E4%BA%8C%E5%80%BC%E5%8C%96/</link>
+        <link>https://entars.github.io/tags/%E5%9B%BE%E5%83%8F%E4%BA%8C%E5%80%BC%E5%8C%96/</link>
         <pubDate>Tue, 02 Dec 2025 20:52:12 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E5%9B%BE%E5%83%8F%E4%BA%8C%E5%80%BC%E5%8C%96/</guid>
+        <guid>https://entars.github.io/tags/%E5%9B%BE%E5%83%8F%E4%BA%8C%E5%80%BC%E5%8C%96/</guid>
         <description></description>
         </item>
         <item>
         <title>Logistic</title>
-        <link>https://Entars.github.io/tags/logistic/</link>
+        <link>https://entars.github.io/tags/logistic/</link>
         <pubDate>Sat, 29 Nov 2025 14:52:43 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/logistic/</guid>
+        <guid>https://entars.github.io/tags/logistic/</guid>
         <description></description>
         </item>
         <item>
         <title>机器学习</title>
-        <link>https://Entars.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+        <link>https://entars.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
         <pubDate>Sat, 29 Nov 2025 14:52:43 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
+        <guid>https://entars.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
         <description></description>
         </item>
         <item>
         <title>逻辑回归</title>
-        <link>https://Entars.github.io/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</link>
+        <link>https://entars.github.io/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</link>
         <pubDate>Sat, 29 Nov 2025 14:52:43 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</guid>
+        <guid>https://entars.github.io/tags/%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92/</guid>
         <description></description>
         </item>
         <item>
         <title>线性回归</title>
-        <link>https://Entars.github.io/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
+        <link>https://entars.github.io/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
         <pubDate>Mon, 24 Nov 2025 20:52:57 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
+        <guid>https://entars.github.io/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
         <description></description>
         </item>
         <item>
         <title>Numpy</title>
-        <link>https://Entars.github.io/tags/numpy/</link>
+        <link>https://entars.github.io/tags/numpy/</link>
         <pubDate>Wed, 05 Nov 2025 12:47:28 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/numpy/</guid>
+        <guid>https://entars.github.io/tags/numpy/</guid>
         <description></description>
         </item>
         <item>
         <title>Python</title>
-        <link>https://Entars.github.io/tags/python/</link>
+        <link>https://entars.github.io/tags/python/</link>
         <pubDate>Wed, 05 Nov 2025 12:47:28 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/python/</guid>
+        <guid>https://entars.github.io/tags/python/</guid>
         <description></description>
         </item>
         <item>
         <title>Customtkiner</title>
-        <link>https://Entars.github.io/tags/customtkiner/</link>
+        <link>https://entars.github.io/tags/customtkiner/</link>
         <pubDate>Fri, 17 Oct 2025 14:53:54 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/customtkiner/</guid>
+        <guid>https://entars.github.io/tags/customtkiner/</guid>
         <description></description>
         </item>
         <item>
         <title>WordCard</title>
-        <link>https://Entars.github.io/tags/wordcard/</link>
+        <link>https://entars.github.io/tags/wordcard/</link>
         <pubDate>Fri, 17 Oct 2025 14:53:54 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/wordcard/</guid>
+        <guid>https://entars.github.io/tags/wordcard/</guid>
         <description></description>
         </item>
         <item>
         <title>SQLite3</title>
-        <link>https://Entars.github.io/tags/sqlite3/</link>
+        <link>https://entars.github.io/tags/sqlite3/</link>
         <pubDate>Sat, 11 Oct 2025 15:16:24 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/sqlite3/</guid>
+        <guid>https://entars.github.io/tags/sqlite3/</guid>
         <description></description>
         </item>
         <item>
         <title>数据库</title>
-        <link>https://Entars.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
+        <link>https://entars.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</link>
         <pubDate>Sat, 11 Oct 2025 15:16:24 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
+        <guid>https://entars.github.io/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/</guid>
         <description></description>
         </item>
         <item>
         <title>图像滤波器</title>
-        <link>https://Entars.github.io/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/</link>
+        <link>https://entars.github.io/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/</link>
         <pubDate>Sun, 14 Sep 2025 01:14:13 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/</guid>
+        <guid>https://entars.github.io/tags/%E5%9B%BE%E5%83%8F%E6%BB%A4%E6%B3%A2%E5%99%A8/</guid>
         <description></description>
         </item>
         <item>
         <title>GUI</title>
-        <link>https://Entars.github.io/tags/gui/</link>
+        <link>https://entars.github.io/tags/gui/</link>
         <pubDate>Fri, 22 Aug 2025 20:41:39 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/gui/</guid>
+        <guid>https://entars.github.io/tags/gui/</guid>
         <description></description>
         </item>
         <item>
         <title>PyQt5</title>
-        <link>https://Entars.github.io/tags/pyqt5/</link>
+        <link>https://entars.github.io/tags/pyqt5/</link>
         <pubDate>Fri, 22 Aug 2025 20:41:39 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/pyqt5/</guid>
+        <guid>https://entars.github.io/tags/pyqt5/</guid>
         <description></description>
         </item>
         <item>
         <title>Selenium</title>
-        <link>https://Entars.github.io/tags/selenium/</link>
+        <link>https://entars.github.io/tags/selenium/</link>
         <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/selenium/</guid>
+        <guid>https://entars.github.io/tags/selenium/</guid>
         <description></description>
         </item>
         <item>
         <title>Urllib3</title>
-        <link>https://Entars.github.io/tags/urllib3/</link>
+        <link>https://entars.github.io/tags/urllib3/</link>
         <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/urllib3/</guid>
+        <guid>https://entars.github.io/tags/urllib3/</guid>
         <description></description>
         </item>
         <item>
         <title>岗位爬取</title>
-        <link>https://Entars.github.io/tags/%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/</link>
+        <link>https://entars.github.io/tags/%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/</link>
         <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/</guid>
+        <guid>https://entars.github.io/tags/%E5%B2%97%E4%BD%8D%E7%88%AC%E5%8F%96/</guid>
         <description></description>
         </item>
         <item>
         <title>国家大学生就业服务平台</title>
-        <link>https://Entars.github.io/tags/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</link>
+        <link>https://entars.github.io/tags/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</link>
         <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</guid>
+        <guid>https://entars.github.io/tags/%E5%9B%BD%E5%AE%B6%E5%A4%A7%E5%AD%A6%E7%94%9F%E5%B0%B1%E4%B8%9A%E6%9C%8D%E5%8A%A1%E5%B9%B3%E5%8F%B0/</guid>
         <description></description>
         </item>
         <item>
         <title>爬虫</title>
-        <link>https://Entars.github.io/tags/%E7%88%AC%E8%99%AB/</link>
+        <link>https://entars.github.io/tags/%E7%88%AC%E8%99%AB/</link>
         <pubDate>Wed, 20 Aug 2025 17:47:51 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/%E7%88%AC%E8%99%AB/</guid>
+        <guid>https://entars.github.io/tags/%E7%88%AC%E8%99%AB/</guid>
         <description></description>
         </item>
         <item>
         <title>BeautifulSoup</title>
-        <link>https://Entars.github.io/tags/beautifulsoup/</link>
+        <link>https://entars.github.io/tags/beautifulsoup/</link>
         <pubDate>Tue, 05 Aug 2025 15:27:58 +0800</pubDate>
         
-        <guid>https://Entars.github.io/tags/beautifulsoup/</guid>
+        <guid>https://entars.github.io/tags/beautifulsoup/</guid>
         <description></description>
         </item>
         <item>
         <title>Css</title>
-        <link>https://Entars.github.io/tags/css/</link>
+        <link>https://entars.github.io/tags/css/</link>
         <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/tags/css/</guid>
+        <guid>https://entars.github.io/tags/css/</guid>
         <description></description>
         </item>
         <item>
         <title>Html</title>
-        <link>https://Entars.github.io/tags/html/</link>
+        <link>https://entars.github.io/tags/html/</link>
         <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/tags/html/</guid>
+        <guid>https://entars.github.io/tags/html/</guid>
         <description></description>
         </item>
         <item>
         <title>Markdown</title>
-        <link>https://Entars.github.io/tags/markdown/</link>
+        <link>https://entars.github.io/tags/markdown/</link>
         <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/tags/markdown/</guid>
+        <guid>https://entars.github.io/tags/markdown/</guid>
         <description></description>
         </item>
         <item>
         <title>Themes</title>
-        <link>https://Entars.github.io/tags/themes/</link>
+        <link>https://entars.github.io/tags/themes/</link>
         <pubDate>Mon, 11 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/tags/themes/</guid>
+        <guid>https://entars.github.io/tags/themes/</guid>
         <description></description>
         </item>
         <item>
         <title>Tag With Whitespaces</title>
-        <link>https://Entars.github.io/tags/tag-with-whitespaces/</link>
+        <link>https://entars.github.io/tags/tag-with-whitespaces/</link>
         <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/tags/tag-with-whitespaces/</guid>
+        <guid>https://entars.github.io/tags/tag-with-whitespaces/</guid>
         <description></description>
         </item>
         <item>
         <title>Text</title>
-        <link>https://Entars.github.io/tags/text/</link>
+        <link>https://entars.github.io/tags/text/</link>
         <pubDate>Sat, 09 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/tags/text/</guid>
+        <guid>https://entars.github.io/tags/text/</guid>
         <description></description>
         </item>
         <item>
         <title>Emoji</title>
-        <link>https://Entars.github.io/tags/emoji/</link>
+        <link>https://entars.github.io/tags/emoji/</link>
         <pubDate>Tue, 05 Mar 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/tags/emoji/</guid>
+        <guid>https://entars.github.io/tags/emoji/</guid>
         <description></description>
         </item>
         

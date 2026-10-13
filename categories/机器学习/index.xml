@@ -2,230 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>机器学习 on 南国遗梦的小站</title>
-        <link>https://Entars.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+        <link>https://entars.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
         <description>Recent content in 机器学习 on 南国遗梦的小站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Sat, 29 Nov 2025 14:52:43 +0800</lastBuildDate><atom:link href="https://Entars.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Sat, 29 Nov 2025 14:52:43 +0800</lastBuildDate><atom:link href="https://entars.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>Logistic回归</title>
-        <link>https://Entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/</link>
+        <link>https://entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/</link>
         <pubDate>Sat, 29 Nov 2025 14:52:43 +0800</pubDate>
         
-        <guid>https://Entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/</guid>
-        <description>&lt;img src="https://Entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/wallpaper.jpeg" alt="Featured image of post Logistic回归" /&gt;&lt;h3 id=&#34;核心&#34;&gt;核心
+        <guid>https://entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/</guid>
+        <description>&lt;img src="https://entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/wallpaper.jpeg" alt="Featured image of post Logistic回归" /&gt;&lt;h3 id=&#34;核心&#34;&gt;核心
 &lt;/h3&gt;&lt;p&gt;逻辑回归的目的和结果是“分类”，其中间过程是”回归“，通过回归模型计算出可能性，再加上阈值，可能性超过阈值是一类，低于阈值为一类&lt;/p&gt;
 &lt;h3 id=&#34;sigmond函数&#34;&gt;Sigmond函数
 &lt;/h3&gt;&lt;p&gt;Sigmond函数为逻辑回归算法的拟合函数：
-&lt;/p&gt;
-$$
-f(z) = \frac{1}{1 + e^{-z}}
-$$&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/1.jpeg&#34;
-	width=&#34;1344&#34;
-	height=&#34;636&#34;
-	srcset=&#34;https://Entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/1_hu_8eb4b5b0dddbf0c0.jpeg 480w, https://Entars.github.io/p/logistic%E5%9B%9E%E5%BD%92/1_hu_73c1c876cc80862e.jpeg 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;Sigmond函数图像&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;211&#34;
-		data-flex-basis=&#34;507px&#34;
-	
-&gt;&lt;/p&gt;
-&lt;h3 id=&#34;推广至多元&#34;&gt;推广至多元
-&lt;/h3&gt;&lt;p&gt;多元线性回归方程的一般形式为：
-&lt;/p&gt;
-$$
-y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \cdots + \beta_p x_p 
-$$&lt;p&gt;
-矩阵形式为$\boldsymbol{Y}=\boldsymbol{X}\boldsymbol{\beta}$，其中：
-&lt;/p&gt;
-$$
-\boldsymbol{Y} = \begin{bmatrix}
-y_{1} \\
-y_{2} \\
-\vdots \\
-y_{n}
-\end{bmatrix},
-\quad
-\boldsymbol{X} = \begin{bmatrix}
-1 &amp; x_{11} &amp; \cdots &amp; x_{1p} \\
-1 &amp; x_{21} &amp; \cdots &amp; x_{2p} \\
-\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-1 &amp; x_{n1} &amp; \cdots &amp; x_{np}
-\end{bmatrix},
-\quad
-\boldsymbol{\beta} = \begin{bmatrix}
-\beta_{0} \\
-\beta_{1} \\
-\vdots \\
-\beta_{p}
-\end{bmatrix}
-$$&lt;p&gt;
-令其为预测为正例的概率P(Y=1)，带入Sigmond函数有：
-&lt;/p&gt;
-$$
-P(Y=1) = \frac{1}{1 + e^{-X\beta}}
-$$&lt;h3 id=&#34;最大似然估计&#34;&gt;最大似然估计
-&lt;/h3&gt;&lt;p&gt;该方法用于求解方程中的${\beta}$值，该方法的基础为似然函数（理论基础为概率论中的后验概率），即一个事件实际已经发生了，反推在什么参数条件下，这个事件发生的概率最大。&lt;/p&gt;
-&lt;p&gt;在二分类问题中，$y$ 只取 0 或 1，可以组合起来表示 $y$ 的概率：
-&lt;/p&gt;
-$$
-P(y) = P(y=1)^{y} P(y=0)^{1-y}
-$$&lt;p&gt;
-我们可以把 $y=1$ 代入上式验证下：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;左边是 $P(y=1)$；&lt;/li&gt;
-&lt;li&gt;右边是 $P(y=1)^{1} P(y=0)^{0}$，也为 $P(y=1)$。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;上面的式子，更严谨的写法需要加上特征 $x$ 和参数 $\beta$：
-&lt;/p&gt;
-$$
-P(y|x, \beta) = P(y=1|x, \beta)^{y}[1 - P(y=1|x, \beta)]^{1-y}
-$$&lt;p&gt;
-前面说了，$\frac{1}{1+e^{-x\beta}}$ 表示的就是 $P(y=1)$，代入上式：&lt;/p&gt;
-$$
-P(y|x, \beta) = \left(\frac{1}{1+e^{-x\beta}}\right)^{y}\left(1 - \frac{1}{1+e^{-x\beta}}\right)^{1-y}
-$$&lt;p&gt;
-根据最优 $\beta$ 的定义，也就是最大化我们见到的样本数据的概率，即求下式的最大值：&lt;/p&gt;
-$$
-\mathcal{L}(\beta) = \prod_{i=1}^{n} P(y_{i} \mid x_{i}, \beta) = \prod_{i=1}^{n}\left(\frac{1}{1+e^{-x_{i} \beta}}\right)^{y_{i}}\left(1 - \frac{1}{1+e^{-x_{i} \beta}}\right)^{1-y_{i}}
-$$&lt;p&gt;
-这个式子来源于$\mathcal{L}(\beta|x) = P(x|\beta)$，即对于某个观测值 $y_i$，似然函数的值 $\mathcal{L}(\beta|y_{i})$，就等于条件概率的值 $P(y_{i}|\beta)$。&lt;/p&gt;
-&lt;p&gt;另外我们知道，如果事件 A 与事件 B 相互独立，那么两者同时发生的概率为 $P(A)^{*}P(B)$。那么我们观测到的 $y_1, y_2, \ldots, y_n$，他们同时发生的概率就是 $\prod_{i=1}^{n} P(y_{i}|\beta)$。&lt;/p&gt;
-&lt;p&gt;因为一系列的 $x_i$ 和 $y_i$ 都是我们实际观测到的数据，式子中未知的只有 $\beta$。因此，现在问题就成了求 $\beta$ 在取什么值的时候，$\mathcal{L}(\beta)$ 能达到最大值。&lt;/p&gt;
-&lt;p&gt;$\mathcal{L}(\beta)$ 是所有观测到的 $y$ 发生概率的乘积，这种情况求最大值比较麻烦，一般我们会先取对数，将乘积转化成加法。&lt;/p&gt;
-&lt;p&gt;取对数后，转化成下式：&lt;/p&gt;
-$$
-\log\mathcal{L}(\beta) = \sum_{i=1}^{n}\left(\left[y_{i} \cdot \log\left(\frac{1}{1+e^{-x_{i}\beta}}\right)\right] + \left[\left(1-y_{i}\right) \cdot \log\left(1 - \frac{1}{1+e^{-x_{i}\beta}}\right)\right]\right)
-$$&lt;p&gt;
-接下来想办法求上式的最大值就可以了，求解前，我们要提一下逻辑回归的损失函数。&lt;/p&gt;
-&lt;h3 id=&#34;损失函数&#34;&gt;损失函数
-&lt;/h3&gt;&lt;p&gt;可以采用残差平方和，带入Sigmond函数有：
-&lt;/p&gt;
-$$
-Q = \sum_{i=1}^{n} \left( y_i - \frac{1}{1 + e^{-\mathbf{x}_i \boldsymbol{\beta}}} \right)^2
-$$&lt;p&gt;
-因为非凸，容易陷入局部极小，所以对两边取对数，即&lt;strong&gt;对数损失函数&lt;/strong&gt;:
-&lt;/p&gt;
-$$
-J(\beta) = -\log\mathcal{L}(\beta) = -\sum_{i=1}^{n}\left[y_{i}\log P\left(y_{i}\right)+\left(1-y_{i}\right)\log\left(1-P\left(y_{i}\right)\right)\right]
-$$&lt;p&gt;
-对于该问题的求解，可以用&lt;strong&gt;梯度下降法&lt;/strong&gt;&lt;/p&gt;
-</description>
+&lt;/p&gt;</description>
         </item>
         <item>
         <title>线性回归</title>
-        <link>https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
+        <link>https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</link>
         <pubDate>Mon, 24 Nov 2025 20:52:57 +0800</pubDate>
         
-        <guid>https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
-        <description>&lt;img src="https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall.png" alt="Featured image of post 线性回归" /&gt;&lt;h3 id=&#34;一元线性回归&#34;&gt;一元线性回归
+        <guid>https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</guid>
+        <description>&lt;img src="https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall.png" alt="Featured image of post 线性回归" /&gt;&lt;h3 id=&#34;一元线性回归&#34;&gt;一元线性回归
 &lt;/h3&gt;&lt;p&gt;基本方程：
 &lt;/p&gt;
 $$
 y = \beta_{0} + \beta_{1}x
 $$&lt;p&gt;
-当给定参数$\beta_{0}$和$\beta_{1}$后，函数图像呈现&lt;strong&gt;一条直线&lt;/strong&gt;。当我们只用一个$x$来预测$y$，就是&lt;strong&gt;一元线性回归&lt;/strong&gt;，但在一般条件下，这两个参数是未知的，我们知道的只有$x$和$y$，在二维图像上表现为一个个单独的点，&lt;strong&gt;线性回归就是要找到一条直线，尽可能让这条线去拟合图中的点&lt;/strong&gt;（即所有的$x$和$y$的组合）。&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1.png&#34;
-	width=&#34;640&#34;
-	height=&#34;480&#34;
-	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_8975bc443cb4959.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_38e7fce06d964f15.png 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;无扰动&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;133&#34;
-		data-flex-basis=&#34;320px&#34;
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;这是非常理想的情况下，在实际中，数据点会十分散乱，线性回归就是在杂乱中寻找规律：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2.png&#34;
-	width=&#34;640&#34;
-	height=&#34;480&#34;
-	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_e670753ccfb10674.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_3465e9e9af260ff1.png 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;添加扰动&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;133&#34;
-		data-flex-basis=&#34;320px&#34;
-	
-&gt;&lt;/p&gt;
-&lt;h3 id=&#34;损失函数&#34;&gt;损失函数
-&lt;/h3&gt;&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3.png&#34;
-	width=&#34;640&#34;
-	height=&#34;480&#34;
-	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_311f4d747f25fb56.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_38702406ac0412d6.png 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;双直线&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;133&#34;
-		data-flex-basis=&#34;320px&#34;
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;既然是用直线拟合散点，为什么最终得到的直线是蓝色的那根而不是绿色的，散点都在这两条线附近，所以我们需要一个&lt;strong&gt;评判标准，用于评价哪条才是最“合适”的&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;一个很直观的标准就是看哪条线和散点之间的偏差最大，也就是&lt;strong&gt;真实值和预测值间的差值&lt;/strong&gt;，即&lt;strong&gt;残差&lt;/strong&gt;，用公式表示即：
-&lt;/p&gt;
-$$
-e = y - \hat{y}
-$$&lt;p&gt;
-图像表示为：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4.png&#34;
-	width=&#34;931&#34;
-	height=&#34;537&#34;
-	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_4e211df32d95de81.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_1992b6d7ebbab3d2.png 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;残差图像&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;173&#34;
-		data-flex-basis=&#34;416px&#34;
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;对于我们数据中的每个点如此计算一遍，再将所有的$e_{i}^{2}$相加，就能量化出拟合的直线和实际之间的误差。公式表示为：
-&lt;/p&gt;
-$$
-Q=\sum_{i=1}^{n}(y_{i}-\hat{y}_{i})^{2}=\sum_{i=1}^{n}(y_{i}-(\hat{\beta}_{0}+\hat{\beta}_{1}x_{i}))^{2}
-$$&lt;p&gt;
-这个公式是&lt;strong&gt;残差平方和&lt;/strong&gt;，即SSE（Sum of Squares for Error），在机器学习中它是回归问题中最常用的&lt;strong&gt;损失函数&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;现在我们知道了&lt;strong&gt;损失函数是衡量回归模型误差的函数，也就是我们要的“直线”的评价标准。这个函数的值越小，说明直线越能拟合我们的数据。&lt;/strong&gt;&lt;/p&gt;
-&lt;h3 id=&#34;最小二乘估计&#34;&gt;最小二乘估计
-&lt;/h3&gt;&lt;p&gt;最小二乘估计是用来计算$\beta_{0}$和$\beta_{1}$的方法，我们知道，两点确定一线，有两组x，y的值，就能算出来$\beta_{0}$和$\beta_{1}$。但是现在我们有很多点，且并不正好落在一条直线上，这么多点每两点都能确定一条直线，这到底要怎么确定选哪条直线呢？&lt;/p&gt;
-&lt;p&gt;将一切回归到评价准则，对于一条最适合的线，其损失函数的值一定是最小的，对于一个一元二次函数，其导函数为0的点处取到最小函数值，而在损失函数中，存在两个变量，为二元二次函数，其函数图像大致为：&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5.png&#34;
-	width=&#34;643&#34;
-	height=&#34;482&#34;
-	srcset=&#34;https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_d075332fee245e13.png 480w, https://Entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_374b95cac7e6a017.png 1024w&#34;
-	loading=&#34;lazy&#34;
-	
-		alt=&#34;三维凸函数图&#34;
-	
-	
-		class=&#34;gallery-image&#34; 
-		data-flex-grow=&#34;133&#34;
-		data-flex-basis=&#34;320px&#34;
-	
-&gt;&lt;/p&gt;
-&lt;p&gt;在微积分中，若闭区间内是凹函数，则极小值即为最小值，导数为0时，Q取最小值，因此对两个未知量求偏导，令其为0，则：
-&lt;/p&gt;
-$$
-\frac{\partial Q}{\partial\beta_{0}}=2\sum_{i=1}^{n}\left(y_{i}-\hat{\beta}_{0}-\hat{\beta}_{1}x_{i}\right)=0
-$$$$
-\frac{\partial Q}{\partial\beta_{1}}=2\sum_{i=1}^{n}\left(y_{i}-\hat{\beta}_{0}-\hat{\beta}_{1}x_{i}\right)x_{i}=0
-$$&lt;p&gt;将散点值代入，即可求得。&lt;/p&gt;
-</description>
+当给定参数$\beta_{0}$和$\beta_{1}$后，函数图像呈现&lt;strong&gt;一条直线&lt;/strong&gt;。当我们只用一个$x$来预测$y$，就是&lt;strong&gt;一元线性回归&lt;/strong&gt;，但在一般条件下，这两个参数是未知的，我们知道的只有$x$和$y$，在二维图像上表现为一个个单独的点，&lt;strong&gt;线性回归就是要找到一条直线，尽可能让这条线去拟合图中的点&lt;/strong&gt;（即所有的$x$和$y$的组合）。&lt;/p&gt;</description>
         </item>
         
     </channel>

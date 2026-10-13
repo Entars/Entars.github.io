@@ -2,34 +2,33 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
         <title>Pages on 南国遗梦的小站</title>
-        <link>https://Entars.github.io/page/</link>
+        <link>https://entars.github.io/page/</link>
         <description>Recent content in Pages on 南国遗梦的小站</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <copyright>Haibo Huang</copyright>
-        <lastBuildDate>Tue, 28 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://Entars.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 28 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://entars.github.io/page/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>归档</title>
-        <link>https://Entars.github.io/archives/</link>
+        <link>https://entars.github.io/archives/</link>
         <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/archives/</guid>
+        <guid>https://entars.github.io/archives/</guid>
         <description></description>
         </item>
         <item>
         <title>关于</title>
-        <link>https://Entars.github.io/%E5%85%B3%E4%BA%8E/</link>
+        <link>https://entars.github.io/%E5%85%B3%E4%BA%8E/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/%E5%85%B3%E4%BA%8E/</guid>
-        <description>&lt;p&gt;一个抛弃了本专业的小小项目助理，目前正在努力学习，争取有一天能有大大的价值。&lt;/p&gt;
-</description>
+        <guid>https://entars.github.io/%E5%85%B3%E4%BA%8E/</guid>
+        <description>&lt;p&gt;一个抛弃了本专业的小小项目助理，目前正在努力学习，争取有一天能有大大的价值。&lt;/p&gt;</description>
         </item>
         <item>
         <title>搜索</title>
-        <link>https://Entars.github.io/search/</link>
+        <link>https://entars.github.io/search/</link>
         <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
         
-        <guid>https://Entars.github.io/search/</guid>
+        <guid>https://entars.github.io/search/</guid>
         <description></description>
         </item>
         
