@@ -50,9 +50,11 @@
         src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
     }
 
-     
     :root {
-        --code-font-family: "JetBrains Mono";  
+         
+        --code-font-family: "JetBrains Mono", var(--zh-font-family), monospace;
+         
+        --zh-font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei";
     }
 
     code {
