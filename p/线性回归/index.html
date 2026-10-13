@@ -10,10 +10,10 @@
 <meta property='og:description' content="有关线性回归的基本内容，包括基本式、残差平方和以及最小二乘">
 <meta property='og:url' content='https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/'>
 <meta property='og:site_name' content='南国遗梦的小站'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='线性回归' /><meta property='article:tag' content='机器学习' /><meta property='article:published_time' content='2025-11-24T20:52:57&#43;08:00'/><meta property='article:modified_time' content='2025-11-24T20:52:57&#43;08:00'/><meta property='og:image' content='https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall.png' />
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='线性回归' /><meta property='article:tag' content='机器学习' /><meta property='article:published_time' content='2025-11-24T20:52:57&#43;08:00'/><meta property='article:modified_time' content='2025-11-24T20:52:57&#43;08:00'/><meta property='og:image' content='https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_42d9d4e2fca34e0.jpg' />
 <meta name="twitter:title" content="线性回归">
 <meta name="twitter:description" content="有关线性回归的基本内容，包括基本式、残差平方和以及最小二乘"><meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content='https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall.png' />
+    <meta name="twitter:image" content='https://entars.github.io/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_42d9d4e2fca34e0.jpg' />
     <link rel="shortcut icon" href="/favicon.ico" />
 <style>
      
@@ -353,8 +353,8 @@ version: "1.114"
     <header class="article-header">
         <div class="article-image">
             <a href="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
-                <img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_54077472e0cd4678.png"
-                        srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_54077472e0cd4678.png 800w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_360dd2b1058f7c8d.png 1600w"
+                <img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_129c34459999e639.webp"
+                        srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_129c34459999e639.webp 800w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall_hu_64d63a34be6df3cb.webp 1600w"
                         width="800" 
                         height="387" 
                         loading="lazy"
@@ -464,10 +464,10 @@ $$
 y = \beta_{0} + \beta_{1}x
 $$<p>
 当给定参数$\beta_{0}$和$\beta_{1}$后，函数图像呈现<strong>一条直线</strong>。当我们只用一个$x$来预测$y$，就是<strong>一元线性回归</strong>，但在一般条件下，这两个参数是未知的，我们知道的只有$x$和$y$，在二维图像上表现为一个个单独的点，<strong>线性回归就是要找到一条直线，尽可能让这条线去拟合图中的点</strong>（即所有的$x$和$y$的组合）。</p>
-<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1.png"
+<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_e3bf6f042af5c663.webp"
 	width="640"
 	height="480"
-	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_8975bc443cb4959.png 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_38e7fce06d964f15.png 1024w"
+	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_e609db7eb31962e9.webp 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_1_hu_e3bf6f042af5c663.webp 1024w"
 	loading="lazy"
 	
 		alt="无扰动"
@@ -479,10 +479,10 @@ $$<p>
 	
 ></p>
 <p>这是非常理想的情况下，在实际中，数据点会十分散乱，线性回归就是在杂乱中寻找规律：</p>
-<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2.png"
+<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_55296a7e623863d4.webp"
 	width="640"
 	height="480"
-	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_e670753ccfb10674.png 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_3465e9e9af260ff1.png 1024w"
+	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_a364ab8961bee43b.webp 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_2_hu_55296a7e623863d4.webp 1024w"
 	loading="lazy"
 	
 		alt="添加扰动"
@@ -494,10 +494,10 @@ $$<p>
 	
 ></p>
 <h3 id="损失函数">损失函数
-</h3><p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3.png"
+</h3><p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_8004fa684c73eb73.webp"
 	width="640"
 	height="480"
-	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_311f4d747f25fb56.png 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_38702406ac0412d6.png 1024w"
+	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_4949967b390ecbef.webp 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_3_hu_8004fa684c73eb73.webp 1024w"
 	loading="lazy"
 	
 		alt="双直线"
@@ -515,10 +515,10 @@ $$
 e = y - \hat{y}
 $$<p>
 图像表示为：</p>
-<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4.png"
+<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_3fba61add0d3fb6b.webp"
 	width="931"
 	height="537"
-	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_4e211df32d95de81.png 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_1992b6d7ebbab3d2.png 1024w"
+	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_e1dc787832cd4d7b.webp 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_4_hu_3fba61add0d3fb6b.webp 1024w"
 	loading="lazy"
 	
 		alt="残差图像"
@@ -539,10 +539,10 @@ $$<p>
 <h3 id="最小二乘估计">最小二乘估计
 </h3><p>最小二乘估计是用来计算$\beta_{0}$和$\beta_{1}$的方法，我们知道，两点确定一线，有两组x，y的值，就能算出来$\beta_{0}$和$\beta_{1}$。但是现在我们有很多点，且并不正好落在一条直线上，这么多点每两点都能确定一条直线，这到底要怎么确定选哪条直线呢？</p>
 <p>将一切回归到评价准则，对于一条最适合的线，其损失函数的值一定是最小的，对于一个一元二次函数，其导函数为0的点处取到最小函数值，而在损失函数中，存在两个变量，为二元二次函数，其函数图像大致为：</p>
-<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5.png"
+<p><img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_ae740cf75e3fe132.webp"
 	width="643"
 	height="482"
-	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_d075332fee245e13.png 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_374b95cac7e6a017.png 1024w"
+	srcset="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_7506d15c7fee3858.webp 480w, /p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/Figure_5_hu_ae740cf75e3fe132.webp 1024w"
 	loading="lazy"
 	
 		alt="三维凸函数图"
