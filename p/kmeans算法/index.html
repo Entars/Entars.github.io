@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Kmeans算法的理论，包含核心思想、数学分析以及伪代码">
+<title>Kmeans算法</title>
+
+<link rel='canonical' href='https://entars.github.io/p/kmeans%E7%AE%97%E6%B3%95/'>
+
+<link rel="stylesheet" href="/scss/style.min.cf28134006f92ef3947603c6d481d1529e68e1a1dfd8e3de16fc4ab19c31e6d6.css"><meta property='og:title' content="Kmeans算法">
+<meta property='og:description' content="Kmeans算法的理论，包含核心思想、数学分析以及伪代码">
+<meta property='og:url' content='https://entars.github.io/p/kmeans%E7%AE%97%E6%B3%95/'>
+<meta property='og:site_name' content='南国遗梦的小站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='机器学习' /><meta property='article:tag' content='kmeans' /><meta property='article:published_time' content='2026-08-09T22:37:33&#43;08:00'/><meta property='article:modified_time' content='2026-08-09T22:37:33&#43;08:00'/>
+<meta name="twitter:title" content="Kmeans算法">
+<meta name="twitter:description" content="Kmeans算法的理论，包含核心思想、数学分析以及伪代码">
+    <link rel="shortcut icon" href="/favicon.ico" />
+<link rel="preload" href="/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+     
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 300;
+        font-display: swap;
+        src: url("/fonts/lato-300.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("/fonts/lato-400.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url("/fonts/lato-700.woff2") format("woff2");
+    }
+
+     
+    @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: swap;
+        src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+    }
+
+    :root {
+         
+        --code-font-family: "JetBrains Mono", var(--zh-font-family), monospace;
+         
+        --zh-font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei";
+    }
+
+    code {
+        font-size: 1.4rem;  
+    }
+
+    pre {
+        font-size: 1.4rem;  
+    }
+</style>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_b439c9ec2036e131.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">南国遗梦的小站</a></h1>
+            <h2 class="site-description">记录学习，记录生活</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://b23.tv/ueaKiC6'
+                        target="_blank"
+                        title="bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, platform, streaming, video]
+category: Brand
+version: "2.1"
+unicode: "f6d2"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" />
+  <path d="M8 3l2 3" />
+  <path d="M16 3l-2 3" />
+  <path d="M9 13v-2" />
+  <path d="M15 11v2" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/Entars'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://qm.qq.com/q/CxmhbYf7YQ'
+                        target="_blank"
+                        title="QQ"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, communicator, internet]
+category: Brand
+unicode: "f606"
+version: "1.114"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 9.748a14.716 14.716 0 0 0 11.995 -.052c.275 -9.236 -11.104 -11.256 -11.995 .052z" />
+  <path d="M18 10c.984 2.762 1.949 4.765 2 7.153c.014 .688 -.664 1.346 -1.184 .303c-.346 -.696 -.952 -1.181 -1.816 -1.456" />
+  <path d="M17 16c.031 1.831 .147 3.102 -1 4" />
+  <path d="M8 20c-1.099 -.87 -.914 -2.24 -1 -4" />
+  <path d="M6 10c-.783 2.338 -1.742 4.12 -1.968 6.43c-.217 2.227 .716 1.644 1.16 .917c.296 -.487 .898 -.934 1.808 -1.347" />
+  <path d="M15.898 13l-.476 -2" />
+  <path d="M8 20l-1.5 1c-.5 .5 -.5 1 .5 1h10c1 0 1 -.5 .5 -1l-1.5 -1" />
+  <path d="M13.75 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+  <path d="M10.25 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#一算法概述">一、算法概述</a></li>
+    <li><a href="#二数学形式化">二、数学形式化</a>
+      <ol>
+        <li><a href="#21-问题定义">2.1 问题定义</a></li>
+        <li><a href="#22-目标函数">2.2 目标函数</a></li>
+        <li><a href="#23-最优解推导">2.3 最优解推导</a></li>
+        <li><a href="#24-收敛性">2.4 收敛性</a></li>
+      </ol>
+    </li>
+    <li><a href="#三伪代码">三、伪代码</a>
+      <ol>
+        <li><a href="#31-标准-k-meanslloyd-算法">3.1 标准 K-Means（Lloyd 算法）</a></li>
+        <li><a href="#32-时间复杂度">3.2 时间复杂度</a></li>
+      </ol>
+    </li>
+    <li><a href="#四初始化方法k-means">四、初始化方法（K-Means++）</a></li>
+    <li><a href="#五k-值的选择">五、K 值的选择</a></li>
+    <li><a href="#六优缺点与注意事项">六、优缺点与注意事项</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/kmeans%E7%AE%97%E6%B3%95/">Kmeans算法</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            Kmeans算法的理论，包含核心思想、数学分析以及伪代码
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time-wrapper">
+        <footer class="article-time">
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-08-09</time>
+            </div>
+            
+
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+            
+        </footer>
+        
+        
+        <footer class="taxonomy-container">
+            
+            <div class="article-categories">
+                
+                <a class="article-category" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" data-text="机器学习">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">机器学习</span>
+                </a>
+                
+            </div>
+            
+
+            
+            <div class="article-tags">
+                
+                <a class="article-tag" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" data-text="机器学习">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">机器学习 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/kmeans/" data-text="Kmeans">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">Kmeans </span>
+                
+                </a>
+                
+            </div>
+            
+        </footer>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="一算法概述">一、算法概述
+</h2><p>K-Means（K 均值聚类）是一种基于<strong>划分</strong>的无监督学习算法，用于把 $n$ 个样本划分为 $K$ 个簇（cluster），使得簇内的样本尽可能相似（紧凑），簇间的样本尽可能不同（分离）。</p>
+<p>其核心思想可以概括为：</p>
+<blockquote>
+<p><strong>不断迭代&quot;分配—更新&quot;两步：把样本分给最近的簇中心，再重新计算簇中心，直到簇中心不再变化。</strong></p></blockquote>
+<hr>
+<h2 id="二数学形式化">二、数学形式化
+</h2><h3 id="21-问题定义">2.1 问题定义
+</h3><p>设样本集为 $X = {x_1, x_2, \cdots, x_n}$，其中每个样本 $x_i \in \mathbb{R}^d$ 是一个 $d$ 维向量。目标是找到 $K$ 个簇中心 $\mu_1, \mu_2, \cdots, \mu_K$，以及每个样本的簇归属 ${c_i \in {1, 2, \cdots, K}}$，使得<strong>损失函数（目标函数）最小化</strong>。</p>
+<h3 id="22-目标函数">2.2 目标函数
+</h3><p>K-Means 最小化的是<strong>簇内误差平方和（Sum of Squared Errors, SSE）</strong>，也称作<strong>惯性（Inertia）</strong>：</p>
+$$
+J = \sum_{i=1}^{n} \sum_{k=1}^{K} w_{ik} \cdot \|x_i - \mu_k\|_2^2
+$$<p>其中：</p>
+<ul>
+<li>$|\cdot|_2$ 表示 L2 范数（欧氏距离）；</li>
+<li>$w_{ik} \in {0, 1}$ 是指示变量：当样本 $x_i$ 属于簇 $k$ 时 $w_{ik} = 1$，否则为 $0$；</li>
+<li>$\mu_k$ 是簇 $k$ 的中心（质心）。</li>
+</ul>
+<p>展开欧氏距离，目标函数可写为：</p>
+$$
+J = \sum_{i=1}^{n} \sum_{k=1}^{K} w_{ik} \sum_{j=1}^{d} (x_{ij} - \mu_{kj})^2
+$$<h3 id="23-最优解推导">2.3 最优解推导
+</h3><p>该目标函数是<strong>非凸</strong>的（关于 $w_{ik}$ 和 $\mu_k$ 是联合非凸的），因此无法直接求全局最优解。K-Means 采用**坐标下降（Coordinate Descent）**策略，交替固定一个变量、优化另一个变量。</p>
+<p><strong>（1）固定簇中心 $\mu_k$，优化归属 $w_{ik}$（分配步）</strong></p>
+<p>每个样本 $x_i$ 应归属于离它最近的簇中心：</p>
+$$
+w_{ik} = \begin{cases} 1 & \text{if } k = \arg\min_k \|x_i - \mu_k\|_2^2 \\ 0 & \text{otherwise} \end{cases}
+$$<p><strong>（2）固定归属 $w_{ik}$，优化簇中心 $\mu_k$（更新步）</strong></p>
+<p>对 $\mu_k$ 求偏导并令其为 $0$：</p>
+$$
+\frac{\partial J}{\partial \mu_k} = -2 \sum_{i=1}^{n} w_{ik} (x_i - \mu_k) = 0
+$$<p>解得簇中心为簇内所有样本的<strong>均值（mean）</strong>：</p>
+$$
+\mu_k = \frac{\sum_{i=1}^{n} w_{ik} x_i}{\sum_{i=1}^{n} w_{ik}} = \frac{1}{|C_k|} \sum_{x_i \in C_k} x_i
+$$<p>其中 $C_k = {x_i \mid w_{ik} = 1}$ 表示簇 $k$ 中的样本集合，$|C_k|$ 为该簇的样本个数。这正是&quot;K-Means（均值）&ldquo;名称的由来。</p>
+<h3 id="24-收敛性">2.4 收敛性
+</h3><ul>
+<li>每次分配步会<strong>不增加</strong>目标函数 $J$（每个样本都被分配到了最近的中心）；</li>
+<li>每次更新步取均值是当前归属下的<strong>最优解</strong>，同样不增加 $J$；</li>
+<li>$J$ 有下界（$\geq 0$），且有限的分配方案只有有限种，因此算法<strong>必然收敛</strong>。</li>
+</ul>
+<blockquote>
+<p>但注意：收敛只能保证到达<strong>局部最优</strong>（局部极小值），无法保证全局最优，最终结果高度依赖于初始簇中心的选择。</p></blockquote>
+<hr>
+<h2 id="三伪代码">三、伪代码
+</h2><h3 id="31-标准-k-meanslloyd-算法">3.1 标准 K-Means（Lloyd 算法）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">输入：
+</span></span><span class="line"><span class="cl">    X        # n×d 的样本矩阵
+</span></span><span class="line"><span class="cl">    K        # 簇的个数
+</span></span><span class="line"><span class="cl">    最大迭代次数 max_iter（可选）
+</span></span><span class="line"><span class="cl">    阈值 ε（可选，用于提前终止）
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">输出：
+</span></span><span class="line"><span class="cl">    μ        # K 个簇中心 (K×d)
+</span></span><span class="line"><span class="cl">    labels   # 每个样本的簇归属 (n 维向量)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">1. 初始化簇中心：
+</span></span><span class="line"><span class="cl">   μ1, μ2, ..., μK ← 从 X 中随机选取 K 个样本（或随机生成 K 个点）
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">2. repeat：
+</span></span><span class="line"><span class="cl">   # —— 分配步 ——
+</span></span><span class="line"><span class="cl">   for i = 1 to n：
+</span></span><span class="line"><span class="cl">       labels[i] ← argmin_{k} ‖x_i − μ_k‖²
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   # —— 更新步 ——
+</span></span><span class="line"><span class="cl">   for k = 1 to K：
+</span></span><span class="line"><span class="cl">       C_k ← { x_i | labels[i] = k }        # 簇 k 的样本集合
+</span></span><span class="line"><span class="cl">       μ_k ← (1/|C_k|) · Σ_{x_i ∈ C_k} x_i   # 求均值作为新中心
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   计算本次目标函数值 J ← Σ_i ‖x_i − μ_{labels[i]}‖²
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">   until 簇中心变化量 &lt; ε  或  达到 max_iter  或  归属不再变化
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">3. return μ, labels
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="32-时间复杂度">3.2 时间复杂度
+</h3><ul>
+<li>每轮迭代：计算所有 $n$ 个样本到 $K$ 个中心的距离，共 $O(n \cdot K \cdot d)$；</li>
+<li>总复杂度：$O(n \cdot K \cdot d \cdot T)$，其中 $T$ 为迭代轮数（通常 $T$ 很小，收敛很快）。</li>
+</ul>
+<hr>
+<h2 id="四初始化方法k-means">四、初始化方法（K-Means++）
+</h2><p>标准随机初始化容易陷入差的局部最优。<strong>K-Means++</strong> 通过让初始中心彼此尽量远离来改善结果：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1. 从样本中均匀随机选取第一个中心 μ1
+</span></span><span class="line"><span class="cl">2. for k = 2 to K：
+</span></span><span class="line"><span class="cl">     # 对每个样本 x_i，计算其到最近已有中心的距离平方 D(x_i)²
+</span></span><span class="line"><span class="cl">     # 以概率正比于 D(x_i)² 选择下一个中心 μk
+</span></span><span class="line"><span class="cl">     D(x_i) ← min_{j&lt;k} ‖x_i − μ_j‖²
+</span></span><span class="line"><span class="cl">     μk ← 以 P(x_i) = D(x_i)² / Σ_m D(x_m)² 的概率采样得到
+</span></span><span class="line"><span class="cl">3. 得到初始中心后，再执行标准 K-Means 迭代
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="五k-值的选择">五、K 值的选择
+</h2><p>K-Means 需要<strong>预先指定 K</strong>，常用的选择方法：</p>
+<ul>
+<li><strong>肘部法（Elbow Method）</strong>：绘制不同 K 下的 SSE 曲线，选择&quot;肘部&quot;拐点处的 K；</li>
+<li><strong>轮廓系数（Silhouette Coefficient）</strong>：综合衡量簇内紧凑度与簇间分离度，选择使平均轮廓系数最大的 K；</li>
+<li><strong>Gap Statistic</strong>：将 SSE 与随机参考分布的 SSE 对比，选取差距最大的 K。</li>
+</ul>
+<hr>
+<h2 id="六优缺点与注意事项">六、优缺点与注意事项
+</h2><p><strong>优点：</strong></p>
+<ul>
+<li>简单、高效，时间复杂度低，适合大规模数据；</li>
+<li>思想直观，易于实现与解释。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>需预先指定 K；</li>
+<li>对初始中心敏感，可能陷入局部最优；</li>
+<li>对异常值（outliers）敏感（均值会被拉偏）；</li>
+<li>只适用于<strong>凸形、等大小</strong>的簇，对任意形状的簇效果差；</li>
+<li>对特征尺度敏感，使用前通常需要<strong>标准化（z-score / Min-Max）</strong>；</li>
+<li>本质是硬划分（hard assignment），每个样本只能属于一个簇。</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>
+        
+            <a href="/tags/kmeans/">Kmeans</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/logistic%E5%9B%9E%E5%BD%92/">
+        
+        
+            <div class="article-image">
+                <img src="/p/logistic%E5%9B%9E%E5%BD%92/wallpaper.489a81f2b84b90b1011192e3b55fd408_hu_9968d428c86729a9.jpeg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Logistic回归"
+                        
+                        data-hash="md5-SJqB8rhLkLEBEZLjtV/UCA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Logistic回归</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall.c8df8068583a78501b224e084b457a50_hu_eccbb93ba92b851d.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 线性回归"
+                        
+                        data-hash="md5-yN&#43;AaFg6eFAbIk4IS0V6UA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">线性回归</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2025 - 
+        
+        2026 Haibo Huang
+    </section>
+    
+    <section class="powerby">
+        
+            恍如昨日，嗤笑今朝 <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script
+        src="/js/vibrant.min.6b0711da39e8e242395f4ccbf1ec74be2db3f8a324176e21516f1678f480f473.js"
+        integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="
+        crossorigin="anonymous"
+        ></script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+{/* Fonts are self-hosted: see layouts/partials/head/custom.html */}
+
+
+    </body>
+</html>
