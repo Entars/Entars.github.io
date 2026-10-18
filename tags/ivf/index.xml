@@ -13,7 +13,7 @@
         <pubDate>Thu, 04 Jun 2026 16:11:20 +0800</pubDate>
         
         <guid>https://entars.github.io/p/%E5%80%92%E6%8E%92%E6%96%87%E4%BB%B6%E7%B4%A2%E5%BC%95/</guid>
-        <description>&lt;h2 id=&#34;1-要解决什么问题&#34;&gt;1. 要解决什么问题
+        <description>&lt;img src="https://entars.github.io/p/%E5%80%92%E6%8E%92%E6%96%87%E4%BB%B6%E7%B4%A2%E5%BC%95/wallpaper.png" alt="Featured image of post 倒排文件索引" /&gt;&lt;h2 id=&#34;1-要解决什么问题&#34;&gt;1. 要解决什么问题
 &lt;/h2&gt;&lt;p&gt;在向量检索（比如用 embedding 做相似性搜索）中，最朴素的做法是&lt;strong&gt;暴力搜索（Brute-force / Flat）&lt;/strong&gt;：把查询向量和库中每一个向量做距离计算，取 Top-K。时间复杂度 O(N×D)，N 是向量总数，D 是维度。当 N 达到百万、亿级时，暴力搜索不可接受。&lt;/p&gt;</description>
         </item>
         
