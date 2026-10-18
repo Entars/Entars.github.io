@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="IVF（倒排文件索引）的原理、实现与进阶：涵盖 K-means 聚类建索引、nprobe 参数调优、边界问题、残差向量与 IVF+PQ 压缩、自适应 nprobe 策略，附简化 Python 实现，面向理解与动手实现。">
+<title>倒排文件索引</title>
+
+<link rel='canonical' href='https://entars.github.io/p/%E5%80%92%E6%8E%92%E6%96%87%E4%BB%B6%E7%B4%A2%E5%BC%95/'>
+
+<link rel="stylesheet" href="/scss/style.min.cf28134006f92ef3947603c6d481d1529e68e1a1dfd8e3de16fc4ab19c31e6d6.css"><meta property='og:title' content="倒排文件索引">
+<meta property='og:description' content="IVF（倒排文件索引）的原理、实现与进阶：涵盖 K-means 聚类建索引、nprobe 参数调优、边界问题、残差向量与 IVF+PQ 压缩、自适应 nprobe 策略，附简化 Python 实现，面向理解与动手实现。">
+<meta property='og:url' content='https://entars.github.io/p/%E5%80%92%E6%8E%92%E6%96%87%E4%BB%B6%E7%B4%A2%E5%BC%95/'>
+<meta property='og:site_name' content='南国遗梦的小站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='ANN' /><meta property='article:tag' content='向量检索' /><meta property='article:tag' content='IVF' /><meta property='article:tag' content='Faiss' /><meta property='article:published_time' content='2026-06-04T16:11:20&#43;08:00'/><meta property='article:modified_time' content='2026-06-04T16:11:20&#43;08:00'/>
+<meta name="twitter:title" content="倒排文件索引">
+<meta name="twitter:description" content="IVF（倒排文件索引）的原理、实现与进阶：涵盖 K-means 聚类建索引、nprobe 参数调优、边界问题、残差向量与 IVF+PQ 压缩、自适应 nprobe 策略，附简化 Python 实现，面向理解与动手实现。">
+    <link rel="shortcut icon" href="/favicon.ico" />
+<link rel="preload" href="/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+     
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 300;
+        font-display: swap;
+        src: url("/fonts/lato-300.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("/fonts/lato-400.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url("/fonts/lato-700.woff2") format("woff2");
+    }
+
+     
+    @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: swap;
+        src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+    }
+
+    :root {
+         
+        --code-font-family: "JetBrains Mono", var(--zh-font-family), monospace;
+         
+        --zh-font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei";
+    }
+
+    code {
+        font-size: 1.4rem;  
+    }
+
+    pre {
+        font-size: 1.4rem;  
+    }
+</style>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_b439c9ec2036e131.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">南国遗梦的小站</a></h1>
+            <h2 class="site-description">记录学习，记录生活</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://b23.tv/ueaKiC6'
+                        target="_blank"
+                        title="bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, platform, streaming, video]
+category: Brand
+version: "2.1"
+unicode: "f6d2"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" />
+  <path d="M8 3l2 3" />
+  <path d="M16 3l-2 3" />
+  <path d="M9 13v-2" />
+  <path d="M15 11v2" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/Entars'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://qm.qq.com/q/CxmhbYf7YQ'
+                        target="_blank"
+                        title="QQ"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, communicator, internet]
+category: Brand
+unicode: "f606"
+version: "1.114"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 9.748a14.716 14.716 0 0 0 11.995 -.052c.275 -9.236 -11.104 -11.256 -11.995 .052z" />
+  <path d="M18 10c.984 2.762 1.949 4.765 2 7.153c.014 .688 -.664 1.346 -1.184 .303c-.346 -.696 -.952 -1.181 -1.816 -1.456" />
+  <path d="M17 16c.031 1.831 .147 3.102 -1 4" />
+  <path d="M8 20c-1.099 -.87 -.914 -2.24 -1 -4" />
+  <path d="M6 10c-.783 2.338 -1.742 4.12 -1.968 6.43c-.217 2.227 .716 1.644 1.16 .917c.296 -.487 .898 -.934 1.808 -1.347" />
+  <path d="M15.898 13l-.476 -2" />
+  <path d="M8 20l-1.5 1c-.5 .5 -.5 1 .5 1h10c1 0 1 -.5 .5 -1l-1.5 -1" />
+  <path d="M13.75 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+  <path d="M10.25 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-要解决什么问题">1. 要解决什么问题</a></li>
+    <li><a href="#2-核心思想先聚类再搜索">2. 核心思想：先聚类，再搜索</a></li>
+    <li><a href="#3-理解-nprobe搜索时探访多少个桶">3. 理解 nprobe：搜索时探访多少个桶</a>
+      <ol>
+        <li><a href="#直观理解">直观理解</a></li>
+        <li><a href="#三个基准值">三个基准值</a></li>
+        <li><a href="#关键性质">关键性质</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-训练过程详解">4. 训练过程详解</a></li>
+    <li><a href="#5-搜索过程详解">5. 搜索过程详解</a></li>
+    <li><a href="#6-与暴力搜索的对比">6. 与暴力搜索的对比</a></li>
+    <li><a href="#7-内存消耗分析">7. 内存消耗分析</a></li>
+    <li><a href="#8-边界问题--ivf-的固有精度瓶颈">8. 边界问题 — IVF 的固有精度瓶颈</a>
+      <ol>
+        <li><a href="#问题本质">问题本质</a></li>
+        <li><a href="#量化影响">量化影响</a></li>
+        <li><a href="#缓解手段">缓解手段</a></li>
+      </ol>
+    </li>
+    <li><a href="#9-残差向量--ivfpq-的数学基础">9. 残差向量 — IVF+PQ 的数学基础</a>
+      <ol>
+        <li><a href="#定义">定义</a></li>
+        <li><a href="#为什么重要">为什么重要</a></li>
+        <li><a href="#ivfpq-的完整链路">IVF+PQ 的完整链路</a></li>
+        <li><a href="#为什么残差让-pq-更有效">为什么残差让 PQ 更有效</a></li>
+        <li><a href="#压缩收益">压缩收益</a></li>
+      </ol>
+    </li>
+    <li><a href="#10-自适应-nprobe--告别一刀切">10. 自适应 nprobe — 告别一刀切</a>
+      <ol>
+        <li><a href="#固定-nprobe-的问题">固定 nprobe 的问题</a></li>
+        <li><a href="#方法一基于距离比最常用">方法一：基于距离比（最常用）</a></li>
+        <li><a href="#方法二基于候选集质量更鲁棒">方法二：基于候选集质量（更鲁棒）</a></li>
+        <li><a href="#方法三查询感知的历史统计">方法三：查询感知的历史统计</a></li>
+        <li><a href="#实际效果">实际效果</a></li>
+        <li><a href="#在-faiss-中的使用">在 Faiss 中的使用</a></li>
+      </ol>
+    </li>
+    <li><a href="#11-一个简化的-python-实现">11. 一个简化的 Python 实现</a></li>
+    <li><a href="#12-常见问题">12. 常见问题</a></li>
+    <li><a href="#13-ivf-vs-其他-ann-方法">13. IVF vs 其他 ANN 方法</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E5%80%92%E6%8E%92%E6%96%87%E4%BB%B6%E7%B4%A2%E5%BC%95/">倒排文件索引</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            IVF（倒排文件索引）的原理、实现与进阶：涵盖 K-means 聚类建索引、nprobe 参数调优、边界问题、残差向量与 IVF&#43;PQ 压缩、自适应 nprobe 策略，附简化 Python 实现，面向理解与动手实现。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time-wrapper">
+        <footer class="article-time">
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-06-04</time>
+            </div>
+            
+
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 9 分钟
+                </time>
+            </div>
+            
+        </footer>
+        
+        
+        <footer class="taxonomy-container">
+            
+            <div class="article-categories">
+                
+                <a class="article-category" href="/categories/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/" data-text="向量检索">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">向量检索</span>
+                </a>
+                
+            </div>
+            
+
+            
+            <div class="article-tags">
+                
+                <a class="article-tag" href="/tags/ann/" data-text="ANN">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">ANN </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/" data-text="向量检索">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">向量检索 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/ivf/" data-text="IVF">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">IVF </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/faiss/" data-text="Faiss">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">Faiss </span>
+                
+                </a>
+                
+            </div>
+            
+        </footer>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-要解决什么问题">1. 要解决什么问题
+</h2><p>在向量检索（比如用 embedding 做相似性搜索）中，最朴素的做法是<strong>暴力搜索（Brute-force / Flat）</strong>：把查询向量和库中每一个向量做距离计算，取 Top-K。时间复杂度 O(N×D)，N 是向量总数，D 是维度。当 N 达到百万、亿级时，暴力搜索不可接受。</p>
+<p><strong>近似最近邻搜索（ANN）</strong> 的思路是：<strong>牺牲一点精度，换来数量级的加速</strong>。IVF（Inverted File Index）就是最经典、最常用的 ANN 方法之一。</p>
+<h2 id="2-核心思想先聚类再搜索">2. 核心思想：先聚类，再搜索
+</h2><p>IVF 分为两个阶段：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span><span class="lnt">9
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">训练阶段（Indexing）：
+</span></span><span class="line"><span class="cl">  1. 用 K-means 对所有向量聚成 nlist 个类
+</span></span><span class="line"><span class="cl">  2. 每个类有一个质心（centroid）
+</span></span><span class="line"><span class="cl">  3. 建立倒排列表：每个质心 → 属于该类的所有向量
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">搜索阶段（Searching）：
+</span></span><span class="line"><span class="cl">  1. 对查询向量 q，找到离它最近的 nprobe 个质心
+</span></span><span class="line"><span class="cl">  2. 只在这些质心对应的倒排列表中搜索
+</span></span><span class="line"><span class="cl">  3. 返回全局 Top-K
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>关键参数：</strong></p>
+<ul>
+<li><strong>nlist</strong>：聚类数量。越大，每个桶越小，但质心越多。</li>
+<li><strong>nprobe</strong>：搜索时探访的聚类数。越大，精度越高但速度越慢。</li>
+</ul>
+<h2 id="3-理解-nprobe搜索时探访多少个桶">3. 理解 nprobe：搜索时探访多少个桶
+</h2><p>nprobe 是 IVF 搜索阶段最重要的参数，它在精度和速度之间做权衡。</p>
+<h3 id="直观理解">直观理解
+</h3><p>训练阶段 K-means 把空间切成了 nlist 个桶：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">所有数据点被分配到 nlist 个桶中
+</span></span><span class="line"><span class="cl">       ┌────┬────┬────┬────┬────┬────┬────┐
+</span></span><span class="line"><span class="cl">       │桶0 │桶1 │桶2 │桶3 │桶4 │桶5 │... │
+</span></span><span class="line"><span class="cl">       └────┴────┴────┴────┴────┴────┴────┘
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>搜索时，查询 q 先和所有 nlist 个质心算距离，按距离从小到大排序。nprobe 决定只取前多少个桶来搜：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">离 q 最近的质心排序： 桶33(最近), 桶78, 桶12, 桶401, ...
+</span></span><span class="line"><span class="cl">                     ├───── nprobe=1 ─────┤
+</span></span><span class="line"><span class="cl">                     ├───── nprobe=3 ────────────┤
+</span></span><span class="line"><span class="cl">                     ├───── nprobe=10 ─────────────────────────┤
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>只搜这些桶里的向量，其他桶完全不碰。</p>
+<h3 id="三个基准值">三个基准值
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>nprobe</th>
+          <th>行为</th>
+          <th>速度</th>
+          <th>精度</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>只搜最近的 1 个桶</td>
+          <td>最快</td>
+          <td>可能很低（30-60%），见边界问题</td>
+      </tr>
+      <tr>
+          <td>nlist/10 左右</td>
+          <td>经验常用值，如 nlist=1000, nprobe=10</td>
+          <td>比暴力快 50-100x</td>
+          <td>通常 90-98%</td>
+      </tr>
+      <tr>
+          <td>nlist</td>
+          <td>搜全部桶 = 退化为暴力搜索</td>
+          <td>最慢</td>
+          <td>100%</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="关键性质">关键性质
+</h3><p><strong>nprobe 是搜索时参数，建好索引后可以随时调整，不需要重新训练。</strong> 这意味着你可以先建索引，上线后根据实际场景灵活配置。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">调优流程：
+</span></span><span class="line"><span class="cl">  1. 固定 nlist（决定索引结构）
+</span></span><span class="line"><span class="cl">  2. nprobe 从 1 开始增大
+</span></span><span class="line"><span class="cl">  3. 观察召回率曲线，在拐点附近选择一个值
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>典型拐点：在 nprobe=10-20 附近，召回率增长曲线从陡峭变得平缓，此时继续增大 nprobe 对精度帮助很小，但搜索时间线性增长。</p>
+<h2 id="4-训练过程详解">4. 训练过程详解
+</h2><p><strong>Step 1: K-means 聚类</strong></p>
+<ul>
+<li>输入：N 个 D 维向量</li>
+<li>输出：nlist 个质心（centroids），形状为 (nlist, D)</li>
+<li>通常用 <strong>K-means++</strong> 初始化，迭代直到收敛</li>
+</ul>
+<p><strong>Step 2: 建立倒排列表</strong></p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">index = {
+</span></span><span class="line"><span class="cl">  centroid_0: [vec_id_3, vec_id_7, vec_id_15, ...],
+</span></span><span class="line"><span class="cl">  centroid_1: [vec_id_1, vec_id_9, ...],
+</span></span><span class="line"><span class="cl">  ...
+</span></span><span class="line"><span class="cl">  centroid_{nlist-1}: [...]
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>每个向量被分配到离它最近的质心。</p>
+<p><strong>直观理解：</strong> IVF 把向量空间划分成 nlist 个 <strong>Voronoi cell</strong>，每个 cell 对应一个质心。</p>
+<h2 id="5-搜索过程详解">5. 搜索过程详解
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">1. 计算 q 到所有 nlist 个质心的距离
+</span></span><span class="line"><span class="cl">2. 选出距离最近的 nprobe 个质心
+</span></span><span class="line"><span class="cl">3. 收集这些质心对应的所有向量
+</span></span><span class="line"><span class="cl">4. 在这些向量中做暴力搜索，返回 Top-K
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>如果 <code>nprobe = nlist</code>，退化为全量暴力搜索（精度最高，速度最慢）。
+如果 <code>nprobe = 1</code>，只搜最近的那个桶（速度最快，精度最低）。</p>
+<h2 id="6-与暴力搜索的对比">6. 与暴力搜索的对比
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>指标</th>
+          <th>暴力搜索 (Flat)</th>
+          <th>IVF</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>时间复杂度</td>
+          <td>O(N×D)</td>
+          <td>O(nlist×D + (N/nlist)×nprobe×D)</td>
+      </tr>
+      <tr>
+          <td>精度</td>
+          <td>100% (精确)</td>
+          <td>≈90-99% (近似)</td>
+      </tr>
+      <tr>
+          <td>内存</td>
+          <td>原始向量</td>
+          <td>原始向量 + 质心 + 倒排表</td>
+      </tr>
+      <tr>
+          <td>适用规模</td>
+          <td>≤10⁵</td>
+          <td>10⁵~10⁹</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>以 N=1,000,000, nlist=1000, nprobe=10 为例：</p>
+<ul>
+<li>暴力搜索：计算 1,000,000 次距离</li>
+<li>IVF：先算 1000 次（质心），再算约 10,000 次（每个桶约 1000 个向量，探访 10 个桶）</li>
+<li>加速比约 <strong>100x</strong>，精度通常仍有 95%+</li>
+</ul>
+<h2 id="7-内存消耗分析">7. 内存消耗分析
+</h2><p>IVF 本身不压缩向量，所以<strong>内存开销 = 原始向量 + 质心 + 倒排表</strong>。</p>
+<ul>
+<li>原始向量：N × D × 4 字节（float32）</li>
+<li>质心：nlist × D × 4 字节（float32）</li>
+<li>倒排表：N × 4 字节（每个向量的 ID）</li>
+</ul>
+<p>当 N=10⁸, D=768 时，仅原始向量就需要约 300GB 内存。</p>
+<p><strong>这正是 IVF 的瓶颈：</strong> 虽然搜索加速了，但内存没有减少。解决方案是与**乘积量化（PQ）**配合使用（IVF+PQ，即 Faiss 中的 IVFPQ），对残差做量化压缩。</p>
+<h2 id="8-边界问题--ivf-的固有精度瓶颈">8. 边界问题 — IVF 的固有精度瓶颈
+</h2><h3 id="问题本质">问题本质
+</h3><p>IVF 的搜索策略隐含一个假设：<strong>如果数据点 x 是查询 q 的最近邻，那么 x 所属的质心一定离 q 也很近。</strong></p>
+<p>这个假设在边界附近不成立。</p>
+<p>假设K-means 的聚类结果将空间划分成若干 Voronoi cell——每个 cell 是到对应质心距离最近的所有点的集合，cell 之间的分界线是相邻两个质心的<strong>垂直平分线</strong>。</p>
+<p>当查询点 q 靠近边界时，问题就出现了：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      C1 的 Voronoi cell     C2 的 Voronoi cell
+</span></span><span class="line"><span class="cl">      ┌──────────────────┼──────────────────┐
+</span></span><span class="line"><span class="cl">      │                  │                  │
+</span></span><span class="line"><span class="cl">      │                  │                  │
+</span></span><span class="line"><span class="cl">      │        C1●       │       ●C2        │
+</span></span><span class="line"><span class="cl">      │                  │                  │
+</span></span><span class="line"><span class="cl">      │                  │    x             │  ← 数据点 x（属于 C2）
+</span></span><span class="line"><span class="cl">      │                  │    ·             │
+</span></span><span class="line"><span class="cl">      │           q      │                  │
+</span></span><span class="line"><span class="cl">      │           ·      │                  │
+</span></span><span class="line"><span class="cl">      └──────────────────┼──────────────────┘
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">                    边界（垂直平分线）
+</span></span></code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>查询点 q 离 C1 的质心更近 → 只搜 C1 的桶（nprobe=1）</li>
+<li>但离 q 最近的数据点 x 属于 C2，因为它在边界的另一侧</li>
+<li>C2 从未被探访，x <strong>必然被漏掉</strong></li>
+</ul>
+<p>即使 nprobe=2 能覆盖两个桶，如果边界附近有多个质心交错，仍可能漏掉真正的最近邻——只是概率降低了。</p>
+<h3 id="量化影响">量化影响
+</h3><p>nprobe=1 的极端情况下，<strong>召回率可能只有 30-60%</strong>，取决于数据分布。随着 nprobe 增大，召回率曲线呈<strong>对数增长</strong>——前几个桶贡献最大，后面收益递减。</p>
+<h3 id="缓解手段">缓解手段
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>手段</th>
+          <th>原理</th>
+          <th>代价</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>增大 nprobe</td>
+          <td>覆盖更多边界区域</td>
+          <td>线性增加搜索时间</td>
+      </tr>
+      <tr>
+          <td>多分配（multi-assignment）</td>
+          <td>训练时把一个向量分配到最近的多个质心</td>
+          <td>增加存储和搜索范围</td>
+      </tr>
+      <tr>
+          <td><strong>IVF + 重排</strong></td>
+          <td>先用 IVF 粗筛出 Top-K×倍数，再用原始向量精确重排</td>
+          <td>多一次重排开销，需保留原始向量</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>重排是最实用的方案：比如 <code>k=10</code> 时 IVF 先取 <code>k×倍数=100</code> 个候选，再用原始向量算一遍距离精确排序，可以在几乎不损失速度的前提下把召回率从 85% 提升到 98%+。</p>
+<h2 id="9-残差向量--ivfpq-的数学基础">9. 残差向量 — IVF+PQ 的数学基础
+</h2><h3 id="定义">定义
+</h3><p>残差 = 原始向量 - 所属质心</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">residual</span> <span class="o">=</span> <span class="n">vector</span> <span class="o">-</span> <span class="n">centroids</span><span class="p">[</span><span class="n">label</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="为什么重要">为什么重要
+</h3><p>原始向量在空间中散乱分布。减去质心后，<strong>残差向量的分布集中在零点附近</strong>，幅值显著减小。这种集中性使得**乘积量化（PQ）**对残差的编码效率远高于对原始向量的编码。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">原始向量分布：                        残差向量分布：
+</span></span><span class="line"><span class="cl">    ·     ·                          · · ·
+</span></span><span class="line"><span class="cl">  ·   ·   ·    ·                    ········  
+</span></span><span class="line"><span class="cl">·  ·  ·  ·  ·  ·  ·                 ·········
+</span></span><span class="line"><span class="cl">   ·  ·   ·                          ·····
+</span></span><span class="line"><span class="cl">                                       ···
+</span></span><span class="line"><span class="cl">    （分散）                          （集中在零点）
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="ivfpq-的完整链路">IVF+PQ 的完整链路
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">训练：
+</span></span><span class="line"><span class="cl">  1. K-means 聚类 → nlist 个质心
+</span></span><span class="line"><span class="cl">  2. 对每个向量：残差 = 向量 - 最近的质心
+</span></span><span class="line"><span class="cl">  3. 对残差做 PQ → 存储 PQ 编码（而不是原始向量）
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">搜索：
+</span></span><span class="line"><span class="cl">  1. 计算 q 到所有质心的距离 → 选 nprobe 个桶
+</span></span><span class="line"><span class="cl">  2. 对每个选中的桶：
+</span></span><span class="line"><span class="cl">     a. 计算 q 到该质心的残差：q - centroid
+</span></span><span class="line"><span class="cl">     b. 用 PQ 的查找表（LUT）快速估算距离
+</span></span><span class="line"><span class="cl">  3. 合并结果，取 Top-K
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="为什么残差让-pq-更有效">为什么残差让 PQ 更有效
+</h3><p>PQ 的原理是把 D 维空间分成 M 个子空间，每个子空间用 k_sub 个码字编码。如果向量的幅值大、分布散，每个子空间需要更多码字来覆盖同样大的范围。残差集中在零点附近，同样的码字数量下量化误差更小——这意味着<strong>可以用更少的码字达到同样的精度，或者同码字数量下精度更高</strong>。</p>
+<h3 id="压缩收益">压缩收益
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>单向量存储</th>
+          <th>N=10⁸, D=768</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>原始向量 (float32)</td>
+          <td>3072 字节</td>
+          <td>~300 GB</td>
+      </tr>
+      <tr>
+          <td>IVF (同上)</td>
+          <td>3072 字节</td>
+          <td>~300 GB</td>
+      </tr>
+      <tr>
+          <td>IVF+PQ (M=64, 每子空间 8 位)</td>
+          <td>64 字节</td>
+          <td>~6.4 GB</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>压缩比约 48x</strong>，使全内存索引成为可能。代价是 PQ 量化引入的额外精度损失通常为 1-3%。</p>
+<h2 id="10-自适应-nprobe--告别一刀切">10. 自适应 nprobe — 告别一刀切
+</h2><h3 id="固定-nprobe-的问题">固定 nprobe 的问题
+</h3><p>不同查询的&quot;难度&quot;不同：</p>
+<ul>
+<li><strong>简单查询</strong>：离一个质心极近，其他质心很远 → nprobe=1 就够</li>
+<li><strong>困难查询</strong>：落在多个质心的边界附近 → 需要 nprobe=16 甚至更高</li>
+</ul>
+<p>固定 nprobe 要么<strong>浪费计算</strong>（在简单查询上探访过多桶），要么<strong>损失精度</strong>（在困难查询上探访不够）。</p>
+<h3 id="方法一基于距离比最常用">方法一：基于距离比（最常用）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">dists_to_centroids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">d0</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="n">d_</span><span class="p">{</span><span class="n">nlist</span><span class="o">-</span><span class="mi">1</span><span class="p">}])</span>
+</span></span><span class="line"><span class="cl"><span class="n">ratio</span> <span class="o">=</span> <span class="n">dists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">dists</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># 最近 / 次近</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="n">ratio</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>    <span class="c1"># d0 和 d1 接近 → 边界附近，多探访</span>
+</span></span><span class="line"><span class="cl">    <span class="n">nprobe</span> <span class="o">=</span> <span class="n">large</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span><span class="p">:</span>                    <span class="c1"># d0 明显更小 → 安全，少探访</span>
+</span></span><span class="line"><span class="cl">    <span class="n">nprobe</span> <span class="o">=</span> <span class="n">small</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>直观含义：最近质心和次近质心的距离差距越小，q 越可能在边界上。</p>
+<h3 id="方法二基于候选集质量更鲁棒">方法二：基于候选集质量（更鲁棒）
+</h3><p>先以小的 nprobe 做一轮搜索，看 Top-K 候选的距离分布：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">如果 top1 ~ topK 的距离没有明显断层 → 候选不稳定，增大 nprobe 再搜
+</span></span><span class="line"><span class="cl">如果 top1 &lt;&lt; topK                   → 结果置信度高，停止
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>这其实是一种<strong>迭代加深</strong>策略，类似 IDDFS。</p>
+<h3 id="方法三查询感知的历史统计">方法三：查询感知的历史统计
+</h3><p>记录每个质心被选中的历史命中率（该桶中的向量有多少次出现在最终 Top-K 中）。搜索时，优先探访历史命中率高的桶，而不是一味按质心距离排序。但这种方法需要维护统计信息，且在面对分布偏移时可能劣化。</p>
+<h3 id="实际效果">实际效果
+</h3><p>好的自适应策略可以在<strong>保持精度的同时减少 30-50% 的搜索时间</strong>。距离比法实现成本最低，是实际中最常用的方案。</p>
+<h3 id="在-faiss-中的使用">在 Faiss 中的使用
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">faiss</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">index</span> <span class="o">=</span> <span class="n">faiss</span><span class="o">.</span><span class="n">index_factory</span><span class="p">(</span><span class="s2">&#34;IVF100,Flat&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">index</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">index</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Faiss 支持在搜索时动态调整 nprobe</span>
+</span></span><span class="line"><span class="cl"><span class="n">index</span><span class="o">.</span><span class="n">nprobe</span> <span class="o">=</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="n">index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 不同查询可以用不同的 SearchParameters</span>
+</span></span><span class="line"><span class="cl"><span class="n">params</span> <span class="o">=</span> <span class="n">faiss</span><span class="o">.</span><span class="n">SearchParameters</span><span class="p">(</span><span class="n">nprobe</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">index</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>注意 Faiss 本身不内置自适应 nprobe 逻辑，需要自己在外层实现距离比判断，然后为不同查询传入不同的 <code>nprobe</code>。</p>
+<h2 id="11-一个简化的-python-实现">11. 一个简化的 Python 实现
+</h2><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">IVF</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nlist</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">nprobe</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">nlist</span> <span class="o">=</span> <span class="n">nlist</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">nprobe</span> <span class="o">=</span> <span class="n">nprobe</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">kmeans</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">inverted_lists</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="kc">None</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vectors</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;训练 IVF 索引&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="n">vectors</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">nlist</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">labels</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kmeans</span><span class="o">.</span><span class="n">fit_predict</span><span class="p">(</span><span class="n">vectors</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">inverted_lists</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nlist</span><span class="p">)}</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">vec_id</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">inverted_lists</span><span class="p">[</span><span class="n">label</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">vec_id</span><span class="p">,</span> <span class="n">vectors</span><span class="p">[</span><span class="n">vec_id</span><span class="p">]))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;搜索 Top-K 近似最近邻&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">dists_to_centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">kmeans</span><span class="o">.</span><span class="n">cluster_centers_</span> <span class="o">-</span> <span class="n">query</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nearest_centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">dists_to_centroids</span><span class="p">)[:</span><span class="bp">self</span><span class="o">.</span><span class="n">nprobe</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">nearest_centroids</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">candidates</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">inverted_lists</span><span class="p">[</span><span class="n">cid</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="ow">not</span> <span class="n">candidates</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">cand_ids</span><span class="p">,</span> <span class="n">cand_vecs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">candidates</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">cand_vecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cand_vecs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">dists</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cand_vecs</span> <span class="o">-</span> <span class="n">query</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">topk_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">dists</span><span class="p">)[:</span><span class="n">k</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="p">[</span><span class="n">cand_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">topk_indices</span><span class="p">],</span> <span class="n">dists</span><span class="p">[</span><span class="n">topk_indices</span><span class="p">]</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>注意事项：</strong> 仅用于教学理解，生产环境应使用 Faiss 等优化库（C++ 实现、SIMD 加速、多线程、GPU 支持）。</p>
+<h2 id="12-常见问题">12. 常见问题
+</h2><p><strong>Q: nlist 和 nprobe 怎么选？</strong></p>
+<ul>
+<li>nlist ≈ 4√N 是一个经验值（也有 √N 的说法）</li>
+<li>nprobe 从 1 开始调大，直到精度满足需求</li>
+</ul>
+<p><strong>Q: IVF 适合我的场景吗？</strong></p>
+<ul>
+<li>数据量大（&gt;10⁵）且可以接受少量精度损失 → 适合</li>
+<li>要求 100% 召回 → 不适合，应该用 Flat</li>
+<li>内存受限 → 单独 IVF 不够，需要 IVF+PQ</li>
+</ul>
+<p><strong>Q: K-means 的训练开销？</strong></p>
+<ul>
+<li>K-means 复杂度 O(N×D×nlist×niter)，是建索引的主要成本</li>
+<li>好在训练是<strong>离线一次性</strong>的</li>
+<li>Faiss 实现了更快的 K-means（使用 IVF 本身加速 K-means 的训练）</li>
+</ul>
+<h2 id="13-ivf-vs-其他-ann-方法">13. IVF vs 其他 ANN 方法
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>特点</th>
+          <th>适合场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>IVF</strong></td>
+          <td>简单、高效、内存高</td>
+          <td>通用场景，配合 PQ 更佳</td>
+      </tr>
+      <tr>
+          <td><strong>HNSW</strong></td>
+          <td>图结构，精度高，内存极高</td>
+          <td>小到中等规模，精度敏感</td>
+      </tr>
+      <tr>
+          <td><strong>PQ</strong></td>
+          <td>向量压缩，精度损失</td>
+          <td>内存极度受限</td>
+      </tr>
+      <tr>
+          <td><strong>IVF+PQ</strong></td>
+          <td>速度 + 压缩，最均衡</td>
+          <td>大规模生产场景</td>
+      </tr>
+      <tr>
+          <td><strong>NSW</strong></td>
+          <td>HNSW 的前身</td>
+          <td>了解 HNSW 的必经之路</td>
+      </tr>
+  </tbody>
+</table></div>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/ann/">ANN</a>
+        
+            <a href="/tags/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/">向量检索</a>
+        
+            <a href="/tags/ivf/">IVF</a>
+        
+            <a href="/tags/faiss/">Faiss</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="">
+    <a href="/p/%E5%88%86%E5%B1%82%E5%8F%AF%E5%AF%BC%E8%88%AA%E5%B0%8F%E4%B8%96%E7%95%8C%E5%9B%BE/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">分层可导航小世界图</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2025 - 
+        
+        2026 Haibo Huang
+    </section>
+    
+    <section class="powerby">
+        
+            恍如昨日，嗤笑今朝 <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script
+        src="/js/vibrant.min.6b0711da39e8e242395f4ccbf1ec74be2db3f8a324176e21516f1678f480f473.js"
+        integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="
+        crossorigin="anonymous"
+        ></script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+{/* Fonts are self-hosted: see layouts/partials/head/custom.html */}
+
+
+    </body>
+</html>

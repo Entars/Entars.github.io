@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>小端序 on 南国遗梦的小站</title>
+        <link>https://entars.github.io/tags/%E5%B0%8F%E7%AB%AF%E5%BA%8F/</link>
+        <description>Recent content in 小端序 on 南国遗梦的小站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>Haibo Huang</copyright>
+        <lastBuildDate>Sat, 10 Oct 2026 01:07:09 +0800</lastBuildDate><atom:link href="https://entars.github.io/tags/%E5%B0%8F%E7%AB%AF%E5%BA%8F/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>小端序</title>
+        <link>https://entars.github.io/p/%E5%B0%8F%E7%AB%AF%E5%BA%8F/</link>
+        <pubDate>Sat, 10 Oct 2026 01:07:09 +0800</pubDate>
+        
+        <guid>https://entars.github.io/p/%E5%B0%8F%E7%AB%AF%E5%BA%8F/</guid>
+        <description>&lt;p&gt;小端序理解：把“小的一头”（序列尾部）放在最前面&lt;/p&gt;
+&lt;p&gt;数字“42”&lt;/p&gt;
+&lt;p&gt;“十位”（4）在左边，“个位”（2）写在右边，&lt;strong&gt;先写大数，后写小数&lt;/strong&gt;的习惯，叫&lt;strong&gt;大端序&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;小端序&lt;/strong&gt;则是反过来，先把“个位”（2）写左边，再把“十位”（4）写在右边&lt;/p&gt;</description>
+        </item>
+        
+    </channel>
+</rss>
