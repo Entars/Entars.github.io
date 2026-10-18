@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="从原理到实现：HNSW 完整理解指南">
+<title>分层可导航小世界图</title>
+
+<link rel='canonical' href='https://entars.github.io/p/%E5%88%86%E5%B1%82%E5%8F%AF%E5%AF%BC%E8%88%AA%E5%B0%8F%E4%B8%96%E7%95%8C%E5%9B%BE/'>
+
+<link rel="stylesheet" href="/scss/style.min.cf28134006f92ef3947603c6d481d1529e68e1a1dfd8e3de16fc4ab19c31e6d6.css"><meta property='og:title' content="分层可导航小世界图">
+<meta property='og:description' content="从原理到实现：HNSW 完整理解指南">
+<meta property='og:url' content='https://entars.github.io/p/%E5%88%86%E5%B1%82%E5%8F%AF%E5%AF%BC%E8%88%AA%E5%B0%8F%E4%B8%96%E7%95%8C%E5%9B%BE/'>
+<meta property='og:site_name' content='南国遗梦的小站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='HNSW' /><meta property='article:tag' content='NSW' /><meta property='article:tag' content='最近邻问题' /><meta property='article:tag' content='最近邻搜索' /><meta property='article:tag' content='六度人脉' /><meta property='article:tag' content='ANN' /><meta property='article:tag' content='向量检索' /><meta property='article:published_time' content='2026-06-04T12:47:03&#43;08:00'/><meta property='article:modified_time' content='2026-06-04T12:47:03&#43;08:00'/>
+<meta name="twitter:title" content="分层可导航小世界图">
+<meta name="twitter:description" content="从原理到实现：HNSW 完整理解指南">
+    <link rel="shortcut icon" href="/favicon.ico" />
+<link rel="preload" href="/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+     
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 300;
+        font-display: swap;
+        src: url("/fonts/lato-300.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("/fonts/lato-400.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url("/fonts/lato-700.woff2") format("woff2");
+    }
+
+     
+    @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: swap;
+        src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+    }
+
+    :root {
+         
+        --code-font-family: "JetBrains Mono", var(--zh-font-family), monospace;
+         
+        --zh-font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei";
+    }
+
+    code {
+        font-size: 1.4rem;  
+    }
+
+    pre {
+        font-size: 1.4rem;  
+    }
+</style>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_b439c9ec2036e131.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">南国遗梦的小站</a></h1>
+            <h2 class="site-description">记录学习，记录生活</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://b23.tv/ueaKiC6'
+                        target="_blank"
+                        title="bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, platform, streaming, video]
+category: Brand
+version: "2.1"
+unicode: "f6d2"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" />
+  <path d="M8 3l2 3" />
+  <path d="M16 3l-2 3" />
+  <path d="M9 13v-2" />
+  <path d="M15 11v2" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/Entars'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://qm.qq.com/q/CxmhbYf7YQ'
+                        target="_blank"
+                        title="QQ"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, communicator, internet]
+category: Brand
+unicode: "f606"
+version: "1.114"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 9.748a14.716 14.716 0 0 0 11.995 -.052c.275 -9.236 -11.104 -11.256 -11.995 .052z" />
+  <path d="M18 10c.984 2.762 1.949 4.765 2 7.153c.014 .688 -.664 1.346 -1.184 .303c-.346 -.696 -.952 -1.181 -1.816 -1.456" />
+  <path d="M17 16c.031 1.831 .147 3.102 -1 4" />
+  <path d="M8 20c-1.099 -.87 -.914 -2.24 -1 -4" />
+  <path d="M6 10c-.783 2.338 -1.742 4.12 -1.968 6.43c-.217 2.227 .716 1.644 1.16 .917c.296 -.487 .898 -.934 1.808 -1.347" />
+  <path d="M15.898 13l-.476 -2" />
+  <path d="M8 20l-1.5 1c-.5 .5 -.5 1 .5 1h10c1 0 1 -.5 .5 -1l-1.5 -1" />
+  <path d="M13.75 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+  <path d="M10.25 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li><a href="#1-背景与动机">1. 背景与动机</a></li>
+    <li><a href="#2-理论基础六度分隔与可导航小世界">2. 理论基础：六度分隔与可导航小世界</a>
+      <ol>
+        <li><a href="#21-可导航小世界公式">2.1 可导航小世界公式</a></li>
+        <li><a href="#22-为什么需要远程捷径">2.2 为什么需要远程捷径</a></li>
+      </ol>
+    </li>
+    <li><a href="#3-单层-nswnavigable-small-world">3. 单层 NSW（Navigable Small World）</a>
+      <ol>
+        <li><a href="#31-结构">3.1 结构</a></li>
+        <li><a href="#32-搜索算法贪心-knn-search">3.2 搜索算法（贪心 KNN Search）</a></li>
+        <li><a href="#33-优点与局限">3.3 优点与局限</a></li>
+      </ol>
+    </li>
+    <li><a href="#4-多层-hnswhierarchical-nsw">4. 多层 HNSW（Hierarchical NSW）</a>
+      <ol>
+        <li><a href="#41-设计思想">4.1 设计思想</a></li>
+        <li><a href="#42-核心优势">4.2 核心优势</a></li>
+      </ol>
+    </li>
+    <li><a href="#5-核心算法详解以实现为导向">5. 核心算法详解（以实现为导向）</a>
+      <ol>
+        <li><a href="#51-层级分配-level-generation">5.1 层级分配 (Level Generation)</a></li>
+        <li><a href="#52-search-算法">5.2 SEARCH 算法</a></li>
+        <li><a href="#53-insert-算法">5.3 INSERT 算法</a></li>
+        <li><a href="#54-select-neighbors-邻居选择策略">5.4 SELECT-NEIGHBORS 邻居选择策略</a></li>
+        <li><a href="#55-连接剪枝-shrink-connections">5.5 连接剪枝 (Shrink Connections)</a></li>
+      </ol>
+    </li>
+    <li><a href="#6-参数体系深度解析">6. 参数体系深度解析</a>
+      <ol>
+        <li><a href="#61-核心参数总表">6.1 核心参数总表</a></li>
+        <li><a href="#62-m-与-m_max0-的关系">6.2 M 与 M_max0 的关系</a></li>
+        <li><a href="#63-ef_construction-的选择">6.3 ef_construction 的选择</a></li>
+        <li><a href="#64-ml-的推导">6.4 mL 的推导</a></li>
+        <li><a href="#65-参数交互关系">6.5 参数交互关系</a></li>
+      </ol>
+    </li>
+    <li><a href="#7-调参实战指南">7. 调参实战指南</a>
+      <ol>
+        <li><a href="#71-精度优先场景召回率--99">7.1 精度优先场景（召回率 &gt; 99%）</a></li>
+        <li><a href="#72-延迟优先场景高-qps10ms-级">7.2 延迟优先场景（高 QPS，~10ms 级）</a></li>
+        <li><a href="#73-调参流程推荐">7.3 调参流程（推荐）</a></li>
+        <li><a href="#74-常见陷阱">7.4 常见陷阱</a></li>
+      </ol>
+    </li>
+    <li><a href="#8-工程实现注意事项">8. 工程实现注意事项</a>
+      <ol>
+        <li><a href="#81-删除操作hnsw-的软肋">8.1 删除操作（HNSW 的软肋）</a></li>
+        <li><a href="#82-更新操作">8.2 更新操作</a></li>
+        <li><a href="#83-内存占用分析">8.3 内存占用分析</a></li>
+        <li><a href="#84-并发安全">8.4 并发安全</a></li>
+        <li><a href="#85-内存随数据增长的分析">8.5 内存随数据增长的分析</a></li>
+      </ol>
+    </li>
+    <li><a href="#9-hnsw-vs-其他-ann-算法">9. HNSW vs 其他 ANN 算法</a>
+      <ol>
+        <li><a href="#为什么-hnsw-仍然是最好的">为什么 HNSW 仍然是&quot;最好&quot;的？</a></li>
+        <li><a href="#什么时候不用-hnsw">什么时候<strong>不用</strong> HNSW？</a></li>
+      </ol>
+    </li>
+    <li><a href="#10-从理论到实现的路线图">10. 从理论到实现的路线图</a></li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E5%88%86%E5%B1%82%E5%8F%AF%E5%AF%BC%E8%88%AA%E5%B0%8F%E4%B8%96%E7%95%8C%E5%9B%BE/">分层可导航小世界图</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            从原理到实现：HNSW 完整理解指南
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time-wrapper">
+        <footer class="article-time">
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-06-04</time>
+            </div>
+            
+
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 10 分钟
+                </time>
+            </div>
+            
+        </footer>
+        
+        
+        <footer class="taxonomy-container">
+            
+            <div class="article-categories">
+                
+                <a class="article-category" href="/categories/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/" data-text="向量检索">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">向量检索</span>
+                </a>
+                
+            </div>
+            
+
+            
+            <div class="article-tags">
+                
+                <a class="article-tag" href="/tags/hnsw/" data-text="HNSW">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">HNSW </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/nsw/" data-text="NSW">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">NSW </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E6%9C%80%E8%BF%91%E9%82%BB%E9%97%AE%E9%A2%98/" data-text="最近邻问题">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">最近邻问题 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E6%9C%80%E8%BF%91%E9%82%BB%E6%90%9C%E7%B4%A2/" data-text="最近邻搜索">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">最近邻搜索 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E5%85%AD%E5%BA%A6%E4%BA%BA%E8%84%89/" data-text="六度人脉">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">六度人脉 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/ann/" data-text="ANN">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">ANN </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/" data-text="向量检索">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">向量检索 </span>
+                
+                </a>
+                
+            </div>
+            
+        </footer>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h2 id="1-背景与动机">1. 背景与动机
+</h2><p>当数据（图片、音频、文本）被 Embedding 模型向量化后，如何从海量向量中快速找到最近邻是一个核心问题（<strong>最近邻问题</strong>），这个过程称为<strong>最近邻搜索</strong>（Nearest Neighbor Search）。</p>
+<p>精确最近邻（KNN）需要 O(N*d) 的暴力比较，数据量稍大就无法接受。<strong>近似最近邻搜索（ANN）</strong> 通过牺牲一点点精度换取数量级的加速，HNSW 是目前 ANN 领域的 SOTA 方案之一。</p>
+<blockquote>
+<p>参考论文：<a class="link" href="https://arxiv.org/abs/1603.09320"  target="_blank" rel="noopener"
+    >Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs</a> (Malkov &amp; Yashunin, 2016)</p></blockquote>
+<hr>
+<h2 id="2-理论基础六度分隔与可导航小世界">2. 理论基础：六度分隔与可导航小世界
+</h2><p>核心理论是<strong>六度人脉</strong>：世界上任意两人平均只需 6 个中间人就能建立联系。</p>
+<h3 id="21-可导航小世界公式">2.1 可导航小世界公式
+</h3>$$
+\text{局部密友} + \text{少量远程捷径} = \text{任意两点之间距离极短}
+$$<h3 id="22-为什么需要远程捷径">2.2 为什么需要远程捷径
+</h3><p>纯局部连接形成的是<strong>网格/聚类</strong>——跨区域必须逐跳穿过中间节点，路径长度与节点数成正比（O(√N)）。加入少量随机长边后，任意两点跳数降至 O(log N)，这就是小世界图的核心性质。</p>
+<hr>
+<h2 id="3-单层-nswnavigable-small-world">3. 单层 NSW（Navigable Small World）
+</h2><h3 id="31-结构">3.1 结构
+</h3><ul>
+<li><strong>稠密本地连接</strong>：每个向量只和离自己最近的 <strong>M</strong> 个向量建立连接（精确近邻边）</li>
+<li><strong>少量随机长边</strong>：插入过程中，新节点被随机连接到的早期节点会成为&quot;枢纽&quot;，自动形成长边</li>
+</ul>
+<h3 id="32-搜索算法贪心-knn-search">3.2 搜索算法（贪心 KNN Search）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">function SEARCH_NSW(query, entry, K):
+</span></span><span class="line"><span class="cl">    // 从 entry 出发，每一步只走到离 query 最近的邻居
+</span></span><span class="line"><span class="cl">    cur = entry
+</span></span><span class="line"><span class="cl">    while True:
+</span></span><span class="line"><span class="cl">        nearest = None
+</span></span><span class="line"><span class="cl">        minDist = INF
+</span></span><span class="line"><span class="cl">        for neighbor in neighbors(cur):
+</span></span><span class="line"><span class="cl">            d = distance(neighbor, query)
+</span></span><span class="line"><span class="cl">            if d &lt; minDist:
+</span></span><span class="line"><span class="cl">                minDist = d
+</span></span><span class="line"><span class="cl">                nearest = neighbor
+</span></span><span class="line"><span class="cl">        if minDist &gt;= distance(cur, query):
+</span></span><span class="line"><span class="cl">            break  // 无法再改进 → 局部最优
+</span></span><span class="line"><span class="cl">        cur = nearest
+</span></span><span class="line"><span class="cl">    return cur  // 近似最近邻
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>贪心搜索返回的是<strong>局部最优</strong>而非全局最优，但因为小世界图的拓扑性质，这个局部最优通常离全局最优很近。</p>
+<h3 id="33-优点与局限">3.3 优点与局限
+</h3><p>优点：结构简单、高维友好、任意两点跳数少（5~6 跳）。</p>
+<p>局限：</p>
+<ul>
+<li>数据量百万级以上，跳数增长到 7~9 跳</li>
+<li><strong>没有全局入口策略</strong>——从任意点出发，第一次跳的目的地不可控</li>
+<li>搜索路由可能先&quot;绕远路&quot;再收缩</li>
+</ul>
+<hr>
+<h2 id="4-多层-hnswhierarchical-nsw">4. 多层 HNSW（Hierarchical NSW）
+</h2><h3 id="41-设计思想">4.1 设计思想
+</h3><p>仿照社会分层：顶层是&quot;跨领域大佬&quot;（节点少、长边多），底层是&quot;普通人&quot;（全量节点、本地连接）。搜索时从顶层快速定位区域，逐层下沉精细搜索。</p>
+<p><strong>图层结构</strong>：</p>
+<ul>
+<li><strong>Layer L（顶层）</strong>：节点数最少，全是长边。类比社会名流</li>
+<li><strong>Layer 1</strong>：节点指数级增多，长短边混合</li>
+<li><strong>Layer 0（底层）</strong>：全量节点 + 稠密近邻边，负责最终精准搜索</li>
+</ul>
+<p><img src="/..%5c%e5%88%86%e5%b1%82%e5%8f%af%e5%af%bc%e8%88%aa%e5%b0%8f%e4%b8%96%e7%95%8c%e5%9b%be%5c%e5%88%86%e5%b1%82%e5%9b%be.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="分层图"
+	
+	
+></p>
+<h3 id="42-核心优势">4.2 核心优势
+</h3><p>从顶层一路贪心到底层，搜索路径从单层的 5<del>6 跳压缩到 **2</del>4 跳**。关键改进在于找到<strong>最好的起点</strong>——顶层节点天然就是优质入口。</p>
+<p><img src="/..%5c%e5%88%86%e5%b1%82%e5%8f%af%e5%af%bc%e8%88%aa%e5%b0%8f%e4%b8%96%e7%95%8c%e5%9b%be%5c%e5%b1%82%e7%ba%a7%e6%90%9c%e7%b4%a2%e7%a4%ba%e4%be%8b.png"
+	
+	
+	
+	loading="lazy"
+	
+		alt="层级搜索示例"
+	
+	
+></p>
+<hr>
+<h2 id="5-核心算法详解以实现为导向">5. 核心算法详解（以实现为导向）
+</h2><h3 id="51-层级分配-level-generation">5.1 层级分配 (Level Generation)
+</h3><p>每个节点被分配一个随机层级 <code>l</code>，服从<strong>指数衰减分布</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">function GET_RANDOM_LEVEL(mL):
+</span></span><span class="line"><span class="cl">    // mL = 1 / ln(M)，控制衰减快慢
+</span></span><span class="line"><span class="cl">    return floor(-ln(uniform(0,1)) * mL)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>性质：</p>
+<ul>
+<li>P(level ≥ k) ∝ exp(-k/mL)，每上升一层节点数约除以 M</li>
+<li>顶层期望节点数 = totalNodes × (1 - 1/M)^{topLayer}</li>
+<li>例如 M=16, N=100万，顶层约 100万 × (1-1/16)^{3} ≈ 550 节点</li>
+</ul>
+<h3 id="52-search-算法">5.2 SEARCH 算法
+</h3><p>逐层贪心 + 底层扩大搜索（ef 参数控制宽度）。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">function SEARCH_LAYER(query, entry, ef, layer):
+</span></span><span class="line"><span class="cl">    visited = set()
+</span></span><span class="line"><span class="cl">    candidates = MinHeap()   // 按距离升序，待探索
+</span></span><span class="line"><span class="cl">    results   = MaxHeap()    // 按距离降序，当前 top-ef 候选
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    visited.add(entry)
+</span></span><span class="line"><span class="cl">    candidates.push(entry, dist(entry, query))
+</span></span><span class="line"><span class="cl">    results.push(entry, dist(entry, query))
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    while candidates is not empty:
+</span></span><span class="line"><span class="cl">        c = candidates.pop()          // 离 query 最近的候选
+</span></span><span class="line"><span class="cl">        furthest = results.peek()     // 当前候选中最远的
+</span></span><span class="line"><span class="cl">        if dist(c, query) &gt; dist(furthest, query):
+</span></span><span class="line"><span class="cl">            break                     // 无法再改进（关键剪枝）
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        for neighbor in adj_list[c][layer]:
+</span></span><span class="line"><span class="cl">            if neighbor not in visited:
+</span></span><span class="line"><span class="cl">                visited.add(neighbor)
+</span></span><span class="line"><span class="cl">                f_dist = dist(results.peek(), query)
+</span></span><span class="line"><span class="cl">                d = dist(neighbor, query)
+</span></span><span class="line"><span class="cl">                if d &lt; f_dist or |results| &lt; ef:
+</span></span><span class="line"><span class="cl">                    candidates.push(neighbor, d)
+</span></span><span class="line"><span class="cl">                    results.push(neighbor, d)
+</span></span><span class="line"><span class="cl">                    if |results| &gt; ef:
+</span></span><span class="line"><span class="cl">                        results.pop()  // 移除最远的
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    return results  // 返回 ef 个候选节点
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">function SEARCH(query, K, ef):
+</span></span><span class="line"><span class="cl">    cur = entryPoint
+</span></span><span class="line"><span class="cl">    // 从最高层逐层下降到第 1 层（每层只走 1 个近邻）
+</span></span><span class="line"><span class="cl">    for l in topLayer .. 1:
+</span></span><span class="line"><span class="cl">        cur = SEARCH_LAYER(query, cur, ef=1, l).pop()
+</span></span><span class="line"><span class="cl">    // 底层用完整的 ef 搜索
+</span></span><span class="line"><span class="cl">    return SEARCH_LAYER(query, cur, ef, 0).topK(K)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p><strong>为什么高层用 ef=1？</strong> 高层只为找到下一层入口点，不需要过多候选——选最好的一个就够了，减少无用计算。</p>
+<h3 id="53-insert-算法">5.3 INSERT 算法
+</h3><p>插入 = 分配层级 + 逐层找邻居 + 双向连接 + 必要时剪枝。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">function INSERT(node, M, Mmax, Mmax0, efConstruction, mL):
+</span></span><span class="line"><span class="cl">    level = GET_RANDOM_LEVEL(mL)
+</span></span><span class="line"><span class="cl">    cur = entryPoint
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    // 1. 从顶层搜索到 level+1 层，确定入口
+</span></span><span class="line"><span class="cl">    for l in topLayer .. level + 1:
+</span></span><span class="line"><span class="cl">        cur = SEARCH_LAYER(node, cur, ef=1, l).pop()
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    // 2. 从 min(level, topLayer) 向下插入到 0 层
+</span></span><span class="line"><span class="cl">    for l in min(level, topLayer) .. 0:
+</span></span><span class="line"><span class="cl">        candidates = SEARCH_LAYER(node, cur, efConstruction, l)
+</span></span><span class="line"><span class="cl">        M_layer = (l == 0) ? Mmax0 : M
+</span></span><span class="line"><span class="cl">        neighbors = SELECT_NEIGHBORS(node, candidates, M_layer)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        // 双向连接
+</span></span><span class="line"><span class="cl">        for neighbor in neighbors:
+</span></span><span class="line"><span class="cl">            add_edge(node, neighbor, l)
+</span></span><span class="line"><span class="cl">            add_edge(neighbor, node, l)
+</span></span><span class="line"><span class="cl">            // 如果某节点连接数超限，裁剪其邻居
+</span></span><span class="line"><span class="cl">            if degree(neighbor, l) &gt; limit(neighbor, l):
+</span></span><span class="line"><span class="cl">                shrink_connections(neighbor, l)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        // 3. 更新下一层的入口为当前层找到的最佳点
+</span></span><span class="line"><span class="cl">        cur = closest(candidates)
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    // 4. 如果新节点的 level 比当前顶层高，更新全局入口
+</span></span><span class="line"><span class="cl">    if level &gt; topLayer:
+</span></span><span class="line"><span class="cl">        entryPoint = node
+</span></span><span class="line"><span class="cl">        topLayer = level
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="54-select-neighbors-邻居选择策略">5.4 SELECT-NEIGHBORS 邻居选择策略
+</h3><p>这是 HNSW 的核心创新之一。两种策略：</p>
+<p><strong>Simple 策略（默认回退）</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SELECT_NEIGHBORS_SIMPLE(candidates, M):
+</span></span><span class="line"><span class="cl">    // 直接取距离最近的 M 个候选
+</span></span><span class="line"><span class="cl">    return sort_by_distance(candidates)[:M]
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>问题：选出来的邻居全挤在一起，缺乏&quot;可导航性&quot;。</p>
+<p><strong>Heuristic 策略（推荐）</strong>：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">SELECT_NEIGHBORS_HEURISTIC(candidates, M, layer, query):
+</span></span><span class="line"><span class="cl">    // candidates 按距离 query 排序
+</span></span><span class="line"><span class="cl">    result = []
+</span></span><span class="line"><span class="cl">    queue  = sort_by_distance(candidates)  // 升序
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    // 第一轮：贪心选，只选&#34;非冗余&#34;的
+</span></span><span class="line"><span class="cl">    for c in queue:
+</span></span><span class="line"><span class="cl">        if is_closer_to_existing(c, result, query):
+</span></span><span class="line"><span class="cl">            continue    // c 离某个已选邻居比离 query 更近 → 冗余
+</span></span><span class="line"><span class="cl">        result.append(c)
+</span></span><span class="line"><span class="cl">        if |result| == M:
+</span></span><span class="line"><span class="cl">            return result
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    // 第二轮：如果不够 M 个，从最近者补足
+</span></span><span class="line"><span class="cl">    for c in queue:
+</span></span><span class="line"><span class="cl">        if c not in result:
+</span></span><span class="line"><span class="cl">            result.append(c)
+</span></span><span class="line"><span class="cl">            if |result| == M:
+</span></span><span class="line"><span class="cl">                break
+</span></span><span class="line"><span class="cl">    return result
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>其中 <code>is_closer_to_existing</code> 检查 <code>dist(c, query) &gt; dist(c, any_result)</code>，如果成立说明 c 被已有邻居&quot;覆盖&quot;了，不需要重复连接。</p>
+<p><strong>启发式选择的效果</strong>：生成的邻居在空间中分布更发散，远程捷径更丰富，搜索路径更短。</p>
+<blockquote>
+<p>论文推荐：<strong>底层用 Mmax0 + heuristic</strong>，上层用 M + simple。这是因为底层需要高精度（heuristic 发散好），上层只需要快速路由（simple 足够且更快）。</p></blockquote>
+<h3 id="55-连接剪枝-shrink-connections">5.5 连接剪枝 (Shrink Connections)
+</h3><p>当一个节点的度数超过该层限制（M_max 或 M_max0）时，需要裁剪多余连接——同样用 heuristic 策略保留最&quot;有价值&quot;的邻居。</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">function SHRINK_CONNECTIONS(node, layer):
+</span></span><span class="line"><span class="cl">    candidates = all_neighbors(node, layer)
+</span></span><span class="line"><span class="cl">    new_neighbors = SELECT_NEIGHBORS_HEURISTIC(candidates, limit(layer), layer, node)
+</span></span><span class="line"><span class="cl">    set_neighbors(node, new_neighbors, layer)
+</span></span></code></pre></td></tr></table>
+</div>
+</div><hr>
+<h2 id="6-参数体系深度解析">6. 参数体系深度解析
+</h2><h3 id="61-核心参数总表">6.1 核心参数总表
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>参数</th>
+          <th>含义</th>
+          <th>典型范围</th>
+          <th>默认值（FAISS）</th>
+          <th>对召回的影响</th>
+          <th>对延迟的影响</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>M</strong></td>
+          <td>每层（非底层）最大连接数</td>
+          <td>12~48</td>
+          <td>32</td>
+          <td>M ↑ → 图更密，召回↑</td>
+          <td>M ↑ → 遍历任务↑，延迟↑</td>
+      </tr>
+      <tr>
+          <td><strong>M_max0</strong></td>
+          <td>底层最大连接数</td>
+          <td>2M~4M</td>
+          <td>64</td>
+          <td>↑ → 底层精度↑</td>
+          <td>↑ → 底层搜索慢</td>
+      </tr>
+      <tr>
+          <td><strong>ef_construction</strong></td>
+          <td>建图时搜索宽度</td>
+          <td>100~400</td>
+          <td>200</td>
+          <td>↑ → 图质量↑（边际递减）</td>
+          <td>↑ → 建图慢（O(N log N) → O(N ef log)）</td>
+      </tr>
+      <tr>
+          <td><strong>ef</strong></td>
+          <td>搜索时候选队列大小</td>
+          <td>10~500</td>
+          <td>—</td>
+          <td>↑ → 召回↑（调优最直接）</td>
+          <td>↑ → <strong>线性</strong>增加延迟</td>
+      </tr>
+      <tr>
+          <td><strong>mL</strong></td>
+          <td>层级衰减率</td>
+          <td>1/ln(M) ~ 1/log2(M)</td>
+          <td>1/ln(M)</td>
+          <td>大 → 上层节点多，路径长</td>
+          <td>太大 → 检索变慢；太小 → 顶层过快到底</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="62-m-与-m_max0-的关系">6.2 M 与 M_max0 的关系
+</h3><ul>
+<li>M_max0 通常设为 2*M 或更大，因为底层承担最终精度</li>
+<li>如果 M_max0 = M，底层节点的连接数容易被暴力剪掉太多，导致召回下降</li>
+<li>实现中 <code>limit(l)</code> 在 <code>l==0</code> 时返回 <code>M_max0</code>，否则返回 <code>M</code></li>
+</ul>
+<h3 id="63-ef_construction-的选择">6.3 ef_construction 的选择
+</h3><ul>
+<li>ef_construction ∈ [M, 上限 ~2000]</li>
+<li>ef ∈ [1, 上限]</li>
+<li><strong>关系</strong>：ef_construction ≥ ef（否则建图搜索窄于检索，不合理）</li>
+<li>典型搭配：ef_construction = 200（建图），ef 从 20 ~ 500（运行时动态调）</li>
+</ul>
+<p><strong>召回-ef 曲线有边际递减</strong>，建议画一次曲线找出拐点。</p>
+<h3 id="64-ml-的推导">6.4 mL 的推导
+</h3>$$
+m_L = \frac{1}{\ln(M)}
+$$<p>这个值保证每向上一层，期望节点数除以 M。推导：</p>
+<p>在底层（level=0）有全部 N 个节点。一个节点出现在 level≥k 的概率是 $1/M^k$，所以 level≥k 的期望节点数是 $N / M^k$。当这个值小于 1 时，顶层建立：</p>
+$$
+\frac{N}{M^{L}} < 1 \Rightarrow L > \log_M N = \frac{\ln N}{\ln M}
+$$<p>所以顶层高度 ≈ $\ln N / \ln M$，M=32, N=100万 时顶层 ≈ 4 层。</p>
+<h3 id="65-参数交互关系">6.5 参数交互关系
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">       M 大 → 每层连接多 → 图更密 → 召回高
+</span></span><span class="line"><span class="cl">        ↓                              ↓
+</span></span><span class="line"><span class="cl">   mL 应减小 ← 否则上层节点过多 → 搜索路径长
+</span></span><span class="line"><span class="cl">        ↓
+</span></span><span class="line"><span class="cl">  反之亦然
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>所以 M 和 mL 需要联动调，不能各自独立改。</p>
+<hr>
+<h2 id="7-调参实战指南">7. 调参实战指南
+</h2><h3 id="71-精度优先场景召回率--99">7.1 精度优先场景（召回率 &gt; 99%）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">M</span>              <span class="o">=</span> <span class="mi">32</span><span class="o">~</span><span class="mi">48</span>
+</span></span><span class="line"><span class="cl"><span class="n">M_max0</span>         <span class="o">=</span> <span class="mi">64</span><span class="o">~</span><span class="mi">96</span>
+</span></span><span class="line"><span class="cl"><span class="n">ef_construction</span> <span class="o">=</span> <span class="mi">400</span><span class="o">~</span><span class="mi">800</span>
+</span></span><span class="line"><span class="cl"><span class="n">ef</span>              <span class="o">=</span> <span class="mi">300</span><span class="o">~</span><span class="mi">500</span><span class="err">（检索时）</span>
+</span></span><span class="line"><span class="cl"><span class="n">mL</span>              <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">ln</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>代价：建图慢（5~10 倍基准），内存大，检索延迟高。</p>
+<h3 id="72-延迟优先场景高-qps10ms-级">7.2 延迟优先场景（高 QPS，~10ms 级）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="n">M</span>              <span class="o">=</span> <span class="mi">12</span><span class="o">~</span><span class="mi">16</span>
+</span></span><span class="line"><span class="cl"><span class="n">M_max0</span>         <span class="o">=</span> <span class="mi">24</span><span class="o">~</span><span class="mi">32</span>
+</span></span><span class="line"><span class="cl"><span class="n">ef_construction</span> <span class="o">=</span> <span class="mi">100</span><span class="o">~</span><span class="mi">200</span>
+</span></span><span class="line"><span class="cl"><span class="n">ef</span>              <span class="o">=</span> <span class="mi">20</span><span class="o">~</span><span class="mi">100</span><span class="err">（检索时）</span>
+</span></span><span class="line"><span class="cl"><span class="n">mL</span>              <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">ln</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>代价：召回率可能降至 90~95%。</p>
+<h3 id="73-调参流程推荐">7.3 调参流程（推荐）
+</h3><div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-gdscript3" data-lang="gdscript3"><span class="line"><span class="cl"><span class="mf">1.</span> <span class="err">固定</span> <span class="n">M</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="n">M_max0</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="n">mL</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">ln</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="mf">2.</span> <span class="err">用</span> <span class="n">ef_construction</span> <span class="o">=</span> <span class="mi">200</span> <span class="err">建图</span>
+</span></span><span class="line"><span class="cl"><span class="mf">3.</span> <span class="err">测试不同</span> <span class="n">ef</span> <span class="err">的召回</span><span class="o">-</span><span class="err">延迟曲线</span> <span class="err">→</span> <span class="err">找到</span> <span class="n">ef</span> <span class="err">拐点</span>
+</span></span><span class="line"><span class="cl"><span class="mf">4.</span> <span class="err">若召回不达标，增大</span> <span class="n">M</span> <span class="err">→</span> <span class="n">M_max0</span><span class="p">,</span> <span class="n">ef_construction</span>
+</span></span><span class="line"><span class="cl"><span class="mf">5.</span> <span class="err">在目标</span> <span class="n">ef</span> <span class="err">下微调：</span>
+</span></span><span class="line"><span class="cl">   <span class="o">-</span> <span class="err">若召回达标但延迟高：减小</span> <span class="n">M</span> <span class="err">或</span> <span class="n">ef</span>
+</span></span><span class="line"><span class="cl">   <span class="o">-</span> <span class="err">若延迟低但召回不足：增大</span> <span class="n">M</span> <span class="err">或</span> <span class="n">ef</span><span class="err">（优先调</span> <span class="n">ef</span><span class="err">，代价小）</span>
+</span></span></code></pre></td></tr></table>
+</div>
+</div><h3 id="74-常见陷阱">7.4 常见陷阱
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>现象</th>
+          <th>原因</th>
+          <th>解决</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>建图极慢</td>
+          <td>ef_construction 太大</td>
+          <td>从 200 开始，上线前再加大</td>
+      </tr>
+      <tr>
+          <td>搜索慢但召回高</td>
+          <td>不需要那么高召回，ef 太大</td>
+          <td>减小 ef</td>
+      </tr>
+      <tr>
+          <td>召回低但搜索快</td>
+          <td>ef/M 太小</td>
+          <td>适当增加 ef / M</td>
+      </tr>
+      <tr>
+          <td>建图后召回不随 ef 增长</td>
+          <td>M_max0 太小，底层图太稀疏</td>
+          <td>增大 M_max0</td>
+      </tr>
+      <tr>
+          <td>内存 OOM</td>
+          <td>参数过大 + 数据量超内存</td>
+          <td>减 M / 换 DiskANN / 分片</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="8-工程实现注意事项">8. 工程实现注意事项
+</h2><h3 id="81-删除操作hnsw-的软肋">8.1 删除操作（HNSW 的软肋）
+</h3><p>HNSW <strong>原生不支持删除</strong>。删除一个节点意味着必须重建所有与被删节点相连的边——这在多层结构中极其复杂。</p>
+<p><strong>常见方案</strong>：</p>
+<ol>
+<li><strong>惰性标记（Tombstone）</strong>：标记删除，搜索时跳过。简单，但被删节点仍占用内存，删除多了图质量下降</li>
+<li><strong>标记 + 周期性重建</strong>：累积到阈值（如 20%）后重建整个索引</li>
+<li><strong>原地替换</strong>：将删除节点的邻居重新连接（实现复杂，几乎不用）</li>
+</ol>
+<blockquote>
+<p>实践中大部分生产系统（Milvus、FAISS）采用方案 1+2</p></blockquote>
+<h3 id="82-更新操作">8.2 更新操作
+</h3><p>HNSW 不支持更新，通常实现为删除 + 重新插入。频繁更新的场景建议考虑其他索引（如 IVF 或磁盘方案）。</p>
+<h3 id="83-内存占用分析">8.3 内存占用分析
+</h3><p>每一层存储：</p>
+<ul>
+<li>节点 ID（int）：4B</li>
+<li>邻居列表（边）：每邻接 4B（指针）+ 距离值如果用预计算可额外存储</li>
+</ul>
+<p>单节点内存 ≈ <code>(M_max0 + M * avgLayers) * 4B + 固定开销</code></p>
+<p><strong>Estimate for N=100万, M=32</strong>：</p>
+<ul>
+<li>底层连接数 ≈ N × M_max0 = 100万 × 64 = 6400万条边</li>
+<li>上层连接数 ≈ N × (1 + 1/M + 1/M² + &hellip;) × M ≈ 100万 × 1.03 × 32 ≈ 3300万条边</li>
+<li>总边数 ≈ 1亿条边 ≈ 400MB~800MB（看指针/距离存储方式）</li>
+</ul>
+<blockquote>
+<p>实际中 HNSW 内存占用约为原始数据的 <strong>2~5 倍</strong>（取决于 M 和 M_max0）。M=32 时，100万 128维 float 数据约占用 1~2GB。</p></blockquote>
+<h3 id="84-并发安全">8.4 并发安全
+</h3><ul>
+<li><strong>搜索（读取）</strong>：天然支持无锁并发——搜索只读，不修改图</li>
+<li><strong>插入（写入）</strong>：需要加锁。常见做法：
+<ul>
+<li>全局读写锁（简单但写入时阻塞搜索）</li>
+<li>逐层锁 + CAS（复杂，高性能）</li>
+<li>批量插入后重建（离线场景）</li>
+</ul>
+</li>
+</ul>
+<h3 id="85-内存随数据增长的分析">8.5 内存随数据增长的分析
+</h3><p>HNSW 是<strong>纯内存索引</strong>，数据规模超过可用内存时无法工作。大规模（亿级以上）的选择：</p>
+<ol>
+<li><strong>DiskANN</strong>：HNSW 思想的磁盘版，用 SSD 分页存储图，只加载热数据到内存</li>
+<li><strong>分布式 HNSW</strong>：按 ID 范围分片，每台机器一个独立图，用 Router 合并结果（Milvus 方案）</li>
+<li><strong>混合：Product Quantization (PQ)</strong>：压缩向量后用 HNSW，适合显存不足的 GPU 场景</li>
+</ol>
+<hr>
+<h2 id="9-hnsw-vs-其他-ann-算法">9. HNSW vs 其他 ANN 算法
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>算法</th>
+          <th>检索延迟</th>
+          <th>建图速度</th>
+          <th>内存占用</th>
+          <th>高维支持</th>
+          <th>更新友好</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>HNSW</strong></td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐</td>
+          <td>⭐⭐（大）</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>❌</td>
+          <td>小~中规模、高精度、纯内存</td>
+      </tr>
+      <tr>
+          <td><strong>IVF</strong></td>
+          <td>⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>✅</td>
+          <td>大数据量、GPU加速</td>
+      </tr>
+      <tr>
+          <td><strong>IVF+HNSW</strong></td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐</td>
+          <td>⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>✅</td>
+          <td>兼顾精度与规模（Milvus 默认）</td>
+      </tr>
+      <tr>
+          <td><strong>KD-Tree</strong></td>
+          <td>⭐⭐</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>⭐（d&lt;20）</td>
+          <td>❌</td>
+          <td>低维空间、精确搜索</td>
+      </tr>
+      <tr>
+          <td><strong>LSH</strong></td>
+          <td>⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐</td>
+          <td>⭐⭐⭐</td>
+          <td>✅</td>
+          <td>理论保证、特定距离函数</td>
+      </tr>
+      <tr>
+          <td><strong>DiskANN</strong></td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>✅</td>
+          <td>超大规模（亿级+）、SSD部署</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="为什么-hnsw-仍然是最好的">为什么 HNSW 仍然是&quot;最好&quot;的？
+</h3><ul>
+<li><strong>召回-延迟 Pareto 前沿最先进</strong>——同等召回率下延迟最低，同等延迟下召回最高</li>
+<li>一个索引搞定，不需要训练（IVF 需要训练聚类）——部署简单</li>
+<li>FAISS、Milvus、Qdrant、Weaviate、Chroma、Elasticsearch 都在用</li>
+</ul>
+<h3 id="什么时候不用-hnsw">什么时候<strong>不用</strong> HNSW？
+</h3><ul>
+<li>数据规模超大且内存不足 → DiskANN / 分片</li>
+<li>需要频繁增删改 → IVF / DiskANN</li>
+<li>需要确定性精确结果 → KD-Tree / Brute Force</li>
+<li>部署在 GPU 上 → GPU-IVF（HNSW 不擅长 GPU 并行化）</li>
+</ul>
+<hr>
+<h2 id="10-从理论到实现的路线图">10. 从理论到实现的路线图
+</h2><p>如果自己实现 HNSW，推荐步骤：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span><span class="lnt">8
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Step 1: 实现底层数据结构（邻接表 + 层级管理）
+</span></span><span class="line"><span class="cl">Step 2: 实现单层 NSW 插入 + 贪心搜索（验证正确性）
+</span></span><span class="line"><span class="cl">Step 3: 实现多层 SEARCH（逐层贪心）
+</span></span><span class="line"><span class="cl">Step 4: 实现多层 INSERT（层级分配 + 双向连接）
+</span></span><span class="line"><span class="cl">Step 5: 实现 SELECT-NEIGHBORS heuristic
+</span></span><span class="line"><span class="cl">Step 6: 实现 SHRINK-CONNECTIONS 剪枝
+</span></span><span class="line"><span class="cl">Step 7: 添加 ef 参数和候选队列
+</span></span><span class="line"><span class="cl">Step 8: 调参优化
+</span></span></code></pre></td></tr></table>
+</div>
+</div><p>开源参考实现：</p>
+<ul>
+<li><strong>FAISS</strong>(CPU): <a class="link" href="https://github.com/facebookresearch/faiss/blob/main/faiss/impl/HNSW.cpp"  target="_blank" rel="noopener"
+    >https://github.com/facebookresearch/faiss/blob/main/faiss/impl/HNSW.cpp</a></li>
+<li><strong>HNSWlib</strong>: <a class="link" href="https://github.com/nmslib/hnswlib"  target="_blank" rel="noopener"
+    >https://github.com/nmslib/hnswlib</a>（最干净的原版实现，建议从这读起）</li>
+<li><strong>nmslib</strong>: <a class="link" href="https://github.com/nmslib/nmslib"  target="_blank" rel="noopener"
+    >https://github.com/nmslib/nmslib</a></li>
+</ul>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/hnsw/">HNSW</a>
+        
+            <a href="/tags/nsw/">NSW</a>
+        
+            <a href="/tags/%E6%9C%80%E8%BF%91%E9%82%BB%E9%97%AE%E9%A2%98/">最近邻问题</a>
+        
+            <a href="/tags/%E6%9C%80%E8%BF%91%E9%82%BB%E6%90%9C%E7%B4%A2/">最近邻搜索</a>
+        
+            <a href="/tags/%E5%85%AD%E5%BA%A6%E4%BA%BA%E8%84%89/">六度人脉</a>
+        
+            <a href="/tags/ann/">ANN</a>
+        
+            <a href="/tags/%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/">向量检索</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2025 - 
+        
+        2026 Haibo Huang
+    </section>
+    
+    <section class="powerby">
+        
+            恍如昨日，嗤笑今朝 <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script
+        src="/js/vibrant.min.6b0711da39e8e242395f4ccbf1ec74be2db3f8a324176e21516f1678f480f473.js"
+        integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="
+        crossorigin="anonymous"
+        ></script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+{/* Fonts are self-hosted: see layouts/partials/head/custom.html */}
+
+
+    </body>
+</html>
