@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="系统讲解感知机模型的基本概念、原理、损失函数及其原始与对偶形式的算法训练过程。">
+<title>感知机</title>
+
+<link rel='canonical' href='https://entars.github.io/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/'>
+
+<link rel="stylesheet" href="/scss/style.min.cf28134006f92ef3947603c6d481d1529e68e1a1dfd8e3de16fc4ab19c31e6d6.css"><meta property='og:title' content="感知机">
+<meta property='og:description' content="系统讲解感知机模型的基本概念、原理、损失函数及其原始与对偶形式的算法训练过程。">
+<meta property='og:url' content='https://entars.github.io/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/'>
+<meta property='og:site_name' content='南国遗梦的小站'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='感知机' /><meta property='article:tag' content='二分类' /><meta property='article:tag' content='线性分类' /><meta property='article:tag' content='机器学习' /><meta property='article:tag' content='监督学习' /><meta property='article:tag' content='线性模型' /><meta property='article:published_time' content='2026-10-31T21:28:16&#43;08:00'/><meta property='article:modified_time' content='2026-10-31T21:28:16&#43;08:00'/><meta property='og:image' content='https://entars.github.io/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/wallpaper_hu_4071154647c7289.jpg' />
+<meta name="twitter:title" content="感知机">
+<meta name="twitter:description" content="系统讲解感知机模型的基本概念、原理、损失函数及其原始与对偶形式的算法训练过程。"><meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content='https://entars.github.io/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/wallpaper_hu_4071154647c7289.jpg' />
+    <link rel="shortcut icon" href="/favicon.ico" />
+<link rel="preload" href="/fonts/lato-400.woff2" as="font" type="font/woff2" crossorigin>
+
+<style>
+     
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 300;
+        font-display: swap;
+        src: url("/fonts/lato-300.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url("/fonts/lato-400.woff2") format("woff2");
+    }
+    @font-face {
+        font-family: "Lato";
+        font-style: normal;
+        font-weight: 700;
+        font-display: swap;
+        src: url("/fonts/lato-700.woff2") format("woff2");
+    }
+
+     
+    @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: swap;
+        src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+    }
+
+    :root {
+         
+        --code-font-family: "JetBrains Mono", var(--zh-font-family), monospace;
+         
+        --zh-font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "WenQuanYi Micro Hei";
+    }
+
+    code {
+        font-size: 1.4rem;  
+    }
+
+    pre {
+        font-size: 1.4rem;  
+    }
+</style>
+
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+            
+            <figure class="site-avatar">
+                <a href="/">
+                
+                    
+                    
+                    
+                        
+                        <img src="/img/avatar_hu_b439c9ec2036e131.jpg" width="300"
+                            height="300" class="site-logo" loading="lazy" alt="Avatar">
+                    
+                
+                </a>
+                
+            </figure>
+            
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">南国遗梦的小站</a></h1>
+            <h2 class="site-description">记录学习，记录生活</h2>
+        </div>
+    </header><ol class="menu-social">
+            
+                <li>
+                    <a 
+                        href='https://b23.tv/ueaKiC6'
+                        target="_blank"
+                        title="bilibili"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, platform, streaming, video]
+category: Brand
+version: "2.1"
+unicode: "f6d2"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M3 10a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v6a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4v-6z" />
+  <path d="M8 3l2 3" />
+  <path d="M16 3l-2 3" />
+  <path d="M9 13v-2" />
+  <path d="M15 11v2" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://github.com/Entars'
+                        target="_blank"
+                        title="GitHub"
+                        rel="me"
+                    >
+                        
+                        
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+  <path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5" />
+</svg>
+
+
+
+                        
+                    </a>
+                </li>
+            
+                <li>
+                    <a 
+                        href='https://qm.qq.com/q/CxmhbYf7YQ'
+                        target="_blank"
+                        title="QQ"
+                        rel="me"
+                    >
+                        
+                        
+                            <!--
+tags: [china, communicator, internet]
+category: Brand
+unicode: "f606"
+version: "1.114"
+-->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="32"
+  height="32"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="#000000"
+  stroke-width="1"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M6 9.748a14.716 14.716 0 0 0 11.995 -.052c.275 -9.236 -11.104 -11.256 -11.995 .052z" />
+  <path d="M18 10c.984 2.762 1.949 4.765 2 7.153c.014 .688 -.664 1.346 -1.184 .303c-.346 -.696 -.952 -1.181 -1.816 -1.456" />
+  <path d="M17 16c.031 1.831 .147 3.102 -1 4" />
+  <path d="M8 20c-1.099 -.87 -.914 -2.24 -1 -4" />
+  <path d="M6 10c-.783 2.338 -1.742 4.12 -1.968 6.43c-.217 2.227 .716 1.644 1.16 .917c.296 -.487 .898 -.934 1.808 -1.347" />
+  <path d="M15.898 13l-.476 -2" />
+  <path d="M8 20l-1.5 1c-.5 .5 -.5 1 .5 1h10c1 0 1 -.5 .5 -1l-1.5 -1" />
+  <path d="M13.75 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+  <path d="M10.25 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+</svg>
+
+                        
+                    </a>
+                </li>
+            
+        </ol><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/%E5%85%B3%E4%BA%8E/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/archives/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>归档</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/search/' >
+                
+                
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>暗色模式</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">目录</h2>
+        
+        <div class="widget--toc">
+            <nav id="TableOfContents">
+  <ol>
+    <li>
+      <ol>
+        <li><a href="#1是什么">1.是什么</a></li>
+        <li><a href="#2基本原理">2.基本原理</a></li>
+        <li><a href="#3损失函数">3.损失函数</a></li>
+        <li><a href="#4感知机算法">4.感知机算法</a>
+          <ol>
+            <li><a href="#41原始形式">4.1原始形式</a></li>
+            <li><a href="#42-对偶形式">4.2 对偶形式</a></li>
+            <li><a href="#43-选择">4.3 选择</a></li>
+            <li><a href="#44-训练过程">4.4 训练过程</a></li>
+          </ol>
+        </li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="has-image main-article">
+    <header class="article-header">
+        <div class="article-image">
+            <a href="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/">
+                <img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/wallpaper_hu_8f78084d72fefc6c.webp"
+                        srcset="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/wallpaper_hu_8f78084d72fefc6c.webp 800w, /p/%E6%84%9F%E7%9F%A5%E6%9C%BA/wallpaper_hu_1a066228b4b5101d.webp 1600w"
+                        width="800" 
+                        height="267" 
+                        loading="lazy"
+                        alt="Featured image of post 感知机" />
+                
+            </a>
+        </div>
+    
+
+    <div class="article-details">
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/">感知机</a>
+        </h2>
+    
+        
+        <h3 class="article-subtitle">
+            系统讲解感知机模型的基本概念、原理、损失函数及其原始与对偶形式的算法训练过程。
+        </h3>
+        
+    </div>
+
+    
+    
+    
+    
+    <footer class="article-time-wrapper">
+        <footer class="article-time">
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                <time class="article-time--published">2026-10-31</time>
+            </div>
+            
+
+            
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                <time class="article-time--reading">
+                    阅读时长: 4 分钟
+                </time>
+            </div>
+            
+        </footer>
+        
+        
+        <footer class="taxonomy-container">
+            
+            <div class="article-categories">
+                
+                <a class="article-category" href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" data-text="机器学习">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-books"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M9 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z" /><path d="M5 8h4" /><path d="M9 16h4" /><path d="M13.803 4.56l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041z" /><path d="M14 9l4 -1" /><path d="M16 16l3.923 -.98" /></svg>
+                    <span class="category-text">机器学习</span>
+                </a>
+                
+            </div>
+            
+
+            
+            <div class="article-tags">
+                
+                <a class="article-tag" href="/tags/%E6%84%9F%E7%9F%A5%E6%9C%BA/" data-text="感知机">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">感知机 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E4%BA%8C%E5%88%86%E7%B1%BB/" data-text="二分类">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">二分类 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/" data-text="线性分类">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">线性分类 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" data-text="机器学习">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">机器学习 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/" data-text="监督学习">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">监督学习 </span>
+                
+                </a>
+                
+                <a class="article-tag" href="/tags/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/" data-text="线性模型">
+                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="currentColor"  class="icon icon-tabler icons-tabler-filled icon-tabler-tag"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.172 2a3 3 0 0 1 2.121 .879l7.71 7.71a3.41 3.41 0 0 1 0 4.822l-5.592 5.592a3.41 3.41 0 0 1 -4.822 0l-7.71 -7.71a3 3 0 0 1 -.879 -2.121v-5.172a4 4 0 0 1 4 -4zm-3.672 3.5a2 2 0 0 0 -1.995 1.85l-.005 .15a2 2 0 1 0 2 -2" /></svg>
+                    <span class = "tag-text">线性模型 </span>
+                
+                </a>
+                
+            </div>
+            
+        </footer>
+        
+    </footer>
+    
+
+    
+</div>
+</header>
+
+    <section class="article-content">
+    
+    
+    <h3 id="1是什么">1.是什么
+</h3><p>一种<strong>二分类的线性分类模型</strong>，属于<strong>监督学习</strong>，其输入的是特征向量，输出的是类别（值为1或-1）。该模型的目的<strong>旨在求出将输入空间中的实例分为两类的分离超平面</strong>，感知机主要是基于<strong>误分类数据</strong>进行训练，采用的训练方法是<strong>梯度下降法</strong>。</p>
+<p><strong>任务要求</strong>：训练数据线性可分。</p>
+<p><strong>类型</strong>：原始形式、对偶形式</p>
+<h3 id="2基本原理">2.基本原理
+</h3><p>假设有训练数据集 $D={x_i,y_i}_{i=1}^m$ ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = {+1,-1}$ ，则感知机模型为：</p>
+$$
+f(x) = sign(w \cdot x +b) \tag{1}
+$$<p>其中 $w和b$ 称为感知机参数，$w \in \mathbf{R}^n$ 为权向量，$b \in \mathbf{R}$ 为偏置，$w \cdot x$ 为二者的内积，$sign$ 函数为符号函数：</p>
+$$
+\operatorname{sign}(x) = \begin{cases}
++1, & x \ge 0 \\
+-1, & x < 0
+\end{cases} \tag{2}
+$$<p>设感知机模型的一个超平面为：</p>
+$$
+w \cdot x + b = 0 \tag{3}
+$$<p>由简单推导可知 $w$ 为该超平面的法向量，$b$ 为截距。该超平面将样本点分为两类，即对所有的 $y_i = +1$ 有 $w \cdot x_i +b&gt;0$，对所有 $y_i = -1$ 有 $w \cdot x_i +b &lt;0$。</p>
+<h3 id="3损失函数">3.损失函数
+</h3><p>在基于训练数据是线性可分的前提下，需要确定一个损失函数，并通过最小化损失函数来训练模型。常规的损失函数是计误分类的数量，但该方法不是线性连续可导的函数，不容易优化，所以采用<strong>误分类的点到超平面的距离作为损失函数</strong>。</p>
+<blockquote>
+<p>假设直线方程为 $Ax+By+C=0$ ，点P的坐标为 $(x_0,y_0)$ 。点到直线的距离公式为：</p>
+$$
+> d = \frac{Ax_0 + By_0 + C}{\sqrt{A^2 + B^2}}
+> $$<p>同理，在超平面为 $h=w \cdot x + b$ 时，同理可推导样本点 $x&rsquo; $ 到超平面的距离如下：</p>
+$$
+> d = \frac{w \cdot x' + b}{\|w\|}
+> $$</blockquote>
+<p>任意样本点 $x_i$ 到超平面 S 的距离为：</p>
+$$
+\frac{w \cdot x_i + b}{\|w\|}
+$$<p>其中 $|w|$ 是 $w$ 的 $L_2$ 范数。</p>
+<p>对于误分类的数据 $(x_i,y_i)$ 来说，有：</p>
+$$
+-y_i(w \cdot x_i + b) = |w \cdot x_i + b|>0
+$$<p>假设超平面S的误分类集合为 M ，那么误分类的总距离为：</p>
+<p>$$</p>
+<ul>
+<li>\frac{1}{|w|} \sum_{x_i \in M} y_i , (w \cdot x_i + b)
+$$</li>
+</ul>
+<p>不考虑 $ \frac{1}{|w|}$ ，那么就得到损失函数：</p>
+$$
+L(w, b) = - \sum_{x_i \in M} y_i \, (w \cdot x_i + b)
+$$<h3 id="4感知机算法">4.感知机算法
+</h3><h4 id="41原始形式">4.1原始形式
+</h4><p>感知机的学习算法是由误分类驱动的，极小化过程不是一次性使用M中的所有误分类点来计算损失并计算梯度，而是每一次随机选取一个误分类点进行训练（<strong>主要是为了提高训练速度</strong>），更新如下：</p>
+$$
+w \leftarrow w + \eta y_i x_i
+$$$$
+b \leftarrow b + \eta y_i
+$$<p><strong>输入</strong>：训练数据集 $D={x_i,y_i}_{i=1}^m$  ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = {+1,-1}$ ；学习率 η (0&lt;η≤1) 。</p>
+<p><strong>过程</strong>：</p>
+<ol>
+<li>
+<p>选取初值 $w_0, b_0$；</p>
+</li>
+<li>
+<p>在训练数据集中选取数据$ (x_i,y_i)$ ；</p>
+</li>
+<li>
+<p>判断该数据点是否为当前模型的误分类点，即判断 $y_i(w \cdot x_i+b)≤0$ ，如果成立则是误分类点，进行更新：</p>
+$$
+   w \leftarrow w + \eta y_i x_i \\ b \leftarrow b + \eta y_i
+   $$</li>
+<li>
+<p>转到第 2 步，直到训练集中没有误分类点。</p>
+</li>
+</ol>
+<p><strong>输出</strong>： $w, b$ ；感知机模型 $f(x)=sign⁡(w \cdot x+b) $</p>
+<h4 id="42-对偶形式">4.2 对偶形式
+</h4><p>每次梯度的迭代都是选择的一个样本来更新 $w$ 和 $b$  向量。最终经过若干次的迭代得到<strong>最终的结果</strong>。对于从来都没有误分类过的样本，它选择参与 $w$ 和 $b$  迭代修改的次数是0，对于被多次误分类而更新的样本，它参与 $w$ 和 $b$ 迭代修改的次数假设为$n_i$。</p>
+<p>则 $w和b$ 关于 $(x_i,y_i)$ 的最终增量分别 $a_iy_ix_i$，此处 $a_i=n_i \eta$ ，如果令 $w$ 向量的初始值为0向量，那么关于 $w$ 和 $b$ 的表示可以为：</p>
+<p>$$
+w = \sum_{x_i \in M} \eta y_i x_i = \sum_{i=1}^n \alpha_i y_i x_i \</p>
+<p>b = \sum_{x_i \in M} \eta y_i = \sum_{i=1}^n \alpha_i y_i
+$$</p>
+<p>对偶形式中训练实例仅以内积的形式出现，为了减少计算量，我们可以预先将训练集样本间的内积计算出来，也就是Gram矩阵：</p>
+$$
+G = [x_i, x_j]_{m \times m}
+$$<p><strong>优势分析</strong>：使用 $y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)&lt;=0$ 来判断是否误分类，这其中主要的计算量在于计算$x_i$ 和 $x_j$ 的内积，而且每次迭代都是重复计算，所以事先使用矩阵运算计算出所有样本之间的内积，比多次的循环计算省时。</p>
+<p><strong>输入</strong>：训练数据集 $D={x_i,y_i}_{i=1}^m$  ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = {+1,-1}$ ；学习率 η (0&lt;η≤1) 。</p>
+<p><strong>过程</strong>：</p>
+<ol>
+<li>
+<p>选取初值 $a=0, b=0$；</p>
+</li>
+<li>
+<p>在训练数据集中选取数据$ (x_i,y_i)$ ；</p>
+</li>
+<li>
+<p>判断该数据点是否为当前模型的误分类点，即判断 $y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)&lt;=0$ ，如果成立则是误分类点，进行更新：</p>
+$$
+   a_i=a_i+\eta \\ b=b+\eta y_i
+   $$</li>
+<li>
+<p>转到第 2 步，直到训练集中没有误分类点。</p>
+</li>
+</ol>
+<p><strong>输出</strong>： $a, b$ ；感知机模型 $f(x)=sign⁡(y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)&lt;=0) $</p>
+<h4 id="43-选择">4.3 选择
+</h4><ul>
+<li>如果特征数过高，计算内积非常耗时，应选择对偶形式算法加速。</li>
+<li>如果样本数过多，每次计算累计和就没有必要，应选择原始算法。</li>
+</ul>
+<h4 id="44-训练过程">4.4 训练过程
+</h4><p>线性可分的感知机训练过程：</p>
+<p><img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_5863e9c8ac2a912c.webp"
+	width="600"
+	height="450"
+	srcset="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_bf31ea48be44a192.webp 480w, /p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_5863e9c8ac2a912c.webp 1024w"
+	loading="lazy"
+	
+		alt="线性训练过程"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="133"
+		data-flex-basis="320px"
+	
+></p>
+<p>非线性训练过程：</p>
+<p><img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_41f78b779c495ad3.webp"
+	width="600"
+	height="450"
+	srcset="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_bb60e2512506a3e7.webp 480w, /p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_41f78b779c495ad3.webp 1024w"
+	loading="lazy"
+	
+		alt="非线性训练过程"
+	
+	
+		class="gallery-image" 
+		data-flex-grow="133"
+		data-flex-basis="320px"
+	
+></p>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E6%84%9F%E7%9F%A5%E6%9C%BA/">感知机</a>
+        
+            <a href="/tags/%E4%BA%8C%E5%88%86%E7%B1%BB/">二分类</a>
+        
+            <a href="/tags/%E7%BA%BF%E6%80%A7%E5%88%86%E7%B1%BB/">线性分类</a>
+        
+            <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/">机器学习</a>
+        
+            <a href="/tags/%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/">监督学习</a>
+        
+            <a href="/tags/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/">线性模型</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+	const mainArticleElement = document.querySelector(".main-article");
+        renderMathInElement(mainArticleElement, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true }
+            ],
+            ignoredClasses: ["gist"]
+        });})
+</script>
+
+    
+</article>
+
+    
+
+    
+
+<aside class="related-content--wrapper">
+    <h2 class="section-title">相关文章</h2>
+    <div class="related-content">
+        <div class="flex article-list--tile">
+            
+                
+<article class="has-image">
+    <a href="/p/kmeans%E7%AE%97%E6%B3%95/">
+        
+        
+            <div class="article-image">
+                <img src="/p/kmeans%E7%AE%97%E6%B3%95/wallpaper.77785e044d309e35e46804f5878b634e_hu_2026c48bfb969f3b.jpg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Kmeans算法"
+                        
+                        data-hash="md5-d3heBE0wnjXkaAT1h4tjTg==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Kmeans算法</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/logistic%E5%9B%9E%E5%BD%92/">
+        
+        
+            <div class="article-image">
+                <img src="/p/logistic%E5%9B%9E%E5%BD%92/wallpaper.489a81f2b84b90b1011192e3b55fd408_hu_9968d428c86729a9.jpeg" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post Logistic回归"
+                        
+                        data-hash="md5-SJqB8rhLkLEBEZLjtV/UCA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Logistic回归</h2>
+        </div>
+    </a>
+</article>
+
+            
+                
+<article class="has-image">
+    <a href="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
+        
+        
+            <div class="article-image">
+                <img src="/p/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/paperwall.c8df8068583a78501b224e084b457a50_hu_eccbb93ba92b851d.png" 
+                        width="250" 
+                        height="150" 
+                        loading="lazy"
+                        alt="Featured image of post 线性回归"
+                        
+                        data-hash="md5-yN&#43;AaFg6eFAbIk4IS0V6UA==">
+                
+            </div>
+        
+
+        <div class="article-details">
+            <h2 class="article-title">线性回归</h2>
+        </div>
+    </a>
+</article>
+
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2025 - 
+        
+        2026 Haibo Huang
+    </section>
+    
+    <section class="powerby">
+        
+            恍如昨日，嗤笑今朝 <br/>
+        使用 <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> 构建 <br />
+        主题 <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="3.30.0">Stack</a></b> 由 <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a> 设计
+    </section>
+</footer>
+
+
+    
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css"crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css"crossorigin="anonymous"
+            >
+
+            </main>
+        </div>
+        <script
+        src="/js/vibrant.min.6b0711da39e8e242395f4ccbf1ec74be2db3f8a324176e21516f1678f480f473.js"
+        integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z&#43;KMkF24hUW8WePSA9HM="
+        crossorigin="anonymous"
+        ></script><script type="text/javascript" src="/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js" defer></script>
+{/* Fonts are self-hosted: see layouts/partials/head/custom.html */}
+
+
+    </body>
+</html>

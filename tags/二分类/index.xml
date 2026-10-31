@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>二分类 on 南国遗梦的小站</title>
+        <link>https://entars.github.io/tags/%E4%BA%8C%E5%88%86%E7%B1%BB/</link>
+        <description>Recent content in 二分类 on 南国遗梦的小站</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <copyright>Haibo Huang</copyright>
+        <lastBuildDate>Sat, 31 Oct 2026 21:28:16 +0800</lastBuildDate><atom:link href="https://entars.github.io/tags/%E4%BA%8C%E5%88%86%E7%B1%BB/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>感知机</title>
+        <link>https://entars.github.io/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/</link>
+        <pubDate>Sat, 31 Oct 2026 21:28:16 +0800</pubDate>
+        
+        <guid>https://entars.github.io/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/</guid>
+        <description>&lt;img src="https://entars.github.io/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/wallpaper.png" alt="Featured image of post 感知机" /&gt;&lt;h3 id=&#34;1是什么&#34;&gt;1.是什么
+&lt;/h3&gt;&lt;p&gt;一种&lt;strong&gt;二分类的线性分类模型&lt;/strong&gt;，属于&lt;strong&gt;监督学习&lt;/strong&gt;，其输入的是特征向量，输出的是类别（值为1或-1）。该模型的目的&lt;strong&gt;旨在求出将输入空间中的实例分为两类的分离超平面&lt;/strong&gt;，感知机主要是基于&lt;strong&gt;误分类数据&lt;/strong&gt;进行训练，采用的训练方法是&lt;strong&gt;梯度下降法&lt;/strong&gt;。&lt;/p&gt;</description>
+        </item>
+        
+    </channel>
+</rss>
