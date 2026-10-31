@@ -500,15 +500,15 @@ version: "1.114"
 <hr>
 <h2 id="二数学形式化">二、数学形式化
 </h2><h3 id="21-问题定义">2.1 问题定义
-</h3><p>设样本集为 $X = {x_1, x_2, \cdots, x_n}$，其中每个样本 $x_i \in \mathbb{R}^d$ 是一个 $d$ 维向量。目标是找到 $K$ 个簇中心 $\mu_1, \mu_2, \cdots, \mu_K$，以及每个样本的簇归属 ${c_i \in {1, 2, \cdots, K}}$，使得<strong>损失函数（目标函数）最小化</strong>。</p>
+</h3><p>设样本集为 $X = \{x_1, x_2, \cdots, x_n\}$，其中每个样本 $x_i \in \mathbb{R}^d$ 是一个 $d$ 维向量。目标是找到 $K$ 个簇中心 $\mu_1, \mu_2, \cdots, \mu_K$，以及每个样本的簇归属 $\{c_i \in \{1, 2, \cdots, K\}\}$，使得<strong>损失函数（目标函数）最小化</strong>。</p>
 <h3 id="22-目标函数">2.2 目标函数
 </h3><p>K-Means 最小化的是<strong>簇内误差平方和（Sum of Squared Errors, SSE）</strong>，也称作<strong>惯性（Inertia）</strong>：</p>
 $$
 J = \sum_{i=1}^{n} \sum_{k=1}^{K} w_{ik} \cdot \|x_i - \mu_k\|_2^2
 $$<p>其中：</p>
 <ul>
-<li>$|\cdot|_2$ 表示 L2 范数（欧氏距离）；</li>
-<li>$w_{ik} \in {0, 1}$ 是指示变量：当样本 $x_i$ 属于簇 $k$ 时 $w_{ik} = 1$，否则为 $0$；</li>
+<li>$\|\cdot\|_2$ 表示 L2 范数（欧氏距离）；</li>
+<li>$w_{ik} \in \{0, 1\}$ 是指示变量：当样本 $x_i$ 属于簇 $k$ 时 $w_{ik} = 1$，否则为 $0$；</li>
 <li>$\mu_k$ 是簇 $k$ 的中心（质心）。</li>
 </ul>
 <p>展开欧氏距离，目标函数可写为：</p>
@@ -527,7 +527,7 @@ $$
 $$<p>解得簇中心为簇内所有样本的<strong>均值（mean）</strong>：</p>
 $$
 \mu_k = \frac{\sum_{i=1}^{n} w_{ik} x_i}{\sum_{i=1}^{n} w_{ik}} = \frac{1}{|C_k|} \sum_{x_i \in C_k} x_i
-$$<p>其中 $C_k = {x_i \mid w_{ik} = 1}$ 表示簇 $k$ 中的样本集合，$|C_k|$ 为该簇的样本个数。这正是&quot;K-Means（均值）&ldquo;名称的由来。</p>
+$$<p>其中 $C_k = \{x_i \mid w_{ik} = 1\}$ 表示簇 $k$ 中的样本集合，$|C_k|$ 为该簇的样本个数。这正是&quot;K-Means（均值）&ldquo;名称的由来。</p>
 <h3 id="24-收敛性">2.4 收敛性
 </h3><ul>
 <li>每次分配步会<strong>不增加</strong>目标函数 $J$（每个样本都被分配到了最近的中心）；</li>

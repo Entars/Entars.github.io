@@ -518,10 +518,10 @@ version: "1.114"
 <p><strong>任务要求</strong>：训练数据线性可分。</p>
 <p><strong>类型</strong>：原始形式、对偶形式</p>
 <h3 id="2基本原理">2.基本原理
-</h3><p>假设有训练数据集 $D={x_i,y_i}_{i=1}^m$ ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = {+1,-1}$ ，则感知机模型为：</p>
+</h3><p>假设有训练数据集 $D=\{x_i,y_i\}_{i=1}^m$ ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = \{+1,-1\}$ ，则感知机模型为：</p>
 $$
-f(x) = sign(w \cdot x +b) \tag{1}
-$$<p>其中 $w和b$ 称为感知机参数，$w \in \mathbf{R}^n$ 为权向量，$b \in \mathbf{R}$ 为偏置，$w \cdot x$ 为二者的内积，$sign$ 函数为符号函数：</p>
+f(x) = \operatorname{sign}(w \cdot x +b) \tag{1}
+$$<p>其中 $w$ 和 $b$ 称为感知机参数，$w \in \mathbf{R}^n$ 为权向量，$b \in \mathbf{R}$ 为偏置，$w \cdot x$ 为二者的内积，$\operatorname{sign}$ 函数为符号函数：</p>
 $$
 \operatorname{sign}(x) = \begin{cases}
 +1, & x \ge 0 \\
@@ -530,31 +530,28 @@ $$
 $$<p>设感知机模型的一个超平面为：</p>
 $$
 w \cdot x + b = 0 \tag{3}
-$$<p>由简单推导可知 $w$ 为该超平面的法向量，$b$ 为截距。该超平面将样本点分为两类，即对所有的 $y_i = +1$ 有 $w \cdot x_i +b&gt;0$，对所有 $y_i = -1$ 有 $w \cdot x_i +b &lt;0$。</p>
+$$<p>由简单推导可知 $w$ 为该超平面的法向量，$b$ 为截距。该超平面将样本点分为两类，即对所有的 $y_i = +1$ 有 $w \cdot x_i +b>0$，对所有 $y_i = -1$ 有 $w \cdot x_i +b <0$。</p>
 <h3 id="3损失函数">3.损失函数
 </h3><p>在基于训练数据是线性可分的前提下，需要确定一个损失函数，并通过最小化损失函数来训练模型。常规的损失函数是计误分类的数量，但该方法不是线性连续可导的函数，不容易优化，所以采用<strong>误分类的点到超平面的距离作为损失函数</strong>。</p>
 <blockquote>
-<p>假设直线方程为 $Ax+By+C=0$ ，点P的坐标为 $(x_0,y_0)$ 。点到直线的距离公式为：</p>
+<p>假设直线方程为 $Ax+By+C=0$ ，点P的坐标为 $(x_0,y_0)$ 。点到直线的距离公式为：</p></blockquote>
 $$
-> d = \frac{Ax_0 + By_0 + C}{\sqrt{A^2 + B^2}}
-> $$<p>同理，在超平面为 $h=w \cdot x + b$ 时，同理可推导样本点 $x&rsquo; $ 到超平面的距离如下：</p>
+d = \frac{Ax_0 + By_0 + C}{\sqrt{A^2 + B^2}}
+$$<blockquote>
+<p>同理，在超平面为 $h=w \cdot x + b$ 时，同理可推导样本点 $x'$ 到超平面的距离如下：</p></blockquote>
 $$
-> d = \frac{w \cdot x' + b}{\|w\|}
-> $$</blockquote>
-<p>任意样本点 $x_i$ 到超平面 S 的距离为：</p>
+d = \frac{w \cdot x' + b}{\lVert w \rVert}
+$$<p>任意样本点 $x_i$ 到超平面 S 的距离为：</p>
 $$
-\frac{w \cdot x_i + b}{\|w\|}
-$$<p>其中 $|w|$ 是 $w$ 的 $L_2$ 范数。</p>
+\frac{w \cdot x_i + b}{\lVert w \rVert}
+$$<p>其中 $\lVert w \rVert$ 是 $w$ 的 $L_2$ 范数。</p>
 <p>对于误分类的数据 $(x_i,y_i)$ 来说，有：</p>
 $$
 -y_i(w \cdot x_i + b) = |w \cdot x_i + b|>0
 $$<p>假设超平面S的误分类集合为 M ，那么误分类的总距离为：</p>
-<p>$$</p>
-<ul>
-<li>\frac{1}{|w|} \sum_{x_i \in M} y_i , (w \cdot x_i + b)
-$$</li>
-</ul>
-<p>不考虑 $ \frac{1}{|w|}$ ，那么就得到损失函数：</p>
+$$
+-\frac{1}{\lVert w \rVert} \sum_{x_i \in M} y_i \, (w \cdot x_i + b)
+$$<p>不考虑 $ \frac{1}{\lVert w \rVert}$ ，那么就得到损失函数：</p>
 $$
 L(w, b) = - \sum_{x_i \in M} y_i \, (w \cdot x_i + b)
 $$<h3 id="4感知机算法">4.感知机算法
@@ -564,7 +561,7 @@ $$
 w \leftarrow w + \eta y_i x_i
 $$$$
 b \leftarrow b + \eta y_i
-$$<p><strong>输入</strong>：训练数据集 $D={x_i,y_i}_{i=1}^m$  ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = {+1,-1}$ ；学习率 η (0&lt;η≤1) 。</p>
+$$<p><strong>输入</strong>：训练数据集 $D=\{x_i,y_i\}_{i=1}^m$  ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = \{+1,-1\}$ ；学习率 η (0&lt;η≤1) 。</p>
 <p><strong>过程</strong>：</p>
 <ol>
 <li>
@@ -574,27 +571,31 @@ $$<p><strong>输入</strong>：训练数据集 $D={x_i,y_i}_{i=1}^m$  ，其中 
 <p>在训练数据集中选取数据$ (x_i,y_i)$ ；</p>
 </li>
 <li>
-<p>判断该数据点是否为当前模型的误分类点，即判断 $y_i(w \cdot x_i+b)≤0$ ，如果成立则是误分类点，进行更新：</p>
+<p>判断该数据点是否为当前模型的误分类点，即判断 $y_i(w \cdot x_i+b)\le 0$ ，如果成立则是误分类点，进行更新：</p>
 $$
-   w \leftarrow w + \eta y_i x_i \\ b \leftarrow b + \eta y_i
+   \begin{aligned}
+   w &\leftarrow w + \eta y_i x_i \\
+   b &\leftarrow b + \eta y_i
+   \end{aligned}
    $$</li>
 <li>
 <p>转到第 2 步，直到训练集中没有误分类点。</p>
 </li>
 </ol>
-<p><strong>输出</strong>： $w, b$ ；感知机模型 $f(x)=sign⁡(w \cdot x+b) $</p>
+<p><strong>输出</strong>： $w, b$ ；感知机模型 $f(x)=\operatorname{sign}(w \cdot x+b) $</p>
 <h4 id="42-对偶形式">4.2 对偶形式
 </h4><p>每次梯度的迭代都是选择的一个样本来更新 $w$ 和 $b$  向量。最终经过若干次的迭代得到<strong>最终的结果</strong>。对于从来都没有误分类过的样本，它选择参与 $w$ 和 $b$  迭代修改的次数是0，对于被多次误分类而更新的样本，它参与 $w$ 和 $b$ 迭代修改的次数假设为$n_i$。</p>
-<p>则 $w和b$ 关于 $(x_i,y_i)$ 的最终增量分别 $a_iy_ix_i$，此处 $a_i=n_i \eta$ ，如果令 $w$ 向量的初始值为0向量，那么关于 $w$ 和 $b$ 的表示可以为：</p>
-<p>$$
-w = \sum_{x_i \in M} \eta y_i x_i = \sum_{i=1}^n \alpha_i y_i x_i \</p>
-<p>b = \sum_{x_i \in M} \eta y_i = \sum_{i=1}^n \alpha_i y_i
-$$</p>
-<p>对偶形式中训练实例仅以内积的形式出现，为了减少计算量，我们可以预先将训练集样本间的内积计算出来，也就是Gram矩阵：</p>
+<p>则 $w$ 和 $b$ 关于 $(x_i,y_i)$ 的最终增量分别 $a_iy_ix_i$，此处 $a_i=n_i \eta$ ，如果令 $w$ 向量的初始值为0向量，那么关于 $w$ 和 $b$ 的表示可以为：</p>
+$$
+\begin{aligned}
+w &= \sum_{x_i \in M} \eta y_i x_i = \sum_{i=1}^n \alpha_i y_i x_i \\
+b &= \sum_{x_i \in M} \eta y_i = \sum_{i=1}^n \alpha_i y_i
+\end{aligned}
+$$<p>对偶形式中训练实例仅以内积的形式出现，为了减少计算量，我们可以预先将训练集样本间的内积计算出来，也就是Gram矩阵：</p>
 $$
 G = [x_i, x_j]_{m \times m}
-$$<p><strong>优势分析</strong>：使用 $y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)&lt;=0$ 来判断是否误分类，这其中主要的计算量在于计算$x_i$ 和 $x_j$ 的内积，而且每次迭代都是重复计算，所以事先使用矩阵运算计算出所有样本之间的内积，比多次的循环计算省时。</p>
-<p><strong>输入</strong>：训练数据集 $D={x_i,y_i}_{i=1}^m$  ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = {+1,-1}$ ；学习率 η (0&lt;η≤1) 。</p>
+$$<p><strong>优势分析</strong>：使用 $y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)\le 0$ 来判断是否误分类，这其中主要的计算量在于计算$x_i$ 和 $x_j$ 的内积，而且每次迭代都是重复计算，所以事先使用矩阵运算计算出所有样本之间的内积，比多次的循环计算省时。</p>
+<p><strong>输入</strong>：训练数据集 $D=\{x_i,y_i\}_{i=1}^m$  ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = \{+1,-1\}$ ；学习率 η (0&lt;η≤1) 。</p>
 <p><strong>过程</strong>：</p>
 <ol>
 <li>
@@ -604,15 +605,18 @@ $$<p><strong>优势分析</strong>：使用 $y_i(\sum_{j=1}^n \alpha_j y_j x_j x
 <p>在训练数据集中选取数据$ (x_i,y_i)$ ；</p>
 </li>
 <li>
-<p>判断该数据点是否为当前模型的误分类点，即判断 $y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)&lt;=0$ ，如果成立则是误分类点，进行更新：</p>
+<p>判断该数据点是否为当前模型的误分类点，即判断 $y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)\le 0$ ，如果成立则是误分类点，进行更新：</p>
 $$
-   a_i=a_i+\eta \\ b=b+\eta y_i
+   \begin{aligned}
+   a_i &= a_i+\eta \\
+   b &= b+\eta y_i
+   \end{aligned}
    $$</li>
 <li>
 <p>转到第 2 步，直到训练集中没有误分类点。</p>
 </li>
 </ol>
-<p><strong>输出</strong>： $a, b$ ；感知机模型 $f(x)=sign⁡(y_i(\sum_{j=1}^n \alpha_j y_j x_j x_i + b)&lt;=0) $</p>
+<p><strong>输出</strong>： $a, b$ ；感知机模型 $f(x)=\operatorname{sign}(\sum_{j=1}^n \alpha_j y_j x_j \cdot x + b)$</p>
 <h4 id="43-选择">4.3 选择
 </h4><ul>
 <li>如果特征数过高，计算内积非常耗时，应选择对偶形式算法加速。</li>
@@ -620,10 +624,10 @@ $$
 </ul>
 <h4 id="44-训练过程">4.4 训练过程
 </h4><p>线性可分的感知机训练过程：</p>
-<p><img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_5863e9c8ac2a912c.webp"
+<p><img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.gif"
 	width="600"
 	height="450"
-	srcset="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_bf31ea48be44a192.webp 480w, /p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_5863e9c8ac2a912c.webp 1024w"
+	
 	loading="lazy"
 	
 		alt="线性训练过程"
@@ -635,10 +639,10 @@ $$
 	
 ></p>
 <p>非线性训练过程：</p>
-<p><img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_41f78b779c495ad3.webp"
+<p><img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.gif"
 	width="600"
 	height="450"
-	srcset="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_bb60e2512506a3e7.webp 480w, /p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E9%9D%9E%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B_hu_41f78b779c495ad3.webp 1024w"
+	
 	loading="lazy"
 	
 		alt="非线性训练过程"
