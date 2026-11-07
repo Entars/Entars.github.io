@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,127 +359,116 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#第1章-java程序设计概述">第1章 Java程序设计概述</a>
-      <ol>
-        <li><a href="#java语言的特点">Java语言的特点</a></li>
-        <li><a href="#java体系结构">Java体系结构</a></li>
-      </ol>
-    </li>
-    <li><a href="#第2章-java程序设计环境">第2章 Java程序设计环境</a>
-      <ol>
-        <li><a href="#第一个java程序">第一个Java程序</a></li>
-        <li><a href="#java程序结构">Java程序结构</a></li>
-      </ol>
-    </li>
-    <li><a href="#第3章-java的基本程序设计结构">第3章 Java的基本程序设计结构</a>
-      <ol>
-        <li><a href="#数据类型">数据类型</a></li>
-        <li><a href="#变量与常量">变量与常量</a></li>
-        <li><a href="#运算符与表达式">运算符与表达式</a></li>
-        <li><a href="#流程控制结构">流程控制结构</a></li>
-        <li><a href="#数组">数组</a></li>
-      </ol>
-    </li>
-    <li><a href="#第4章-对象与类">第4章 对象与类</a>
-      <ol>
-        <li><a href="#面向对象编程基础">面向对象编程基础</a></li>
-        <li><a href="#类的定义与使用">类的定义与使用</a></li>
-        <li><a href="#访问控制">访问控制</a></li>
-        <li><a href="#构造方法">构造方法</a></li>
-        <li><a href="#方法详解">方法详解</a></li>
-        <li><a href="#对象构造过程">对象构造过程</a></li>
-        <li><a href="#类之间的关系">类之间的关系</a></li>
-        <li><a href="#包">包</a></li>
-        <li><a href="#文档注释">文档注释</a></li>
-        <li><a href="#类设计技巧">类设计技巧</a></li>
-      </ol>
-    </li>
-    <li><a href="#第1-4章复习重点">第1-4章复习重点</a></li>
-    <li><a href="#第5章-继承">第5章 继承</a>
-      <ol>
-        <li><a href="#类超类和子类">类、超类和子类</a></li>
-        <li><a href="#多态">多态</a></li>
-        <li><a href="#final关键字">final关键字</a></li>
-        <li><a href="#object所有类的超类">Object：所有类的超类</a></li>
-        <li><a href="#抽象类">抽象类</a></li>
-      </ol>
-    </li>
-    <li><a href="#第6章-接口与内部类">第6章 接口与内部类</a>
-      <ol>
-        <li><a href="#接口">接口</a></li>
-        <li><a href="#默认方法">默认方法</a></li>
-        <li><a href="#lambda表达式">lambda表达式</a></li>
-        <li><a href="#方法引用">方法引用</a></li>
-        <li><a href="#内部类">内部类</a></li>
-      </ol>
-    </li>
-    <li><a href="#第7章-异常处理">第7章 异常处理</a>
-      <ol>
-        <li><a href="#异常分类">异常分类</a></li>
-        <li><a href="#异常处理机制">异常处理机制</a></li>
-        <li><a href="#try-with-resources语句">try-with-resources语句</a></li>
-        <li><a href="#自定义异常">自定义异常</a></li>
-        <li><a href="#异常使用最佳实践">异常使用最佳实践</a></li>
-      </ol>
-    </li>
-    <li><a href="#第8章-泛型程序设计">第8章 泛型程序设计</a>
-      <ol>
-        <li><a href="#为什么使用泛型">为什么使用泛型</a></li>
-        <li><a href="#定义泛型类">定义泛型类</a></li>
-        <li><a href="#泛型方法">泛型方法</a></li>
-        <li><a href="#类型变量的限定">类型变量的限定</a></li>
-        <li><a href="#泛型代码和虚拟机">泛型代码和虚拟机</a></li>
-        <li><a href="#泛型的限制与局限性">泛型的限制与局限性</a></li>
-        <li><a href="#通配符wildcards">通配符（Wildcards）</a></li>
-        <li><a href="#泛型最佳实践">泛型最佳实践</a></li>
-      </ol>
-    </li>
-    <li><a href="#第4-8章复习重点">第4-8章复习重点</a></li>
-    <li><a href="#第9章-集合">第9章 集合</a>
-      <ol>
-        <li><a href="#java集合框架概述">Java集合框架概述</a></li>
-        <li><a href="#collection接口体系">Collection接口体系</a></li>
-        <li><a href="#迭代器">迭代器</a></li>
-        <li><a href="#map接口">Map接口</a></li>
-        <li><a href="#集合工具类">集合工具类</a></li>
-        <li><a href="#特殊集合">特殊集合</a></li>
-      </ol>
-    </li>
-    <li><a href="#第10章-gui程序设计">第10章 GUI程序设计</a>
-      <ol>
-        <li><a href="#java-gui工具包简史">Java GUI工具包简史</a></li>
-        <li><a href="#基本gui构建">基本GUI构建</a></li>
-        <li><a href="#布局管理器">布局管理器</a></li>
-        <li><a href="#事件处理机制">事件处理机制</a></li>
-        <li><a href="#常用swing组件">常用Swing组件</a></li>
-      </ol>
-    </li>
-    <li><a href="#第11章-swing用户界面组件">第11章 Swing用户界面组件</a>
-      <ol>
-        <li><a href="#swing高级组件">Swing高级组件</a></li>
-        <li><a href="#布局管理进阶">布局管理进阶</a></li>
-        <li><a href="#swing特性与最佳实践">Swing特性与最佳实践</a></li>
-      </ol>
-    </li>
-    <li><a href="#第12章-并发">第12章 并发</a>
-      <ol>
-        <li><a href="#线程基础">线程基础</a></li>
-        <li><a href="#线程属性与控制">线程属性与控制</a></li>
-        <li><a href="#同步机制">同步机制</a></li>
-        <li><a href="#线程安全集合">线程安全集合</a></li>
-        <li><a href="#任务与线程池">任务与线程池</a></li>
-        <li><a href="#异步计算">异步计算</a></li>
-      </ol>
-    </li>
-    <li><a href="#第9-12章复习重点">第9-12章复习重点</a></li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#第1章-java程序设计概述">第1章 Java程序设计概述</a><ul class="toc-list"><li><a href="#java语言的特点">Java语言的特点</a>
+            </li><li><a href="#java体系结构">Java体系结构</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第2章-java程序设计环境">第2章 Java程序设计环境</a><ul class="toc-list"><li><a href="#第一个java程序">第一个Java程序</a>
+            </li><li><a href="#java程序结构">Java程序结构</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第3章-java的基本程序设计结构">第3章 Java的基本程序设计结构</a><ul class="toc-list"><li><a href="#数据类型">数据类型</a>
+            </li><li><a href="#变量与常量">变量与常量</a>
+            </li><li><a href="#运算符与表达式">运算符与表达式</a>
+            </li><li><a href="#流程控制结构">流程控制结构</a>
+            </li><li><a href="#数组">数组</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第4章-对象与类">第4章 对象与类</a><ul class="toc-list"><li><a href="#面向对象编程基础">面向对象编程基础</a>
+            </li><li><a href="#类的定义与使用">类的定义与使用</a>
+            </li><li><a href="#访问控制">访问控制</a>
+            </li><li><a href="#构造方法">构造方法</a>
+            </li><li><a href="#方法详解">方法详解</a>
+            </li><li><a href="#对象构造过程">对象构造过程</a>
+            </li><li><a href="#类之间的关系">类之间的关系</a>
+            </li><li><a href="#包">包</a>
+            </li><li><a href="#文档注释">文档注释</a>
+            </li><li><a href="#类设计技巧">类设计技巧</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第1-4章复习重点">第1-4章复习重点</a>
+            </li><li><a href="#第5章-继承">第5章 继承</a><ul class="toc-list"><li><a href="#类超类和子类">类、超类和子类</a>
+            </li><li><a href="#多态">多态</a>
+            </li><li><a href="#final关键字">final关键字</a>
+            </li><li><a href="#object所有类的超类">Object：所有类的超类</a>
+            </li><li><a href="#抽象类">抽象类</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第6章-接口与内部类">第6章 接口与内部类</a><ul class="toc-list"><li><a href="#接口">接口</a>
+            </li><li><a href="#默认方法">默认方法</a>
+            </li><li><a href="#lambda表达式">lambda表达式</a>
+            </li><li><a href="#方法引用">方法引用</a>
+            </li><li><a href="#内部类">内部类</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第7章-异常处理">第7章 异常处理</a><ul class="toc-list"><li><a href="#异常分类">异常分类</a>
+            </li><li><a href="#异常处理机制">异常处理机制</a>
+            </li><li><a href="#try-with-resources语句">try-with-resources语句</a>
+            </li><li><a href="#自定义异常">自定义异常</a>
+            </li><li><a href="#异常使用最佳实践">异常使用最佳实践</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第8章-泛型程序设计">第8章 泛型程序设计</a><ul class="toc-list"><li><a href="#为什么使用泛型">为什么使用泛型</a>
+            </li><li><a href="#定义泛型类">定义泛型类</a>
+            </li><li><a href="#泛型方法">泛型方法</a>
+            </li><li><a href="#类型变量的限定">类型变量的限定</a>
+            </li><li><a href="#泛型代码和虚拟机">泛型代码和虚拟机</a>
+            </li><li><a href="#泛型的限制与局限性">泛型的限制与局限性</a>
+            </li><li><a href="#通配符wildcards">通配符（Wildcards）</a>
+            </li><li><a href="#泛型最佳实践">泛型最佳实践</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第4-8章复习重点">第4-8章复习重点</a>
+            </li><li><a href="#第9章-集合">第9章 集合</a><ul class="toc-list"><li><a href="#java集合框架概述">Java集合框架概述</a>
+            </li><li><a href="#collection接口体系">Collection接口体系</a>
+            </li><li><a href="#迭代器">迭代器</a>
+            </li><li><a href="#map接口">Map接口</a>
+            </li><li><a href="#集合工具类">集合工具类</a>
+            </li><li><a href="#特殊集合">特殊集合</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第10章-gui程序设计">第10章 GUI程序设计</a><ul class="toc-list"><li><a href="#java-gui工具包简史">Java GUI工具包简史</a>
+            </li><li><a href="#基本gui构建">基本GUI构建</a>
+            </li><li><a href="#布局管理器">布局管理器</a>
+            </li><li><a href="#事件处理机制">事件处理机制</a>
+            </li><li><a href="#常用swing组件">常用Swing组件</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第11章-swing用户界面组件">第11章 Swing用户界面组件</a><ul class="toc-list"><li><a href="#swing高级组件">Swing高级组件</a>
+            </li><li><a href="#布局管理进阶">布局管理进阶</a>
+            </li><li><a href="#swing特性与最佳实践">Swing特性与最佳实践</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第12章-并发">第12章 并发</a><ul class="toc-list"><li><a href="#线程基础">线程基础</a>
+            </li><li><a href="#线程属性与控制">线程属性与控制</a>
+            </li><li><a href="#同步机制">同步机制</a>
+            </li><li><a href="#线程安全集合">线程安全集合</a>
+            </li><li><a href="#任务与线程池">任务与线程池</a>
+            </li><li><a href="#异步计算">异步计算</a>
+            </li>
+</ul>
+
+            </li><li><a href="#第9-12章复习重点">第9-12章复习重点</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,56 +359,53 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#1-要解决什么问题">1. 要解决什么问题</a></li>
-    <li><a href="#2-核心思想先聚类再搜索">2. 核心思想：先聚类，再搜索</a></li>
-    <li><a href="#3-理解-nprobe搜索时探访多少个桶">3. 理解 nprobe：搜索时探访多少个桶</a>
-      <ol>
-        <li><a href="#直观理解">直观理解</a></li>
-        <li><a href="#三个基准值">三个基准值</a></li>
-        <li><a href="#关键性质">关键性质</a></li>
-      </ol>
-    </li>
-    <li><a href="#4-训练过程详解">4. 训练过程详解</a></li>
-    <li><a href="#5-搜索过程详解">5. 搜索过程详解</a></li>
-    <li><a href="#6-与暴力搜索的对比">6. 与暴力搜索的对比</a></li>
-    <li><a href="#7-内存消耗分析">7. 内存消耗分析</a></li>
-    <li><a href="#8-边界问题--ivf-的固有精度瓶颈">8. 边界问题 — IVF 的固有精度瓶颈</a>
-      <ol>
-        <li><a href="#问题本质">问题本质</a></li>
-        <li><a href="#量化影响">量化影响</a></li>
-        <li><a href="#缓解手段">缓解手段</a></li>
-      </ol>
-    </li>
-    <li><a href="#9-残差向量--ivfpq-的数学基础">9. 残差向量 — IVF+PQ 的数学基础</a>
-      <ol>
-        <li><a href="#定义">定义</a></li>
-        <li><a href="#为什么重要">为什么重要</a></li>
-        <li><a href="#ivfpq-的完整链路">IVF+PQ 的完整链路</a></li>
-        <li><a href="#为什么残差让-pq-更有效">为什么残差让 PQ 更有效</a></li>
-        <li><a href="#压缩收益">压缩收益</a></li>
-      </ol>
-    </li>
-    <li><a href="#10-自适应-nprobe--告别一刀切">10. 自适应 nprobe — 告别一刀切</a>
-      <ol>
-        <li><a href="#固定-nprobe-的问题">固定 nprobe 的问题</a></li>
-        <li><a href="#方法一基于距离比最常用">方法一：基于距离比（最常用）</a></li>
-        <li><a href="#方法二基于候选集质量更鲁棒">方法二：基于候选集质量（更鲁棒）</a></li>
-        <li><a href="#方法三查询感知的历史统计">方法三：查询感知的历史统计</a></li>
-        <li><a href="#实际效果">实际效果</a></li>
-        <li><a href="#在-faiss-中的使用">在 Faiss 中的使用</a></li>
-      </ol>
-    </li>
-    <li><a href="#11-一个简化的-python-实现">11. 一个简化的 Python 实现</a></li>
-    <li><a href="#12-常见问题">12. 常见问题</a></li>
-    <li><a href="#13-ivf-vs-其他-ann-方法">13. IVF vs 其他 ANN 方法</a></li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#1-要解决什么问题">1. 要解决什么问题</a>
+            </li><li><a href="#2-核心思想先聚类再搜索">2. 核心思想：先聚类，再搜索</a>
+            </li><li><a href="#3-理解-nprobe搜索时探访多少个桶">3. 理解 nprobe：搜索时探访多少个桶</a><ul class="toc-list"><li><a href="#直观理解">直观理解</a>
+            </li><li><a href="#三个基准值">三个基准值</a>
+            </li><li><a href="#关键性质">关键性质</a>
+            </li>
+</ul>
+
+            </li><li><a href="#4-训练过程详解">4. 训练过程详解</a>
+            </li><li><a href="#5-搜索过程详解">5. 搜索过程详解</a>
+            </li><li><a href="#6-与暴力搜索的对比">6. 与暴力搜索的对比</a>
+            </li><li><a href="#7-内存消耗分析">7. 内存消耗分析</a>
+            </li><li><a href="#8-边界问题--ivf-的固有精度瓶颈">8. 边界问题 — IVF 的固有精度瓶颈</a><ul class="toc-list"><li><a href="#问题本质">问题本质</a>
+            </li><li><a href="#量化影响">量化影响</a>
+            </li><li><a href="#缓解手段">缓解手段</a>
+            </li>
+</ul>
+
+            </li><li><a href="#9-残差向量--ivfpq-的数学基础">9. 残差向量 — IVF&#43;PQ 的数学基础</a><ul class="toc-list"><li><a href="#定义">定义</a>
+            </li><li><a href="#为什么重要">为什么重要</a>
+            </li><li><a href="#ivfpq-的完整链路">IVF&#43;PQ 的完整链路</a>
+            </li><li><a href="#为什么残差让-pq-更有效">为什么残差让 PQ 更有效</a>
+            </li><li><a href="#压缩收益">压缩收益</a>
+            </li>
+</ul>
+
+            </li><li><a href="#10-自适应-nprobe--告别一刀切">10. 自适应 nprobe — 告别一刀切</a><ul class="toc-list"><li><a href="#固定-nprobe-的问题">固定 nprobe 的问题</a>
+            </li><li><a href="#方法一基于距离比最常用">方法一：基于距离比（最常用）</a>
+            </li><li><a href="#方法二基于候选集质量更鲁棒">方法二：基于候选集质量（更鲁棒）</a>
+            </li><li><a href="#方法三查询感知的历史统计">方法三：查询感知的历史统计</a>
+            </li><li><a href="#实际效果">实际效果</a>
+            </li><li><a href="#在-faiss-中的使用">在 Faiss 中的使用</a>
+            </li>
+</ul>
+
+            </li><li><a href="#11-一个简化的-python-实现">11. 一个简化的 Python 实现</a>
+            </li><li><a href="#12-常见问题">12. 常见问题</a>
+            </li><li><a href="#13-ivf-vs-其他-ann-方法">13. IVF vs 其他 ANN 方法</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

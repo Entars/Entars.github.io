@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,29 +359,25 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li>
-      <ol>
-        <li><a href="#1是什么">1.是什么</a></li>
-        <li><a href="#2基本原理">2.基本原理</a></li>
-        <li><a href="#3损失函数">3.损失函数</a></li>
-        <li><a href="#4感知机算法">4.感知机算法</a>
-          <ol>
-            <li><a href="#41原始形式">4.1原始形式</a></li>
-            <li><a href="#42-对偶形式">4.2 对偶形式</a></li>
-            <li><a href="#43-选择">4.3 选择</a></li>
-            <li><a href="#44-训练过程">4.4 训练过程</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#1是什么">1.是什么</a>
+            </li><li><a href="#2基本原理">2.基本原理</a>
+            </li><li><a href="#3损失函数">3.损失函数</a>
+            </li><li><a href="#4感知机算法">4.感知机算法</a><ul class="toc-list"><li><a href="#41原始形式">4.1原始形式</a>
+            </li><li><a href="#42-对偶形式">4.2 对偶形式</a>
+            </li><li><a href="#43-选择">4.3 选择</a>
+            </li><li><a href="#44-训练过程">4.4 训练过程</a>
+            </li>
+</ul>
+
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         
@@ -513,12 +517,12 @@ version: "1.114"
     <section class="article-content">
     
     
-    <h3 id="1是什么">1.是什么
-</h3><p>一种<strong>二分类的线性分类模型</strong>，属于<strong>监督学习</strong>，其输入的是特征向量，输出的是类别（值为1或-1）。该模型的目的<strong>旨在求出将输入空间中的实例分为两类的分离超平面</strong>，感知机主要是基于<strong>误分类数据</strong>进行训练，采用的训练方法是<strong>梯度下降法</strong>。</p>
+    <h2 id="1是什么">1.是什么
+</h2><p>一种<strong>二分类的线性分类模型</strong>，属于<strong>监督学习</strong>，其输入的是特征向量，输出的是类别（值为1或-1）。该模型的目的<strong>旨在求出将输入空间中的实例分为两类的分离超平面</strong>，感知机主要是基于<strong>误分类数据</strong>进行训练，采用的训练方法是<strong>梯度下降法</strong>。</p>
 <p><strong>任务要求</strong>：训练数据线性可分。</p>
 <p><strong>类型</strong>：原始形式、对偶形式</p>
-<h3 id="2基本原理">2.基本原理
-</h3><p>假设有训练数据集 $D=\{x_i,y_i\}_{i=1}^m$ ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = \{+1,-1\}$ ，则感知机模型为：</p>
+<h2 id="2基本原理">2.基本原理
+</h2><p>假设有训练数据集 $D=\{x_i,y_i\}_{i=1}^m$ ，其中 $x_i \in \mathbf{X} \subseteq \mathbf{R}^n$ ，$y_i \in \mathbf{Y} = \{+1,-1\}$ ，则感知机模型为：</p>
 $$
 f(x) = \operatorname{sign}(w \cdot x +b) \tag{1}
 $$<p>其中 $w$ 和 $b$ 称为感知机参数，$w \in \mathbf{R}^n$ 为权向量，$b \in \mathbf{R}$ 为偏置，$w \cdot x$ 为二者的内积，$\operatorname{sign}$ 函数为符号函数：</p>
@@ -531,8 +535,8 @@ $$<p>设感知机模型的一个超平面为：</p>
 $$
 w \cdot x + b = 0 \tag{3}
 $$<p>由简单推导可知 $w$ 为该超平面的法向量，$b$ 为截距。该超平面将样本点分为两类，即对所有的 $y_i = +1$ 有 $w \cdot x_i +b>0$，对所有 $y_i = -1$ 有 $w \cdot x_i +b <0$。</p>
-<h3 id="3损失函数">3.损失函数
-</h3><p>在基于训练数据是线性可分的前提下，需要确定一个损失函数，并通过最小化损失函数来训练模型。常规的损失函数是计误分类的数量，但该方法不是线性连续可导的函数，不容易优化，所以采用<strong>误分类的点到超平面的距离作为损失函数</strong>。</p>
+<h2 id="3损失函数">3.损失函数
+</h2><p>在基于训练数据是线性可分的前提下，需要确定一个损失函数，并通过最小化损失函数来训练模型。常规的损失函数是计误分类的数量，但该方法不是线性连续可导的函数，不容易优化，所以采用<strong>误分类的点到超平面的距离作为损失函数</strong>。</p>
 <blockquote>
 <p>假设直线方程为 $Ax+By+C=0$ ，点P的坐标为 $(x_0,y_0)$ 。点到直线的距离公式为：</p></blockquote>
 $$
@@ -554,9 +558,9 @@ $$
 $$<p>不考虑 $ \frac{1}{\lVert w \rVert}$ ，那么就得到损失函数：</p>
 $$
 L(w, b) = - \sum_{x_i \in M} y_i \, (w \cdot x_i + b)
-$$<h3 id="4感知机算法">4.感知机算法
-</h3><h4 id="41原始形式">4.1原始形式
-</h4><p>感知机的学习算法是由误分类驱动的，极小化过程不是一次性使用M中的所有误分类点来计算损失并计算梯度，而是每一次随机选取一个误分类点进行训练（<strong>主要是为了提高训练速度</strong>），更新如下：</p>
+$$<h2 id="4感知机算法">4.感知机算法
+</h2><h3 id="41原始形式">4.1原始形式
+</h3><p>感知机的学习算法是由误分类驱动的，极小化过程不是一次性使用M中的所有误分类点来计算损失并计算梯度，而是每一次随机选取一个误分类点进行训练（<strong>主要是为了提高训练速度</strong>），更新如下：</p>
 $$
 w \leftarrow w + \eta y_i x_i
 $$$$
@@ -583,8 +587,8 @@ $$
 </li>
 </ol>
 <p><strong>输出</strong>： $w, b$ ；感知机模型 $f(x)=\operatorname{sign}(w \cdot x+b) $</p>
-<h4 id="42-对偶形式">4.2 对偶形式
-</h4><p>每次梯度的迭代都是选择的一个样本来更新 $w$ 和 $b$  向量。最终经过若干次的迭代得到<strong>最终的结果</strong>。对于从来都没有误分类过的样本，它选择参与 $w$ 和 $b$  迭代修改的次数是0，对于被多次误分类而更新的样本，它参与 $w$ 和 $b$ 迭代修改的次数假设为$n_i$。</p>
+<h3 id="42-对偶形式">4.2 对偶形式
+</h3><p>每次梯度的迭代都是选择的一个样本来更新 $w$ 和 $b$  向量。最终经过若干次的迭代得到<strong>最终的结果</strong>。对于从来都没有误分类过的样本，它选择参与 $w$ 和 $b$  迭代修改的次数是0，对于被多次误分类而更新的样本，它参与 $w$ 和 $b$ 迭代修改的次数假设为$n_i$。</p>
 <p>则 $w$ 和 $b$ 关于 $(x_i,y_i)$ 的最终增量分别 $a_iy_ix_i$，此处 $a_i=n_i \eta$ ，如果令 $w$ 向量的初始值为0向量，那么关于 $w$ 和 $b$ 的表示可以为：</p>
 $$
 \begin{aligned}
@@ -617,13 +621,13 @@ $$
 </li>
 </ol>
 <p><strong>输出</strong>： $a, b$ ；感知机模型 $f(x)=\operatorname{sign}(\sum_{j=1}^n \alpha_j y_j x_j \cdot x + b)$</p>
-<h4 id="43-选择">4.3 选择
-</h4><ul>
+<h3 id="43-选择">4.3 选择
+</h3><ul>
 <li>如果特征数过高，计算内积非常耗时，应选择对偶形式算法加速。</li>
 <li>如果样本数过多，每次计算累计和就没有必要，应选择原始算法。</li>
 </ul>
-<h4 id="44-训练过程">4.4 训练过程
-</h4><p>线性可分的感知机训练过程：</p>
+<h3 id="44-训练过程">4.4 训练过程
+</h3><p>线性可分的感知机训练过程：</p>
 <p><img src="/p/%E6%84%9F%E7%9F%A5%E6%9C%BA/%E7%BA%BF%E6%80%A7%E8%AE%AD%E7%BB%83%E8%BF%87%E7%A8%8B.gif"
 	width="600"
 	height="450"

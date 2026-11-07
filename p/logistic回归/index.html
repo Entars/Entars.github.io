@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,23 +359,21 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li>
-      <ol>
-        <li><a href="#核心">核心</a></li>
-        <li><a href="#sigmond函数">Sigmond函数</a></li>
-        <li><a href="#推广至多元">推广至多元</a></li>
-        <li><a href="#最大似然估计">最大似然估计</a></li>
-        <li><a href="#损失函数">损失函数</a></li>
-      </ol>
-    </li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#核心"><span class="toc-number">1.</span> 核心</a>
+            </li><li><a href="#sigmond函数"><span class="toc-number">2.</span> Sigmond函数</a>
+            </li><li><a href="#推广至多元"><span class="toc-number">3.</span> 推广至多元</a>
+            </li><li><a href="#最大似然估计"><span class="toc-number">4.</span> 最大似然估计</a>
+            </li><li><a href="#损失函数"><span class="toc-number">5.</span> 损失函数</a>
+            </li>
+
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

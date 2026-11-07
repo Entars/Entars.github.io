@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,35 +359,34 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#打开数据库">打开数据库</a></li>
-    <li><a href="#创建数据库">创建数据库</a>
-      <ol>
-        <li><a href="#在硬盘上建立数据库">在硬盘上建立数据库</a></li>
-        <li><a href="#在内存上创建数据库">在内存上创建数据库</a></li>
-        <li><a href="#两者差别">两者差别</a></li>
-      </ol>
-    </li>
-    <li><a href="#创建游标">创建游标</a></li>
-    <li><a href="#执行sql语句">执行SQL语句</a>
-      <ol>
-        <li><a href="#创建表">创建表</a></li>
-        <li><a href="#新增数据">新增数据</a></li>
-        <li><a href="#更新数据">更新数据</a></li>
-        <li><a href="#删除数据">删除数据</a></li>
-        <li><a href="#查询数据">查询数据</a></li>
-        <li><a href="#删除表">删除表</a></li>
-      </ol>
-    </li>
-    <li><a href="#事务回滚或提交">事务回滚或提交</a></li>
-    <li><a href="#案例">案例</a></li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#打开数据库"><span class="toc-number">1.</span> 打开数据库</a>
+            </li><li><a href="#创建数据库"><span class="toc-number">2.</span> 创建数据库</a><ul class="toc-list"><li><a href="#在硬盘上建立数据库"><span class="toc-number">2.1.</span> 在硬盘上建立数据库</a>
+            </li><li><a href="#在内存上创建数据库"><span class="toc-number">2.2.</span> 在内存上创建数据库</a>
+            </li><li><a href="#两者差别"><span class="toc-number">2.3.</span> 两者差别</a>
+            </li>
+</ul>
+
+            </li><li><a href="#创建游标"><span class="toc-number">3.</span> 创建游标</a>
+            </li><li><a href="#执行sql语句"><span class="toc-number">4.</span> 执行SQL语句</a><ul class="toc-list"><li><a href="#创建表"><span class="toc-number">4.1.</span> 创建表</a>
+            </li><li><a href="#新增数据"><span class="toc-number">4.2.</span> 新增数据</a>
+            </li><li><a href="#更新数据"><span class="toc-number">4.3.</span> 更新数据</a>
+            </li><li><a href="#删除数据"><span class="toc-number">4.4.</span> 删除数据</a>
+            </li><li><a href="#查询数据"><span class="toc-number">4.5.</span> 查询数据</a>
+            </li><li><a href="#删除表"><span class="toc-number">4.6.</span> 删除表</a>
+            </li>
+</ul>
+
+            </li><li><a href="#事务回滚或提交"><span class="toc-number">5.</span> 事务回滚或提交</a>
+            </li><li><a href="#案例"><span class="toc-number">6.</span> 案例</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

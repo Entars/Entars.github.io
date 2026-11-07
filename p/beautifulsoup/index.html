@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,21 +359,22 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#简介">简介</a></li>
-    <li><a href="#解析器">解析器</a></li>
-    <li><a href="#基本用法">基本用法</a></li>
-    <li><a href="#beautifulsoup的对象种类">BeautifulSoup的对象种类</a></li>
-    <li><a href="#beautifulsoup遍历文档树">BeautifulSoup遍历文档树</a></li>
-    <li><a href="#beautifulsoup搜索文档树">BeautifulSoup搜索文档树</a></li>
-    <li><a href="#beautifulsoup的css选择器">BeautifulSoup的CSS选择器</a></li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#简介"><span class="toc-number">1.</span> 简介</a>
+            </li><li><a href="#解析器"><span class="toc-number">2.</span> 解析器</a>
+            </li><li><a href="#基本用法"><span class="toc-number">3.</span> 基本用法</a>
+            </li><li><a href="#beautifulsoup的对象种类"><span class="toc-number">4.</span> BeautifulSoup的对象种类</a>
+            </li><li><a href="#beautifulsoup遍历文档树"><span class="toc-number">5.</span> BeautifulSoup遍历文档树</a>
+            </li><li><a href="#beautifulsoup搜索文档树"><span class="toc-number">6.</span> BeautifulSoup搜索文档树</a>
+            </li><li><a href="#beautifulsoup的css选择器"><span class="toc-number">7.</span> BeautifulSoup的CSS选择器</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

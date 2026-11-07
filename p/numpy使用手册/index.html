@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,51 +359,47 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#创建数组">创建数组</a>
-      <ol>
-        <li><a href="#从列表创建">从列表创建</a></li>
-        <li><a href="#特殊数组创建">特殊数组创建</a></li>
-      </ol>
-    </li>
-    <li><a href="#数组属性">数组属性</a></li>
-    <li><a href="#数组索引与切片">数组索引与切片</a>
-      <ol>
-        <li><a href="#一维数组">一维数组</a></li>
-        <li><a href="#多维数组">多维数组</a></li>
-        <li><a href="#布尔索引">布尔索引</a></li>
-      </ol>
-    </li>
-    <li><a href="#数组操作">数组操作</a>
-      <ol>
-        <li><a href="#形状操作">形状操作</a></li>
-        <li><a href="#数组拼接">数组拼接</a></li>
-        <li><a href="#数组分割">数组分割</a></li>
-      </ol>
-    </li>
-    <li><a href="#数学运算">数学运算</a>
-      <ol>
-        <li><a href="#基本运算">基本运算</a></li>
-        <li><a href="#通用函数">通用函数</a></li>
-      </ol>
-    </li>
-    <li><a href="#统计函数">统计函数</a></li>
-    <li><a href="#线性代数">线性代数</a></li>
-    <li><a href="#随机数生成">随机数生成</a></li>
-    <li><a href="#数组保存与读取">数组保存与读取</a></li>
-    <li><a href="#实用技巧">实用技巧</a>
-      <ol>
-        <li><a href="#广播机制">广播机制</a></li>
-        <li><a href="#条件运算">条件运算</a></li>
-      </ol>
-    </li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#创建数组"><span class="toc-number">1.</span> 创建数组</a><ul class="toc-list"><li><a href="#从列表创建"><span class="toc-number">1.1.</span> 从列表创建</a>
+            </li><li><a href="#特殊数组创建"><span class="toc-number">1.2.</span> 特殊数组创建</a>
+            </li>
+</ul>
+
+            </li><li><a href="#数组属性"><span class="toc-number">2.</span> 数组属性</a>
+            </li><li><a href="#数组索引与切片"><span class="toc-number">3.</span> 数组索引与切片</a><ul class="toc-list"><li><a href="#一维数组"><span class="toc-number">3.1.</span> 一维数组</a>
+            </li><li><a href="#多维数组"><span class="toc-number">3.2.</span> 多维数组</a>
+            </li><li><a href="#布尔索引"><span class="toc-number">3.3.</span> 布尔索引</a>
+            </li>
+</ul>
+
+            </li><li><a href="#数组操作"><span class="toc-number">4.</span> 数组操作</a><ul class="toc-list"><li><a href="#形状操作"><span class="toc-number">4.1.</span> 形状操作</a>
+            </li><li><a href="#数组拼接"><span class="toc-number">4.2.</span> 数组拼接</a>
+            </li><li><a href="#数组分割"><span class="toc-number">4.3.</span> 数组分割</a>
+            </li>
+</ul>
+
+            </li><li><a href="#数学运算"><span class="toc-number">5.</span> 数学运算</a><ul class="toc-list"><li><a href="#基本运算"><span class="toc-number">5.1.</span> 基本运算</a>
+            </li><li><a href="#通用函数"><span class="toc-number">5.2.</span> 通用函数</a>
+            </li>
+</ul>
+
+            </li><li><a href="#统计函数"><span class="toc-number">6.</span> 统计函数</a>
+            </li><li><a href="#线性代数"><span class="toc-number">7.</span> 线性代数</a>
+            </li><li><a href="#随机数生成"><span class="toc-number">8.</span> 随机数生成</a>
+            </li><li><a href="#数组保存与读取"><span class="toc-number">9.</span> 数组保存与读取</a>
+            </li><li><a href="#实用技巧"><span class="toc-number">10.</span> 实用技巧</a><ul class="toc-list"><li><a href="#广播机制"><span class="toc-number">10.1.</span> 广播机制</a>
+            </li><li><a href="#条件运算"><span class="toc-number">10.2.</span> 条件运算</a>
+            </li>
+</ul>
+
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

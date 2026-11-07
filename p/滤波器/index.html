@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,35 +359,33 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#滤波器的本质">滤波器的本质</a></li>
-    <li><a href="#滤波器的几种大类型">滤波器的几种大类型</a></li>
-    <li><a href="#图像滤波器">图像滤波器</a>
-      <ol>
-        <li><a href="#1平滑滤波器">1.平滑滤波器</a>
-          <ol>
-            <li><a href="#11高斯滤波">1.1高斯滤波</a></li>
-            <li><a href="#12中值滤波">1.2中值滤波</a></li>
-            <li><a href="#13均值滤波">1.3均值滤波</a></li>
-          </ol>
-        </li>
-        <li><a href="#2边缘检测滤波器">2.边缘检测滤波器</a>
-          <ol>
-            <li><a href="#21-prewitt滤波器">2.1 Prewitt滤波器</a></li>
-            <li><a href="#22-sobel滤波器">2.2 Sobel滤波器</a></li>
-            <li><a href="#23--laplacian滤波器">2.3  Laplacian滤波器</a></li>
-            <li><a href="#24max-min滤波器">2.4MAX-MIN滤波器</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#滤波器的本质"><span class="toc-number">1.</span> 滤波器的本质</a>
+            </li><li><a href="#滤波器的几种大类型"><span class="toc-number">2.</span> 滤波器的几种大类型</a>
+            </li><li><a href="#图像滤波器"><span class="toc-number">3.</span> 图像滤波器</a><ul class="toc-list"><li><a href="#1平滑滤波器">1.平滑滤波器</a><ul class="toc-list"><li><a href="#11高斯滤波">1.1高斯滤波</a>
+            </li><li><a href="#12中值滤波">1.2中值滤波</a>
+            </li><li><a href="#13均值滤波">1.3均值滤波</a>
+            </li>
+</ul>
+
+            </li><li><a href="#2边缘检测滤波器">2.边缘检测滤波器</a><ul class="toc-list"><li><a href="#21-prewitt滤波器">2.1 Prewitt滤波器</a>
+            </li><li><a href="#22-sobel滤波器">2.2 Sobel滤波器</a>
+            </li><li><a href="#23--laplacian滤波器">2.3  Laplacian滤波器</a>
+            </li><li><a href="#24max-min滤波器">2.4MAX-MIN滤波器</a>
+            </li>
+</ul>
+
+            </li>
+</ul>
+
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,91 +359,82 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#pyqt5能干什么">PyQt5能干什么</a>
-      <ol>
-        <li><a href="#ui控件widgets">UI控件（Widgets）：</a></li>
-        <li><a href="#图形与视图框架">图形与视图框架：</a></li>
-        <li><a href="#多媒体功能">多媒体功能</a></li>
-        <li><a href="#网络功能">网络功能</a></li>
-        <li><a href="#数据库连接">数据库连接</a></li>
-        <li><a href="#多线程qthread">多线程（QThread）</a></li>
-        <li><a href="#样式与主题qss---qt-style-sheets">样式与主题（QSS - Qt Style Sheets）</a></li>
-      </ol>
-    </li>
-    <li><a href="#基本控件介绍">基本控件介绍</a>
-      <ol>
-        <li><a href="#qmainwindow">QMainWindow：</a></li>
-        <li><a href="#qwidget">Qwidget:</a></li>
-        <li><a href="#spacers控件">Spacers控件</a></li>
-        <li><a href="#qlabel控件">Qlabel控件</a>
-          <ol>
-            <li><a href="#方法">方法：</a></li>
-            <li><a href="#属性">属性：</a></li>
-            <li><a href="#常用信号">常用信号：</a></li>
-            <li><a href="#综合案例">综合案例</a></li>
-          </ol>
-        </li>
-        <li><a href="#qlineedit控件">QLineEdit控件</a>
-          <ol>
-            <li><a href="#方法-1">方法：</a></li>
-            <li><a href="#属性-1">属性：</a></li>
-            <li><a href="#综合案例-1">综合案例</a></li>
-          </ol>
-        </li>
-        <li><a href="#qtextedit">QTextEdit</a>
-          <ol>
-            <li><a href="#综合案例-2">综合案例</a></li>
-          </ol>
-        </li>
-        <li><a href="#qdialog">QDialog</a>
-          <ol>
-            <li><a href="#方法-2">方法：</a></li>
-            <li><a href="#属性-2">属性：</a></li>
-            <li><a href="#信号">信号：</a></li>
-            <li><a href="#几种类型">几种类型</a></li>
-            <li><a href="#综合案例-3">综合案例</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#容器">容器</a>
-      <ol>
-        <li><a href="#qgroupbox使用示例">QGroupBox使用示例：</a></li>
-        <li><a href="#qtabwidget使用示例">QTabWidget使用示例：</a></li>
-        <li><a href="#qstackedwidget使用示例">QStackedWidget使用示例：</a></li>
-        <li><a href="#qsplitters使用示例">QSplitters使用示例：</a></li>
-      </ol>
-    </li>
-    <li><a href="#布局管理器">布局管理器</a>
-      <ol>
-        <li><a href="#qformlayout">QFormLayout</a></li>
-        <li><a href="#qgridlayout">QGridLayout</a></li>
-      </ol>
-    </li>
-    <li><a href="#信号与槽以及关联控件">信号与槽以及关联控件</a>
-      <ol>
-        <li><a href="#信号与槽的介绍">信号与槽的介绍</a></li>
-        <li><a href="#qpushbutton">QPushButton</a></li>
-        <li><a href="#qradiobutton">QRadioButton</a></li>
-        <li><a href="#qcheckbox">QcheckBox</a></li>
-        <li><a href="#qcombobox">QComboBox</a></li>
-      </ol>
-    </li>
-    <li><a href="#独立组件">独立组件</a>
-      <ol>
-        <li><a href="#滑块控件">滑块控件</a></li>
-        <li><a href="#树控件">树控件</a></li>
-        <li><a href="#停靠控件">停靠控件</a></li>
-      </ol>
-    </li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#pyqt5能干什么"><span class="toc-number">1.</span> PyQt5能干什么</a><ul class="toc-list"><li><a href="#ui控件widgets"><span class="toc-number">1.1.</span> UI控件（Widgets）：</a>
+            </li><li><a href="#图形与视图框架"><span class="toc-number">1.2.</span> 图形与视图框架：</a>
+            </li><li><a href="#多媒体功能"><span class="toc-number">1.3.</span> 多媒体功能</a>
+            </li><li><a href="#网络功能"><span class="toc-number">1.4.</span> 网络功能</a>
+            </li><li><a href="#数据库连接"><span class="toc-number">1.5.</span> 数据库连接</a>
+            </li><li><a href="#多线程qthread"><span class="toc-number">1.6.</span> 多线程（QThread）</a>
+            </li><li><a href="#样式与主题qss---qt-style-sheets"><span class="toc-number">1.7.</span> 样式与主题（QSS - Qt Style Sheets）</a>
+            </li>
+</ul>
+
+            </li><li><a href="#基本控件介绍"><span class="toc-number">2.</span> 基本控件介绍</a><ul class="toc-list"><li><a href="#qmainwindow"><span class="toc-number">2.1.</span> QMainWindow：</a>
+            </li><li><a href="#qwidget"><span class="toc-number">2.2.</span> Qwidget:</a>
+            </li><li><a href="#spacers控件"><span class="toc-number">2.3.</span> Spacers控件</a>
+            </li><li><a href="#qlabel控件"><span class="toc-number">2.4.</span> Qlabel控件</a><ul class="toc-list"><li><a href="#方法"><span class="toc-number">2.4.1.</span> 方法：</a>
+            </li><li><a href="#属性"><span class="toc-number">2.4.2.</span> 属性：</a>
+            </li><li><a href="#常用信号"><span class="toc-number">2.4.3.</span> 常用信号：</a>
+            </li><li><a href="#综合案例"><span class="toc-number">2.4.4.</span> 综合案例</a>
+            </li>
+</ul>
+
+            </li><li><a href="#qlineedit控件"><span class="toc-number">2.5.</span> QLineEdit控件</a><ul class="toc-list"><li><a href="#方法-1"><span class="toc-number">2.5.1.</span> 方法：</a>
+            </li><li><a href="#属性-1"><span class="toc-number">2.5.2.</span> 属性：</a>
+            </li><li><a href="#综合案例-1"><span class="toc-number">2.5.3.</span> 综合案例</a>
+            </li>
+</ul>
+
+            </li><li><a href="#qtextedit"><span class="toc-number">2.6.</span> QTextEdit</a><ul class="toc-list"><li><a href="#综合案例-2"><span class="toc-number">2.6.1.</span> 综合案例</a>
+            </li>
+</ul>
+
+            </li><li><a href="#qdialog"><span class="toc-number">2.7.</span> QDialog</a><ul class="toc-list"><li><a href="#方法-2"><span class="toc-number">2.7.1.</span> 方法：</a>
+            </li><li><a href="#属性-2"><span class="toc-number">2.7.2.</span> 属性：</a>
+            </li><li><a href="#信号"><span class="toc-number">2.7.3.</span> 信号：</a>
+            </li><li><a href="#几种类型"><span class="toc-number">2.7.4.</span> 几种类型</a>
+            </li><li><a href="#综合案例-3"><span class="toc-number">2.7.5.</span> 综合案例</a>
+            </li>
+</ul>
+
+            </li>
+</ul>
+
+            </li><li><a href="#容器"><span class="toc-number">3.</span> 容器</a><ul class="toc-list"><li><a href="#qgroupbox使用示例"><span class="toc-number">3.1.</span> QGroupBox使用示例：</a>
+            </li><li><a href="#qtabwidget使用示例"><span class="toc-number">3.2.</span> QTabWidget使用示例：</a>
+            </li><li><a href="#qstackedwidget使用示例"><span class="toc-number">3.3.</span> QStackedWidget使用示例：</a>
+            </li><li><a href="#qsplitters使用示例"><span class="toc-number">3.4.</span> QSplitters使用示例：</a>
+            </li>
+</ul>
+
+            </li><li><a href="#布局管理器"><span class="toc-number">4.</span> 布局管理器</a><ul class="toc-list"><li><a href="#qformlayout"><span class="toc-number">4.1.</span> QFormLayout</a>
+            </li><li><a href="#qgridlayout"><span class="toc-number">4.2.</span> QGridLayout</a>
+            </li>
+</ul>
+
+            </li><li><a href="#信号与槽以及关联控件"><span class="toc-number">5.</span> 信号与槽以及关联控件</a><ul class="toc-list"><li><a href="#信号与槽的介绍"><span class="toc-number">5.1.</span> 信号与槽的介绍</a>
+            </li><li><a href="#qpushbutton"><span class="toc-number">5.2.</span> QPushButton</a>
+            </li><li><a href="#qradiobutton"><span class="toc-number">5.3.</span> QRadioButton</a>
+            </li><li><a href="#qcheckbox"><span class="toc-number">5.4.</span> QcheckBox</a>
+            </li><li><a href="#qcombobox"><span class="toc-number">5.5.</span> QComboBox</a>
+            </li>
+</ul>
+
+            </li><li><a href="#独立组件"><span class="toc-number">6.</span> 独立组件</a><ul class="toc-list"><li><a href="#滑块控件"><span class="toc-number">6.1.</span> 滑块控件</a>
+            </li><li><a href="#树控件"><span class="toc-number">6.2.</span> 树控件</a>
+            </li><li><a href="#停靠控件"><span class="toc-number">6.3.</span> 停靠控件</a>
+            </li>
+</ul>
+
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

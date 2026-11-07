@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,32 +359,31 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#一算法概述">一、算法概述</a></li>
-    <li><a href="#二数学形式化">二、数学形式化</a>
-      <ol>
-        <li><a href="#21-问题定义">2.1 问题定义</a></li>
-        <li><a href="#22-目标函数">2.2 目标函数</a></li>
-        <li><a href="#23-最优解推导">2.3 最优解推导</a></li>
-        <li><a href="#24-收敛性">2.4 收敛性</a></li>
-      </ol>
-    </li>
-    <li><a href="#三伪代码">三、伪代码</a>
-      <ol>
-        <li><a href="#31-标准-k-meanslloyd-算法">3.1 标准 K-Means（Lloyd 算法）</a></li>
-        <li><a href="#32-时间复杂度">3.2 时间复杂度</a></li>
-      </ol>
-    </li>
-    <li><a href="#四初始化方法k-means">四、初始化方法（K-Means++）</a></li>
-    <li><a href="#五k-值的选择">五、K 值的选择</a></li>
-    <li><a href="#六优缺点与注意事项">六、优缺点与注意事项</a></li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#一算法概述">一、算法概述</a>
+            </li><li><a href="#二数学形式化">二、数学形式化</a><ul class="toc-list"><li><a href="#21-问题定义">2.1 问题定义</a>
+            </li><li><a href="#22-目标函数">2.2 目标函数</a>
+            </li><li><a href="#23-最优解推导">2.3 最优解推导</a>
+            </li><li><a href="#24-收敛性">2.4 收敛性</a>
+            </li>
+</ul>
+
+            </li><li><a href="#三伪代码">三、伪代码</a><ul class="toc-list"><li><a href="#31-标准-k-meanslloyd-算法">3.1 标准 K-Means（Lloyd 算法）</a>
+            </li><li><a href="#32-时间复杂度">3.2 时间复杂度</a>
+            </li>
+</ul>
+
+            </li><li><a href="#四初始化方法k-means">四、初始化方法（K-Means&#43;&#43;）</a>
+            </li><li><a href="#五k-值的选择">五、K 值的选择</a>
+            </li><li><a href="#六优缺点与注意事项">六、优缺点与注意事项</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

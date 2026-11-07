@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,24 +359,25 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#特点">特点：</a></li>
-    <li><a href="#核心类与方法">核心类与方法：</a></li>
-    <li><a href="#响应处理与重要属性">响应处理与重要属性</a></li>
-    <li><a href="#高级特性与配置">高级特性与配置</a></li>
-    <li><a href="#性能优化技巧">性能优化技巧</a></li>
-    <li><a href="#6常见的应用场景">6.常见的应用场景</a></li>
-    <li><a href="#常见问题">常见问题</a></li>
-    <li><a href="#与request库的对比">与request库的对比</a></li>
-    <li><a href="#一些问题">一些问题</a></li>
-    <li><a href="#一些测试代码">一些测试代码</a></li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#特点"><span class="toc-number">1.</span> 特点：</a>
+            </li><li><a href="#核心类与方法"><span class="toc-number">2.</span> 核心类与方法：</a>
+            </li><li><a href="#响应处理与重要属性"><span class="toc-number">3.</span> 响应处理与重要属性</a>
+            </li><li><a href="#高级特性与配置"><span class="toc-number">4.</span> 高级特性与配置</a>
+            </li><li><a href="#性能优化技巧"><span class="toc-number">5.</span> 性能优化技巧</a>
+            </li><li><a href="#6常见的应用场景">6.常见的应用场景</a>
+            </li><li><a href="#常见问题"><span class="toc-number">7.</span> 常见问题</a>
+            </li><li><a href="#与request库的对比"><span class="toc-number">8.</span> 与request库的对比</a>
+            </li><li><a href="#一些问题"><span class="toc-number">9.</span> 一些问题</a>
+            </li><li><a href="#一些测试代码"><span class="toc-number">10.</span> 一些测试代码</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

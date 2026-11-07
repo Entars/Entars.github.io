@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,76 +359,69 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#1-背景与动机">1. 背景与动机</a></li>
-    <li><a href="#2-理论基础六度分隔与可导航小世界">2. 理论基础：六度分隔与可导航小世界</a>
-      <ol>
-        <li><a href="#21-可导航小世界公式">2.1 可导航小世界公式</a></li>
-        <li><a href="#22-为什么需要远程捷径">2.2 为什么需要远程捷径</a></li>
-      </ol>
-    </li>
-    <li><a href="#3-单层-nswnavigable-small-world">3. 单层 NSW（Navigable Small World）</a>
-      <ol>
-        <li><a href="#31-结构">3.1 结构</a></li>
-        <li><a href="#32-搜索算法贪心-knn-search">3.2 搜索算法（贪心 KNN Search）</a></li>
-        <li><a href="#33-优点与局限">3.3 优点与局限</a></li>
-      </ol>
-    </li>
-    <li><a href="#4-多层-hnswhierarchical-nsw">4. 多层 HNSW（Hierarchical NSW）</a>
-      <ol>
-        <li><a href="#41-设计思想">4.1 设计思想</a></li>
-        <li><a href="#42-核心优势">4.2 核心优势</a></li>
-      </ol>
-    </li>
-    <li><a href="#5-核心算法详解以实现为导向">5. 核心算法详解（以实现为导向）</a>
-      <ol>
-        <li><a href="#51-层级分配-level-generation">5.1 层级分配 (Level Generation)</a></li>
-        <li><a href="#52-search-算法">5.2 SEARCH 算法</a></li>
-        <li><a href="#53-insert-算法">5.3 INSERT 算法</a></li>
-        <li><a href="#54-select-neighbors-邻居选择策略">5.4 SELECT-NEIGHBORS 邻居选择策略</a></li>
-        <li><a href="#55-连接剪枝-shrink-connections">5.5 连接剪枝 (Shrink Connections)</a></li>
-      </ol>
-    </li>
-    <li><a href="#6-参数体系深度解析">6. 参数体系深度解析</a>
-      <ol>
-        <li><a href="#61-核心参数总表">6.1 核心参数总表</a></li>
-        <li><a href="#62-m-与-m_max0-的关系">6.2 M 与 M_max0 的关系</a></li>
-        <li><a href="#63-ef_construction-的选择">6.3 ef_construction 的选择</a></li>
-        <li><a href="#64-ml-的推导">6.4 mL 的推导</a></li>
-        <li><a href="#65-参数交互关系">6.5 参数交互关系</a></li>
-      </ol>
-    </li>
-    <li><a href="#7-调参实战指南">7. 调参实战指南</a>
-      <ol>
-        <li><a href="#71-精度优先场景召回率--99">7.1 精度优先场景（召回率 &gt; 99%）</a></li>
-        <li><a href="#72-延迟优先场景高-qps10ms-级">7.2 延迟优先场景（高 QPS，~10ms 级）</a></li>
-        <li><a href="#73-调参流程推荐">7.3 调参流程（推荐）</a></li>
-        <li><a href="#74-常见陷阱">7.4 常见陷阱</a></li>
-      </ol>
-    </li>
-    <li><a href="#8-工程实现注意事项">8. 工程实现注意事项</a>
-      <ol>
-        <li><a href="#81-删除操作hnsw-的软肋">8.1 删除操作（HNSW 的软肋）</a></li>
-        <li><a href="#82-更新操作">8.2 更新操作</a></li>
-        <li><a href="#83-内存占用分析">8.3 内存占用分析</a></li>
-        <li><a href="#84-并发安全">8.4 并发安全</a></li>
-        <li><a href="#85-内存随数据增长的分析">8.5 内存随数据增长的分析</a></li>
-      </ol>
-    </li>
-    <li><a href="#9-hnsw-vs-其他-ann-算法">9. HNSW vs 其他 ANN 算法</a>
-      <ol>
-        <li><a href="#为什么-hnsw-仍然是最好的">为什么 HNSW 仍然是&quot;最好&quot;的？</a></li>
-        <li><a href="#什么时候不用-hnsw">什么时候<strong>不用</strong> HNSW？</a></li>
-      </ol>
-    </li>
-    <li><a href="#10-从理论到实现的路线图">10. 从理论到实现的路线图</a></li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#1-背景与动机">1. 背景与动机</a>
+            </li><li><a href="#2-理论基础六度分隔与可导航小世界">2. 理论基础：六度分隔与可导航小世界</a><ul class="toc-list"><li><a href="#21-可导航小世界公式">2.1 可导航小世界公式</a>
+            </li><li><a href="#22-为什么需要远程捷径">2.2 为什么需要远程捷径</a>
+            </li>
+</ul>
+
+            </li><li><a href="#3-单层-nswnavigable-small-world">3. 单层 NSW（Navigable Small World）</a><ul class="toc-list"><li><a href="#31-结构">3.1 结构</a>
+            </li><li><a href="#32-搜索算法贪心-knn-search">3.2 搜索算法（贪心 KNN Search）</a>
+            </li><li><a href="#33-优点与局限">3.3 优点与局限</a>
+            </li>
+</ul>
+
+            </li><li><a href="#4-多层-hnswhierarchical-nsw">4. 多层 HNSW（Hierarchical NSW）</a><ul class="toc-list"><li><a href="#41-设计思想">4.1 设计思想</a>
+            </li><li><a href="#42-核心优势">4.2 核心优势</a>
+            </li>
+</ul>
+
+            </li><li><a href="#5-核心算法详解以实现为导向">5. 核心算法详解（以实现为导向）</a><ul class="toc-list"><li><a href="#51-层级分配-level-generation">5.1 层级分配 (Level Generation)</a>
+            </li><li><a href="#52-search-算法">5.2 SEARCH 算法</a>
+            </li><li><a href="#53-insert-算法">5.3 INSERT 算法</a>
+            </li><li><a href="#54-select-neighbors-邻居选择策略">5.4 SELECT-NEIGHBORS 邻居选择策略</a>
+            </li><li><a href="#55-连接剪枝-shrink-connections">5.5 连接剪枝 (Shrink Connections)</a>
+            </li>
+</ul>
+
+            </li><li><a href="#6-参数体系深度解析">6. 参数体系深度解析</a><ul class="toc-list"><li><a href="#61-核心参数总表">6.1 核心参数总表</a>
+            </li><li><a href="#62-m-与-m_max0-的关系">6.2 M 与 M_max0 的关系</a>
+            </li><li><a href="#63-ef_construction-的选择">6.3 ef_construction 的选择</a>
+            </li><li><a href="#64-ml-的推导">6.4 mL 的推导</a>
+            </li><li><a href="#65-参数交互关系">6.5 参数交互关系</a>
+            </li>
+</ul>
+
+            </li><li><a href="#7-调参实战指南">7. 调参实战指南</a><ul class="toc-list"><li><a href="#71-精度优先场景召回率--99">7.1 精度优先场景（召回率 &amp;gt; 99%）</a>
+            </li><li><a href="#72-延迟优先场景高-qps10ms-级">7.2 延迟优先场景（高 QPS，~10ms 级）</a>
+            </li><li><a href="#73-调参流程推荐">7.3 调参流程（推荐）</a>
+            </li><li><a href="#74-常见陷阱">7.4 常见陷阱</a>
+            </li>
+</ul>
+
+            </li><li><a href="#8-工程实现注意事项">8. 工程实现注意事项</a><ul class="toc-list"><li><a href="#81-删除操作hnsw-的软肋">8.1 删除操作（HNSW 的软肋）</a>
+            </li><li><a href="#82-更新操作">8.2 更新操作</a>
+            </li><li><a href="#83-内存占用分析">8.3 内存占用分析</a>
+            </li><li><a href="#84-并发安全">8.4 并发安全</a>
+            </li><li><a href="#85-内存随数据增长的分析">8.5 内存随数据增长的分析</a>
+            </li>
+</ul>
+
+            </li><li><a href="#9-hnsw-vs-其他-ann-算法">9. HNSW vs 其他 ANN 算法</a><ul class="toc-list"><li><a href="#为什么-hnsw-仍然是最好的">为什么 HNSW 仍然是&amp;quot;最好&amp;quot;的？</a>
+            </li><li><a href="#什么时候不用-hnsw">什么时候&lt;strong&gt;不用&lt;/strong&gt; HNSW？</a>
+            </li>
+</ul>
+
+            </li><li><a href="#10-从理论到实现的路线图">10. 从理论到实现的路线图</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

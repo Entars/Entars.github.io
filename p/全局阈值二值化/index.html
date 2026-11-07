@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,29 +359,26 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
+
         <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li>
-      <ol>
-        <li><a href="#128阈值">128阈值</a></li>
-        <li><a href="#均值阈值">均值阈值</a></li>
-        <li><a href="#ostu大津法">OSTU大津法</a>
-          <ol>
-            <li><a href="#1两类的概率权重">（1）两类的概率（权重）</a></li>
-            <li><a href="#2两类的均值灰度中心">（2）两类的均值（灰度中心）</a></li>
-            <li><a href="#大津算法的具体实现步骤如下以8位图像----为例">大津算法的具体实现步骤如下（以8位图像    为例）：</a></li>
-            <li><a href="#示例验证简化场景">示例验证（简化场景）</a></li>
-            <li><a href="#示例代码">示例代码：</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-  </ol>
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#128阈值"><span class="toc-number">1.</span> 128阈值</a>
+            </li><li><a href="#均值阈值"><span class="toc-number">2.</span> 均值阈值</a>
+            </li><li><a href="#ostu大津法"><span class="toc-number">3.</span> OSTU大津法</a><ul class="toc-list"><li><a href="#1两类的概率权重">（1）两类的概率（权重）</a>
+            </li><li><a href="#2两类的均值灰度中心">（2）两类的均值（灰度中心）</a>
+            </li><li><a href="#大津算法的具体实现步骤如下以8位图像----为例"><span class="toc-number">3.3.</span> 大津算法的具体实现步骤如下（以8位图像    为例）：</a>
+            </li><li><a href="#示例验证简化场景"><span class="toc-number">3.4.</span> 示例验证（简化场景）</a>
+            </li><li><a href="#示例代码"><span class="toc-number">3.5.</span> 示例代码：</a>
+            </li>
+</ul>
+
+            </li>
+
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         

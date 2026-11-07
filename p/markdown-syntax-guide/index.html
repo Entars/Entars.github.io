@@ -64,6 +64,15 @@
     pre {
         font-size: 1.4rem;  
     }
+
+    .widget--toc .toc-number {
+        font-weight: 700;
+        margin-right: 5px;
+    }
+
+    .widget--toc #TableOfContents .toc-list {
+        list-style: none;
+    }
 </style>
 
     </head>
@@ -336,8 +345,7 @@ version: "1.114"
     <aside class="sidebar right-sidebar sticky">
         
             
-                
-    <section class="widget archives">
+                <section class="widget archives">
         <div class="widget-icon">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -351,72 +359,53 @@ version: "1.114"
 
         </div>
         <h2 class="widget-title section-title">目录</h2>
-        
-        <div class="widget--toc">
-            <nav id="TableOfContents">
-  <ol>
-    <li><a href="#headings">Headings</a></li>
-  </ol>
 
-  <ol>
-    <li><a href="#h2">H2</a>
-      <ol>
-        <li><a href="#h3">H3</a>
-          <ol>
-            <li><a href="#h4">H4</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#paragraph">Paragraph</a></li>
-    <li><a href="#blockquotes">Blockquotes</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#blockquote-without-attribution">Blockquote without attribution</a></li>
-            <li><a href="#blockquote-with-attribution">Blockquote with attribution</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#tables">Tables</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#inline-markdown-within-tables">Inline Markdown within tables</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#code-blocks">Code Blocks</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#code-block-with-backticks">Code block with backticks</a></li>
-            <li><a href="#code-block-indented-with-four-spaces">Code block indented with four spaces</a></li>
-            <li><a href="#code-block-with-hugos-internal-highlight-shortcode">Code block with Hugo&rsquo;s internal highlight shortcode</a></li>
-            <li><a href="#diff-code-block">Diff code block</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#list-types">List Types</a>
-      <ol>
-        <li>
-          <ol>
-            <li><a href="#ordered-list">Ordered List</a></li>
-            <li><a href="#unordered-list">Unordered List</a></li>
-            <li><a href="#nested-list">Nested list</a></li>
-          </ol>
-        </li>
-      </ol>
-    </li>
-    <li><a href="#other-elements--abbr-sub-sup-kbd-mark">Other Elements — abbr, sub, sup, kbd, mark</a></li>
-    <li><a href="#hyperlinked-image">Hyperlinked image</a></li>
-  </ol>
+        <div class="widget--toc">
+            <nav id="TableOfContents"><ul class="toc-list"><li><a href="#headings"><span class="toc-number">1.</span> Headings</a>
+            </li>
+<li><a href="#h2"><span class="toc-number">1.</span> H2</a><ul class="toc-list"><li><a href="#h3"><span class="toc-number">1.1.</span> H3</a><ul class="toc-list"><li><a href="#h4"><span class="toc-number">1.1.1.</span> H4</a>
+            </li>
+</ul>
+
+            </li>
+</ul>
+
+            </li><li><a href="#paragraph"><span class="toc-number">2.</span> Paragraph</a>
+            </li><li><a href="#blockquotes"><span class="toc-number">3.</span> Blockquotes</a><ul class="toc-list"><li><a href="#blockquote-without-attribution"><span class="toc-number">3.1.</span> Blockquote without attribution</a>
+            </li><li><a href="#blockquote-with-attribution"><span class="toc-number">3.2.</span> Blockquote with attribution</a>
+            </li>
+
+</ul>
+
+            </li><li><a href="#tables"><span class="toc-number">4.</span> Tables</a><ul class="toc-list"><li><a href="#inline-markdown-within-tables"><span class="toc-number">4.1.</span> Inline Markdown within tables</a>
+            </li>
+
+</ul>
+
+            </li><li><a href="#code-blocks"><span class="toc-number">5.</span> Code Blocks</a><ul class="toc-list"><li><a href="#code-block-with-backticks"><span class="toc-number">5.1.</span> Code block with backticks</a>
+            </li><li><a href="#code-block-indented-with-four-spaces"><span class="toc-number">5.2.</span> Code block indented with four spaces</a>
+            </li><li><a href="#code-block-with-hugos-internal-highlight-shortcode"><span class="toc-number">5.3.</span> Code block with Hugo&amp;rsquo;s internal highlight shortcode</a>
+            </li><li><a href="#diff-code-block"><span class="toc-number">5.4.</span> Diff code block</a>
+            </li>
+
+</ul>
+
+            </li><li><a href="#list-types"><span class="toc-number">6.</span> List Types</a><ul class="toc-list"><li><a href="#ordered-list"><span class="toc-number">6.1.</span> Ordered List</a>
+            </li><li><a href="#unordered-list"><span class="toc-number">6.2.</span> Unordered List</a>
+            </li><li><a href="#nested-list"><span class="toc-number">6.3.</span> Nested list</a>
+            </li>
+
+</ul>
+
+            </li><li><a href="#other-elements--abbr-sub-sup-kbd-mark"><span class="toc-number">7.</span> Other Elements — abbr, sub, sup, kbd, mark</a>
+            </li><li><a href="#hyperlinked-image"><span class="toc-number">8.</span> Hyperlinked image</a>
+            </li>
+
+</ul>
 </nav>
         </div>
     </section>
+
 
             
         
